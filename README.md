@@ -1,6 +1,6 @@
 # Proyect Yaz
 
-_It is a custom development and web application that seeks to improve the financial control, to book appointments online_
+_It is a custom development that consists of a web application. This application seeks help from hairdress “JAZ Color y Estilo” to manage the financial control, the appointment scheduling and the online shop._
 
 ## Starting
 
