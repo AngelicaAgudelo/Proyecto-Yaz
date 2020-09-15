@@ -4,13 +4,13 @@ import Calendar from '../components/Calendar'
 import Shop from '../components/Shop'
 import Register from '../components/Register'
 import Login    from '../components/Login'
-
+import Menu from '../components/Menu'
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/shop',
-    name: 'Shop',
+    name: 'shop',
     component: Shop
   },
   {
@@ -28,10 +28,14 @@ const routes = [
     name: 'login',
     component: Login
   },
+  {
+    path: '/menu',
+    name: 'menu',
+    component: Menu
+  },
 ]
 
 const router = new VueRouter({
   routes
 })
-
 export default router

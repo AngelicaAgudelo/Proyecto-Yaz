@@ -10,45 +10,107 @@ export default new Vuex.Store({
     // Lista de usuarios que proviene de la base de datos
     users: [
       {
-        user_name: "alejandro",
+        id_user: 1,
+        user_email:"duque@du",
+        user_name: "juan duque",
         user_type: 1,
-        user_photo: "",
-        user_password: "al",
-        user_email: "a@a",
-        user_cell_phone: 552,
-        user_address: ""
+        user_photo: "jaz.png",
+        user_password: "duque",
       },
       {
-        user_name: "duque",
-        user_type: 1,
-        user_photo: "",
-        user_password: "du",
-        user_email: "d@d",
-        user_cell_phone: 342,
-        user_address: ""
-      },
-      {
+        id_user: 2,
+        user_email:"angelica@an",
         user_name: "angelica",
         user_type: 1,
-        user_photo: "",
-        user_password: "an",
-        user_email: "an@an",
-        user_cell_phone: 324,
-        user_address: ""
+        user_photo: "maquillaje.png",
+        user_password: "angelica",
       },
       {
+        id_user: 3,
+        user_email:"sebastian@se",
         user_name: "sebastian",
         user_type: 1,
-        user_photo: "",
-        user_password: "se",
-        user_email: "se@se",
-        user_cell_phone: 234,
-        user_address: ""
-      }
+        user_photo: "peluca.png",
+        user_password: "sebastian",
+      },
+      {
+        id_user: 4,
+        user_email:"alejo@al",
+        user_name: "alejandro",
+        user_type: 1,
+        user_photo: "peluca.png",
+        user_password: "alejandro",
+      },
+      {
+        id_user: 5,
+        user_email:"",
+        user_name: "pruebas",
+        user_type: 1,
+        user_photo: "jaz.png",
+        user_password: "",
+      },
+    ],
+    // Eventos del calendario
+    events: [
+      {
+        id: 0,
+        name: "alejo",
+        details: "peluqueado",
+        start: "2020-09-08 09:00",
+        end: "2020-09-08 10:00",
+        color: "green",
+        category: "juan duque",
+      },
+      {
+        id: 1,
+        name: "laura",
+        details: "cepillado",
+        start: "2020-09-08 07:00",
+        end: "2020-09-08 09:00",
+        color: "red",
+        category: "angelica",
+      },
+      {
+        id: 2,
+        name: "kevin",
+        details: "tinturacion de pelo",
+        start: "2020-09-08 08:00",
+        end: "2020-09-08 09:00",
+        color: "pink",
+        category: "juan duque",
+      },
+      {
+        id: 3,
+        name: "daniela",
+        details: "rizos",
+        start: "2020-09-08 12:00",
+        end: "2020-09-08 15:00",
+        color: "pink",
+        category: "angelica",
+      },
+      {
+        id: 4,
+        name: "camilo",
+        details: "rizos",
+        start: "2020-09-08 07:00",
+        end: "2020-09-08 08:00",
+        color: "black",
+        category: "sebastian",
+      },
+      {
+        id: 5,
+        name: "camilo",
+        details: "ssss",
+        start: "2020-09-08 10:00",
+        end: "2020-09-08 13:00",
+        color: "blue",
+        category: "sebastian",
+      },
     ],
     // La sesion del usuario abierta
     activeUser: {
       id_user: 0,
+      user_email:"",
       user_name: "",
       user_type: 0,
       user_photo: "null.png",
@@ -113,29 +175,90 @@ export default new Vuex.Store({
         item_price: 65443,
       },
     ],
-    category:[]
+    isClient: 0,
+    activeEvent: false,
+    categori:[],
   },
   mutations: {
     // Metodo para cambiara el estado de la variable que maneja el menu
     setEsconderMenu(state, bol) {
       state.esconderMenu = bol;
     },
+    setActiveEvent(state, bol){
+      state.activeEvent = bol;
+    },
     // Metodo para agregar un usuario
     addUser(state, user) {
       state.users.push(user);
+    },
+    // Metodo que crea el array de categorias a partir del usuario
+    mountCategory(state){
+      var copy = []
+      for(var i = 0; i < state.users.length ; i++){
+        if(state.users[i].user_type < 2){
+          copy.push(state.users[i].user_name)
+        }
+      }
+      state.categori = copy;
+    },
+    // Metodo que borra un evento segun su indice
+    eraseEvent(state, num){
+      state.events.splice(num, 1);
+
     },
     // Metodo para cambiar la sesion de usuario
     setActiveUser(state, user) {
       state.activeUser = user;
     },
-    mountCategory(state){
-      console.log("entre aqui")
-      for(var i= 0 ; i < state.users.length; i++){
-        if(state.users[i].user_type == 1){
-          state.category.push(state.users[i].user_name);
-
+    // Metodo para validar que el usuario ingresado si exista
+    isUser(state, emailPass) {
+      var num = 4;
+      var num2 = 0;
+      for (let i = 0; i < state.users.length; i++) {
+        if (num != 0) {
+          if (emailPass.email == state.users[i].user_email) {
+            if (emailPass.password == state.users[i].user_password) {
+              num = 0
+              //this.setActiveUser()
+              state.activeUser = state.users[i];
+            } else {
+              num2 = 1
+            }
+          }
+          else {
+            num = 2
+            if (num2 == 1) {
+              num = num2;
+            }
+          }
         }
       }
+      state.isClient = num;
+    },
+    // Metodo para agregar un evento
+    addEvent(state, event){
+      state.events.push(event);
+    },
+    // Metodo que cambia todo un elemento de el array events
+    setEvent(state, eveent){
+        var ind= 0;
+        console.log(eveent)
+        for(var i = 0; i < state.events.length ; i++){
+          if(state.events[i].id == eveent.id){
+            state.events[i].category = eveent.category;
+            state.events[i].color = eveent.color;
+            state.events[i].details = eveent.details;
+            state.events[i].end = eveent.end;
+            state.events[i].name = eveent.name;
+            state.events[i].start = eveent.start;
+            //state.events[i] = eveent;
+            console.log("Este fue el cambio: "+state.events[i])
+            i = state.events.length
+          }
+        }
+    },
+    comunicar(){
+      
     }
   },
   actions: {

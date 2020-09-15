@@ -2,8 +2,24 @@
   <v-app id="app">
     <!-------- Inicio del componente del carrito de compra ----------->
     <v-navigation-drawer v-model="drawer" absolute temporary right>
+      <v-card min-height="50px">
+        <div id="total">
+          <v-btn
+            class="ma-2"
+            tile
+            outlined
+            :elevation="3"
+            color="black"
+            enabled="false"
+          >
+            Pagar
+            <v-icon center>{{PayIcon}}</v-icon>
+          </v-btn>
+          Total: ${{totalCarro}}
+        </div>
+      </v-card>
       <v-col v-for="car in carrito" :key="car.item.id_item">
-        <v-card>
+        <v-card max-height="200px">
           <v-list-item-title class="headline">{{car.item.item_name}}</v-list-item-title>
           <v-list-item-subtitle>$ {{car.item.item_price}}</v-list-item-subtitle>
           <v-img
@@ -15,64 +31,67 @@
           <v-card-actions>
             <div id="cantidad">cantidad: {{car.cantidad}}</div>
             <v-spacer></v-spacer>
-            <v-btn icon @click="añadirCantidad(car)">
-              <v-icon center>{{ añadir }}</v-icon>
-            </v-btn>
             <v-btn icon @click="quitarCantidad(car)">
               <v-icon center>{{ quitar }}</v-icon>
+            </v-btn>
+            <v-btn icon @click="añadirCantidad(car)">
+              <v-icon center>{{ añadir }}</v-icon>
             </v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
-      <v-card min-height="50px">
-        <div id="total">
-          <v-btn class="ma-2" tile outlined color="black" enabled="false">
-            Pagar
-            <v-icon center>{{PayIcon}}</v-icon>
-          </v-btn>
-          Total: ${{totalCarro}}
-        </div>
-      </v-card>
     </v-navigation-drawer>
     <!-------- Final del componente del carrito de compra ----------->
 
     <!-------- Inicio del componente central (Items de compra) ----------->
-    <v-main>
-      <v-container class="my-4">
-        <v-row row grap>
-          <v-flex xs12 sm6 md6 lg3 v-for="item in items" :key="item.id_item">
-            <template>
-              <div id="cartas">
-                <v-card class="mx-auto" max-width="350">
-                  <v-subheader class="headline" color="black">{{item.item_name}}</v-subheader>
-                  <v-img :src="item.src" class="black--text align-end" height="200px">
-                    <div class="fill-height bottom-gradient"></div>
-                  </v-img>
-                  <v-card-subtitle class="pb-0">Make-up</v-card-subtitle>
-                  <v-card-text class="text--primary">
-                    <div>{{ item.item_description }}</div>
-                  </v-card-text>
-                  <v-card-actions>
-                    <v-btn color="black" text @click="comprar(item)">Comprar</v-btn>
-                    <v-spacer></v-spacer>
-                    <div id="precio" color="green" text>$ {{item.item_price}}</div>
-                  </v-card-actions>
-                </v-card>
-              </div>
-            </template>
-          </v-flex>
-        </v-row>
-      </v-container>
-    </v-main>
+    <v-container class="my-4">
+      <v-row row grap>
+        <v-flex xs12 sm6 md5 lg3 v-for="item in items" :key="item.id_item">
+          <template>
+            <div id="cartas">
+              <v-card class="mx-auto" :elevation="3" max-width="350">
+                <v-list-item-content>
+                  <v-layout align-center justify-center>
+                    <div>
+                      <v-list-item-title class="headline" color="#000000">{{item.item_name}}</v-list-item-title>
+                    </div>
+                  </v-layout>
+                </v-list-item-content>
+                <v-img :src="item.src" class="black--text align-end" height="200px">
+                  <div class="fill-height bottom-gradient"></div>
+                </v-img>
+                <v-card-subtitle class="pb-0">Make-up</v-card-subtitle>
+                <v-card-text class="text--primary">
+                  <div>{{ item.item_description }}</div>
+                </v-card-text>
+                <v-card-actions>
+                  <v-btn
+                    color="black"
+                    tile
+                    outlined
+                    :elevation="3"
+                    @click="comprar(item)"
+                  >Comprar</v-btn>
+                  <v-spacer></v-spacer>
+                  <div id="precio" color="green" text>$ {{item.item_price}}</div>
+                </v-card-actions>
+              </v-card>
+            </div>
+          </template>
+        </v-flex>
+      </v-row>
+    </v-container>
     <!-------- Final del componente central (Items de compra) ----------->
 
     <!-------- Inicio del componente Inferior ( Boton de carrito de compra ) ----------->
     <v-footer app>
+              <v-layout align-center justify-center>
       <v-badge :content="totalElementos" :value="totalElementos" color="green" overlap>
         <v-btn color="black" text @click.stop="drawer = !drawer">
-          <v-icon center>{{ IconCar }}</v-icon>
+          <v-icon center large>{{ IconCar }}</v-icon>
         </v-btn>
       </v-badge>
+      </v-layout>
     </v-footer>
     <!-------- Final del componente Inferior ( Boton de carrito de compra ) ----------->
   </v-app>
@@ -83,9 +102,9 @@
 // Import del icono del carrito de compra
 import { mdiCart } from "@mdi/js";
 // Import del icono del carrito bajando
-import { mdiCartArrowDown } from "@mdi/js";
+import { mdiPlusThick } from "@mdi/js";
 // Import del icono del carrito subiendo
-import { mdiCartArrowUp } from "@mdi/js";
+import { mdiMinus } from "@mdi/js";
 // Import del icono de pag
 import { mdiCashUsdOutline } from "@mdi/js";
 // Import del objeto que me permite traer variables del Store
@@ -104,9 +123,9 @@ export default {
       // Variable para cambiar estado al componente drawer
       drawer: null,
       // Icono de carrito+
-      añadir: mdiCartArrowDown,
+      añadir: mdiPlusThick,
       // Icono de carrito-
-      quitar: mdiCartArrowUp,
+      quitar: mdiMinus,
       // Variable que representa el total de elementos en el carrito de compra ( c/u Item * Cantidad )
       totalElementos: 0,
       // Variable que representa el monto total en el carrito
@@ -171,11 +190,11 @@ export default {
       }
       this.totalElementos = total;
       this.totalCarrito();
-    }
+    },
   },
   computed: {
     // Declaracion de las variables de la Store
-    ...mapState(['items']),
+    ...mapState(["items"]),
   },
 };
 </script>>
@@ -188,7 +207,7 @@ export default {
 #precio {
   margin: 10px;
 }
-#inicio {
+#inicios {
   margin: 25px;
 }
 #crearSesion {

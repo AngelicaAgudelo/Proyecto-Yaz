@@ -59,6 +59,7 @@
                     :disabled="!valid"
                     tile
                     outlined
+                    :elevation="3"
                     color="black"
                     @click="validate"
                   >Crear Usuario</v-btn>
@@ -125,6 +126,7 @@ export default {
     // Declaracion de los metodos de la Store
     ...mapMutations([
       "addUser",
+      "activeUser",
       "setEsconderMenu",
       "setActiveUser",
     ]),
