@@ -1,24 +1,17 @@
 <template>
   <v-app id="app">
-    <!-------- Inicio del componente del carrito de compra ----------->
+    <!-------- Starting the shopping cart component ----------->
     <v-navigation-drawer v-model="drawer" absolute temporary right>
       <v-card min-height="50px">
         <div id="total">
-          <v-btn
-            class="ma-2"
-            tile
-            outlined
-            :elevation="3"
-            color="black"
-            enabled="false"
-          >
+          <v-btn class="ma-2" tile outlined :elevation="3" color="black" enabled="false">
             Pagar
             <v-icon center>{{PayIcon}}</v-icon>
           </v-btn>
-          Total: ${{totalCarro}}
+          Total: ${{totalCar}}
         </div>
       </v-card>
-      <v-col v-for="car in carrito" :key="car.item.id_item">
+      <v-col v-for="car in shoopingCar" :key="car.item.id_item">
         <v-card max-height="200px">
           <v-list-item-title class="headline">{{car.item.item_name}}</v-list-item-title>
           <v-list-item-subtitle>$ {{car.item.item_price}}</v-list-item-subtitle>
@@ -29,26 +22,24 @@
             height="100px"
           ></v-img>
           <v-card-actions>
-            <div id="cantidad">cantidad: {{car.cantidad}}</div>
+            <div id="quantity">cantidad: {{car.quantity}}</div>
             <v-spacer></v-spacer>
-            <v-btn icon @click="quitarCantidad(car)">
-              <v-icon center>{{ quitar }}</v-icon>
+            <v-btn icon @click="removeAmount(car)">
+              <v-icon center>{{ remove }}</v-icon>
             </v-btn>
-            <v-btn icon @click="añadirCantidad(car)">
-              <v-icon center>{{ añadir }}</v-icon>
+            <v-btn icon @click="addAmount(car)">
+              <v-icon center>{{ add }}</v-icon>
             </v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
     </v-navigation-drawer>
-    <!-------- Final del componente del carrito de compra ----------->
-
-    <!-------- Inicio del componente central (Items de compra) ----------->
+    <!-------- Start of purchase items ----------->
     <v-container class="my-4">
       <v-row row grap>
         <v-flex xs12 sm6 md5 lg3 v-for="item in items" :key="item.id_item">
           <template>
-            <div id="cartas">
+            <div id="divCart">
               <v-card class="mx-auto" :elevation="3" max-width="350">
                 <v-list-item-content>
                   <v-layout align-center justify-center>
@@ -65,15 +56,9 @@
                   <div>{{ item.item_description }}</div>
                 </v-card-text>
                 <v-card-actions>
-                  <v-btn
-                    color="black"
-                    tile
-                    outlined
-                    :elevation="3"
-                    @click="comprar(item)"
-                  >Comprar</v-btn>
+                  <v-btn color="black" tile outlined :elevation="3" @click="buy(item)">Comprar</v-btn>
                   <v-spacer></v-spacer>
-                  <div id="precio" color="green" text>$ {{item.item_price}}</div>
+                  <div id="price" color="green" text>$ {{item.item_price}}</div>
                 </v-card-actions>
               </v-card>
             </div>
@@ -81,119 +66,123 @@
         </v-flex>
       </v-row>
     </v-container>
-    <!-------- Final del componente central (Items de compra) ----------->
-
-    <!-------- Inicio del componente Inferior ( Boton de carrito de compra ) ----------->
+    <!-------- Button Component Home (Shopping Cart Button) ----------->
     <v-footer app>
-              <v-layout align-center justify-center>
-      <v-badge :content="totalElementos" :value="totalElementos" color="green" overlap>
-        <v-btn color="black" text @click.stop="drawer = !drawer">
-          <v-icon center large>{{ IconCar }}</v-icon>
-        </v-btn>
-      </v-badge>
+      <v-layout align-center justify-center>
+        <v-badge :content="totalElements" :value="totalElements" color="green" overlap>
+          <v-btn color="black" text @click.stop="drawer = !drawer">
+            <v-icon center large>{{ IconCar }}</v-icon>
+          </v-btn>
+        </v-badge>
       </v-layout>
     </v-footer>
-    <!-------- Final del componente Inferior ( Boton de carrito de compra ) ----------->
   </v-app>
 </template>
 
 
 <script>
-// Import del icono del carrito de compra
+// Import from shopping cart icon
 import { mdiCart } from "@mdi/js";
-// Import del icono del carrito bajando
+// Import the plus icon
 import { mdiPlusThick } from "@mdi/js";
-// Import del icono del carrito subiendo
+// Import the menus icon
 import { mdiMinus } from "@mdi/js";
-// Import del icono de pag
+// Payment icon import
 import { mdiCashUsdOutline } from "@mdi/js";
-// Import del objeto que me permite traer variables del Store
+// Import of the object that allows to fetch variables from the Store
 import { mapState } from "vuex";
 
 export default {
   components: {},
   data() {
     return {
-      // Array que almacena todos los items que se presionaron para comprar ( Carrito de compra )
-      carrito: [],
-      // Icono de carrito
+      // Array that stores all the items that are pressed to buy (Shopping cart)
+      shoopingCar: [],
+      // Cart icon
       IconCar: mdiCart,
-      // Icono de pago
+      // Payment icon
       PayIcon: mdiCashUsdOutline,
-      // Variable para cambiar estado al componente drawer
+      // Variable to change state to the drawer component
       drawer: null,
-      // Icono de carrito+
-      añadir: mdiPlusThick,
-      // Icono de carrito-
-      quitar: mdiMinus,
-      // Variable que representa el total de elementos en el carrito de compra ( c/u Item * Cantidad )
-      totalElementos: 0,
-      // Variable que representa el monto total en el carrito
-      totalCarro: 0,
-      // Variable que representa el boolean de abrir y cerrar menu
+      // Cart icon +
+      add: mdiPlusThick,
+      // Cart icon -
+      remove: mdiMinus,
+      // Variable that represents the total number of items in the shopping cart (each Item * Quantity)
+      totalElements: 0,
+      // Variable that represents the total amount in the cart
+      totalCar: 0,
+      // Variable that represents the boolean of opening and closing menu
       menu: null,
     };
   },
   methods: {
-    // Metodo para pasar el item al carrito de compra
-    comprar(vari) {
+    // Function to transfer the item to the shopping cart
+    buy(vari) {
       var val = false;
-      for (var i = 0; i < this.carrito.length; i++) {
-        if (this.carrito[i].item.id_item == vari.id_item) {
-          this.carrito[i].cantidad++;
-          this.carrito[i].total += vari.item_price;
+      for (var i = 0; i < this.shoopingCar.length; i++) {
+        if (this.shoopingCar[i].item.id_item == vari.id_item) {
+          this.shoopingCar[i].quantity++;
+          this.shoopingCar[i].total += vari.item_price;
           val = true;
         }
       }
       if (!val) {
-        this.carrito.push({ item: vari, cantidad: 1, total: vari.item_price });
+        this.shoopingCar.push({
+          item: vari,
+          quantity: 1,
+          total: vari.item_price,
+        });
       }
-      this.cantidadElementos();
-      this.totalCarrito();
+      this.quantifyElements();
+      this.totalTrolley();
+      console.log(this.totalElements);
     },
-    // Metodo para contar el dinero total de c/u * producto ( cada producto del carrito )
-    totalCarrito() {
+    // Function to count the total money of each * product (each product in the cart)
+    totalTrolley() {
       var total = 0;
-      for (var i = 0; i < this.carrito.length; i++) {
-        total += this.carrito[i].total;
+      for (var i = 0; i < this.shoopingCar.length; i++) {
+        total += this.shoopingCar[i].total;
       }
-      this.totalCarro = total;
+      this.totalCar = total;
     },
-    // Metodo para eliminar una c/u de un producto del carrito de compra
-    quitarCantidad(car) {
-      let indice = this.carrito.findIndex(
+    // Function to remove a quantity of a product from the shopping cart
+    removeAmount(car) {
+      let index = this.shoopingCar.findIndex(
         (indic) => indic.item.id_item === car.item.id_item
       );
-      this.carrito[indice].cantidad--;
-      this.carrito[indice].total -= car.item.item_price;
-      if (this.carrito[indice].cantidad == 0) {
-        this.carrito.splice(indice, 1);
+      this.shoopingCar[index].quantity--;
+      this.shoopingCar[index].total -= car.item.item_price;
+      if (this.shoopingCar[index].quantity == 0) {
+        this.shoopingCar.splice(index, 1);
       }
-      this.cantidadElementos();
-      this.totalCarrito();
+      this.quantifyElements();
+      this.totalTrolley();
     },
-    // Metodo para agregar una c/u de un producto del carrito de compra
-    añadirCantidad(car) {
-      let indice = this.carrito.findIndex(
+    // Function to add a quantity of a product from the shopping cart
+    addAmount(car) {
+      let index = this.shoopingCar.findIndex(
         (indic) => indic.item.id_item === car.item.id_item
       );
-      this.carrito[indice].cantidad++;
-      this.carrito[indice].total += car.item.item_price;
-      this.cantidadElementos();
-      this.totalCarrito();
+      this.shoopingCar[index].quantity++;
+      this.shoopingCar[index].total += car.item.item_price;
+      this.quantifyElements();
+      this.totalTrolley();
     },
-    // Metodo para contar la cantidad de elementos del carrito()
-    cantidadElementos() {
+    // Function to count the number of items in the cart
+    quantifyElements() {
       var total = 0;
-      for (var i = 0; i < this.carrito.length; i++) {
-        total += this.carrito[i].cantidad;
+      for (var i = 0; i < this.shoopingCar.length; i++) {
+        total += this.shoopingCar[i].quantity;
+        console.log("aq");
       }
-      this.totalElementos = total;
-      this.totalCarrito();
+      this.totalElements = total;
+      this.totalTrolley();
+      console.log(this.totalElements);
     },
   },
   computed: {
-    // Declaracion de las variables de la Store
+    // Declaration of Store variables
     ...mapState(["items"]),
   },
 };
@@ -201,19 +190,10 @@ export default {
 
 
 <style>
-#cartas {
+#divCart {
   margin: 10px;
 }
-#precio {
+#price {
   margin: 10px;
-}
-#inicios {
-  margin: 25px;
-}
-#crearSesion {
-  margin: 25px;
-}
-#menu {
-  margin: 15px;
 }
 </style>

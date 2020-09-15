@@ -5,13 +5,13 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    // Booleando para manejar el menu inicial
-    esconderMenu: false,
-    // Lista de usuarios que proviene de la base de datos
+    // Boolean to handle the initial menu
+    hideMenu: false,
+    // List of users coming from the database
     users: [
       {
         id_user: 1,
-        user_email:"duque@du",
+        user_email: "duque@du",
         user_name: "juan duque",
         user_type: 1,
         user_photo: "jaz.png",
@@ -19,7 +19,7 @@ export default new Vuex.Store({
       },
       {
         id_user: 2,
-        user_email:"angelica@an",
+        user_email: "angelica@an",
         user_name: "angelica",
         user_type: 1,
         user_photo: "maquillaje.png",
@@ -27,7 +27,7 @@ export default new Vuex.Store({
       },
       {
         id_user: 3,
-        user_email:"sebastian@se",
+        user_email: "sebastian@se",
         user_name: "sebastian",
         user_type: 1,
         user_photo: "peluca.png",
@@ -35,7 +35,7 @@ export default new Vuex.Store({
       },
       {
         id_user: 4,
-        user_email:"alejo@al",
+        user_email: "alejo@al",
         user_name: "alejandro",
         user_type: 1,
         user_photo: "peluca.png",
@@ -43,14 +43,14 @@ export default new Vuex.Store({
       },
       {
         id_user: 5,
-        user_email:"",
+        user_email: "",
         user_name: "pruebas",
         user_type: 1,
         user_photo: "jaz.png",
         user_password: "",
       },
     ],
-    // Eventos del calendario
+    // Calendar events
     events: [
       {
         id: 0,
@@ -107,16 +107,16 @@ export default new Vuex.Store({
         category: "sebastian",
       },
     ],
-    // La sesion del usuario abierta
+    // Open user session
     activeUser: {
       id_user: 0,
-      user_email:"",
+      user_email: "",
       user_name: "",
       user_type: 0,
       user_photo: "null.png",
       user_password: "",
     },
-    // Lista de items de la tienda
+    // List of store items
     items: [
       {
         id_item: 0,
@@ -175,42 +175,46 @@ export default new Vuex.Store({
         item_price: 65443,
       },
     ],
+    // boolean that says the user type
     isClient: 0,
+    // boolean that handles the ChangeEvent component
     activeEvent: false,
-    categori:[],
+    // event categories (workers)
+    categori: [],
   },
   mutations: {
-    // Metodo para cambiara el estado de la variable que maneja el menu
-    setEsconderMenu(state, bol) {
-      state.esconderMenu = bol;
+    // Function to change the state of the variable that handles the menu
+    setHideMenu(state, bol) {
+      state.hideMenu = bol;
     },
-    setActiveEvent(state, bol){
+    // Function that handles the ChangeEvent component
+    setActiveEvent(state, bol) {
       state.activeEvent = bol;
     },
-    // Metodo para agregar un usuario
+    // Function to add a user
     addUser(state, user) {
       state.users.push(user);
     },
-    // Metodo que crea el array de categorias a partir del usuario
-    mountCategory(state){
+    // Function to create the category array from the user
+    mountCategory(state) {
       var copy = []
-      for(var i = 0; i < state.users.length ; i++){
-        if(state.users[i].user_type < 2){
+      for (var i = 0; i < state.users.length; i++) {
+        if (state.users[i].user_type < 2) {
           copy.push(state.users[i].user_name)
         }
       }
       state.categori = copy;
     },
-    // Metodo que borra un evento segun su indice
-    eraseEvent(state, num){
+    // Function that deletes an event according to its index
+    eraseEvent(state, num) {
       state.events.splice(num, 1);
 
     },
-    // Metodo para cambiar la sesion de usuario
+    // Function to change user session
     setActiveUser(state, user) {
       state.activeUser = user;
     },
-    // Metodo para validar que el usuario ingresado si exista
+    // Function to validate that the user entered if it exists
     isUser(state, emailPass) {
       var num = 4;
       var num2 = 0;
@@ -235,31 +239,28 @@ export default new Vuex.Store({
       }
       state.isClient = num;
     },
-    // Metodo para agregar un evento
-    addEvent(state, event){
+    // Function to add an event
+    addEvent(state, event) {
       state.events.push(event);
     },
-    // Metodo que cambia todo un elemento de el array events
-    setEvent(state, eveent){
-        var ind= 0;
-        console.log(eveent)
-        for(var i = 0; i < state.events.length ; i++){
-          if(state.events[i].id == eveent.id){
-            state.events[i].category = eveent.category;
-            state.events[i].color = eveent.color;
-            state.events[i].details = eveent.details;
-            state.events[i].end = eveent.end;
-            state.events[i].name = eveent.name;
-            state.events[i].start = eveent.start;
-            //state.events[i] = eveent;
-            console.log("Este fue el cambio: "+state.events[i])
-            i = state.events.length
-          }
+    // Function that changes an entire element of the events array
+    setEvent(state, eveent) {
+      var ind = 0;
+      console.log(eveent)
+      for (var i = 0; i < state.events.length; i++) {
+        if (state.events[i].id == eveent.id) {
+          state.events[i].category = eveent.category;
+          state.events[i].color = eveent.color;
+          state.events[i].details = eveent.details;
+          state.events[i].end = eveent.end;
+          state.events[i].name = eveent.name;
+          state.events[i].start = eveent.start;
+          //state.events[i] = eveent;
+          console.log("Este fue el cambio: " + state.events[i])
+          i = state.events.length
         }
+      }
     },
-    comunicar(){
-      
-    }
   },
   actions: {
   },

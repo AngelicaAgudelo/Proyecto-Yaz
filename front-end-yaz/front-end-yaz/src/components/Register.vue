@@ -1,19 +1,19 @@
 <template>
-  <div>
-    <!-------- Div para centrar el v-card ----------->
-    <div class="centro">
-      <!-------- Div del V-card ----------->
-      <v-card width="900px" height="860px" shaped>
-        <div class="central">
-          <v-col cols="5">
-            <!-------- Div del String "Sign up" ----------->
-            <div class="signup">
-              <h2>Sign up</h2>
+  <div class="divMainRegister">
+    <!-------- Div to center the v-card ----------->
+    <div class="divCenter">
+      <!-------- V-card ----------->
+      <v-card width="600px" height="760px" shaped>
+        <div class="divCentral">
+          <v-col cols="10">
+            <!-------- Image Yaz ----------->
+            <div class="imageyaz">
+              <v-img :src="require('@/assets/yaz.png')"></v-img>
             </div>
-            <div class="datos">
-              <!-------- Componente V-form para validar las entradas del usuario ----------->
+            <div class="divInformation">
+              <!-------- V-form component to validate user input ----------->
               <v-form ref="form" v-model="valid" lazy-validation>
-                <!-------- Entrada de la identificacion ----------->
+                <!-------- ID input ----------->
                 <v-text-field
                   v-model="id"
                   :counter="9"
@@ -22,7 +22,7 @@
                   required
                   outlined
                 ></v-text-field>
-                <!-------- Entrada del Nombre ----------->
+                <!-------- Name input ----------->
                 <v-text-field
                   v-model="name"
                   :counter="12"
@@ -31,7 +31,7 @@
                   required
                   outlined
                 ></v-text-field>
-                <!-------- Entrada de la contraseña ----------->
+                <!-------- Password input ----------->
                 <v-text-field
                   v-model="password"
                   :counter="15"
@@ -41,7 +41,7 @@
                   required
                   outlined
                 ></v-text-field>
-                <!-------- Entrada del tipo de usuario ----------->
+                <!-------- type user input ----------->
                 <v-select
                   v-model="select"
                   :items="items"
@@ -50,20 +50,27 @@
                   required
                   outlined
                 ></v-select>
-                <!-------- Entrada de la imagen ----------->
+                <!-------- Image input ----------->
                 <v-file-input v-model="photo" accept="image/*" label="File input"></v-file-input>
-                <!-------- Boton para crear usuario ----------->
-                <router-link to="/" tag="span">
-                  <v-btn
-                    class="ma-2"
-                    :disabled="!valid"
-                    tile
-                    outlined
-                    :elevation="3"
-                    color="black"
-                    @click="validate"
-                  >Crear Usuario</v-btn>
-                </router-link>
+                <!-------- Button to create user ----------->
+                <v-row>
+                  <router-link to="/" tag="span">
+                    <v-btn
+                      class="ma-2"
+                      :disabled="!valid"
+                      tile
+                      outlined
+                      :elevation="3"
+                      color="black"
+                      @click="validate"
+                    >Crear Usuario</v-btn>
+                  </router-link>
+                  <v-spacer></v-spacer>
+                  <!-------- Button to log in ----------->
+                  <router-link to="/" tag="span">
+                    <v-btn class="ma-2" tile :elevation="3">¿ya tienes cuenta?</v-btn>
+                  </router-link>
+                </v-row>
               </v-form>
             </div>
           </v-col>
@@ -74,31 +81,31 @@
 </template>
 
 <script>
-// Import del objeto que me permite traer variables del Store
+// Import from object that allows to fetch variables from the Store
 import { mapState } from "vuex";
-// Import del objeto que me permite manipular funciones del Store
+// Import of the object that allows manipulating Store functions
 import { mapMutations } from "vuex";
 
 export default {
   data() {
     return {
-      // Variable para validar que todos los datos del registro esten correctos
+      // Variable to validate that all registry data is correct
       valid: true,
-      // validaciones del campo Nombre para garantizar su integridad
+      // Name field validations to ensure its integrity
       nameRules: [
         (v) => !!v || "Se requiere un nombre",
         (v) =>
           (v && v.length <= 12) ||
           "El nombre no puede pasar de los 12 caracteres",
       ],
-      // validaciones del campo Contraseña para garantizar su integridad
+      // Password field validations to ensure its integrity
       passwordRules: [
         (v) => !!v || "Se requiere un nombre",
         (v) =>
           (v && v.length <= 15) ||
           "La contraseña no puede pasar de los 15 digitos",
       ],
-      // validaciones del campo Identificacion para garantizar su integridad
+      // Validations of the Identification field to guarantee its integrity
       idRules: [
         (v) => !!v || "Se requiere una identificacion",
         (v) => !isNaN(parseFloat(v)) || "Solo se permite numeros",
@@ -106,72 +113,67 @@ export default {
           (v >= 0 && v <= 999999999) ||
           "La identificacion es maximo de 9 Digitos",
       ],
-      // Datos del combobox para elegir el tipo de usuario
+      // Combobox data to choose the type of user
       items: ["Usuario", "Trabajador"],
-      // Variable donde se guarda la id
+      // ID
       id: "",
-      // Variable donde se guarda el nombre
+      // Name
       name: "",
-      // Variable donde se guarda la contraseña
+      // Password
       password: "",
-      // validacion del formato punto del input contraseña
+      // validation of the password input point format
       show1: false,
-      // Variable donde se guarda el tipo de usuario 
+      // Variable where the user type is saved
       select: null,
-      // Variable donde se guarda la direccion de la foto
+      // Variable where the address of the photo is saved
       photo: null,
     };
   },
   methods: {
-    // Declaracion de los metodos de la Store
-    ...mapMutations([
-      "addUser",
-      "activeUser",
-      "setEsconderMenu",
-      "setActiveUser",
-    ]),
-    // Funcion para validar los datos de los input, crear el usuario y volver a la ruta anterior
+    // Statement of Store methods
+    ...mapMutations(["addUser", "activeUser", "setHideMenu", "setActiveUser"]),
+    // Function to validate the input data, create the user and return to the previous route
     validate() {
-      var tipo = 0;
-      var foto = null;
+      var type = 0;
+      var photo = null;
       if (this.$refs.form.validate()) {
         if (this.select === "Trabajador") {
-          tipo = 1;
+          type = 1;
         } else {
-          tipo = 2;
+          type = 2;
         }
         if (this.photo == null) {
-          foto = "null.png";
+          photo = "null.png";
         } else {
-          foto = this.photo.name;
+          photo = this.photo.name;
         }
         var user = {
           id_user: this.id,
           user_name: this.name,
-          user_type: tipo,
-          user_photo: foto,
+          user_type: type,
+          user_photo: photo,
           user_password: this.password,
         };
         this.addUser(user);
-        this.setEsconderMenu(true);
+        this.setHideMenu(true);
         this.setActiveUser(user);
       }
     },
   },
   computed: {
-    // Declaracion de las variables de la Store
+    // Declaration of Store variables
     ...mapState([]),
   },
 };
 </script>
 <style scoped>
-.centro {
+.divCenter {
   height: 890px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.central {
+.divCentral {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -181,7 +183,22 @@ export default {
   margin-left: 94px;
   font-size: 33px;
 }
-.datos {
+.divInformation {
   margin-top: 90px;
+}
+.divMainRegister {
+  background-image: url("~@/assets/yazBlue.png");
+  background-size: auto;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  background-color: #464646;
+}
+.imageyaz {
+  height: 30px;
+  width: 400px;
+  margin: 0px auto;
+  margin-bottom: 200px;
 }
 </style>

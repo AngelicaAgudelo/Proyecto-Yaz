@@ -1,11 +1,15 @@
 <template>
   <div>
     <v-dialog v-model="activeEvent" persistent max-width="500">
+      <!-------- V-card ----------->
       <v-card>
         <v-container>
           <v-form @submit.prevent="addEvent">
+            <!-------- Name input ----------->
             <v-text-field v-model="name" type="text" label="Nombre evento (required)"></v-text-field>
+            <!-------- details input ----------->
             <v-text-field v-model="details" type="text" label="Detalles"></v-text-field>
+            <!-------- Time input ----------->
             <v-text-field
               v-model="timeEnd"
               type="time"
@@ -13,8 +17,15 @@
               value="12:30:00"
               suffix="PST"
             ></v-text-field>
-            <v-text-field v-model="color" type="color" label="color (click to open color menu)"></v-text-field>
+            <!-------- Color input ----------->
+            <v-text-field
+              v-model="color"
+              type="color"
+              label="color (click to open color menu)"
+              height="45"
+            ></v-text-field>
             <v-row>
+              <!-------- Edit event button ----------->
               <v-btn
                 class="ma-2"
                 tile
@@ -24,6 +35,7 @@
                 @click="addEventComponent"
               >Editar Evento</v-btn>
               <v-spacer></v-spacer>
+              <!-------- Button to cancel ----------->
               <v-btn
                 class="ma-2"
                 tile
@@ -40,48 +52,54 @@
   </div>
 </template>
 <script>
-// Import del objeto que me permite traer variables del Store
+// Import of the object that allows to fetch variables from the Store
 import { mapState } from "vuex";
-// Import del objeto que me permite manipular funciones del Store
+// Statement of Store methods
 import { mapMutations } from "vuex";
 
 export default {
   data() {
     return {
+      // Time
       timeEnd: "13:00",
+      // Name
       name: "",
+      // Details
       details: "",
+      // Time start
       start: "",
+      // Color
       color: "#2ed33c",
-      date:""
+      // Date
+      date: "",
     };
   },
+  // Connection with parent component
   props: ["edEvent"],
-  created() {
-  },
+  created() {},
   methods: {
     ...mapMutations(["setActiveEvent", "setEvent"]),
+    // Function to edit the event
     addEventComponent() {
-    
-      var event={
-          category: this.edEvent.category,
-          color: this.color,
-          details: this.details,
-          end: this.date+" "+this.timeEnd,
-          id: this.edEvent.id,
-          name: this.name,
-          start: this.edEvent.start
-        }
-        this.setEvent(event)
-        this.setActiveEvent(false)
+      var event = {
+        category: this.edEvent.category,
+        color: this.color,
+        details: this.details,
+        end: this.date + " " + this.timeEnd,
+        id: this.edEvent.id,
+        name: this.name,
+        start: this.edEvent.start,
+      };
+      this.setEvent(event);
+      this.setActiveEvent(false);
     },
-    mostrar() {
-        this.name = this.edEvent.name;
-        this.details = this.edEvent.details;
-        this.timeEnd = this.edEvent.end.split(" ")[1]
-        console.log(this.timeEnd)
-        this.date = this.edEvent.end.split(" ")[0]
-        
+    // Function to show component
+    show() {
+      this.name = this.edEvent.name;
+      this.details = this.edEvent.details;
+      this.timeEnd = this.edEvent.end.split(" ")[1];
+      console.log(this.timeEnd);
+      this.date = this.edEvent.end.split(" ")[0];
     },
   },
   computed: {

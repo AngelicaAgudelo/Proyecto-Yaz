@@ -1,13 +1,7 @@
  <template>
   <v-app>
-    <!-------- Inicio del componente superior (Navbar) ----------->
-    <v-app-bar
-      v-show="esconderMenu"
-      :elevation="5"
-      fade-img-on-scroll
-      height="75px"
-      max-height="75px"
-    >
+    <!-------- Navbar ----------->
+    <v-app-bar v-show="hideMenu" :elevation="5" fade-img-on-scroll height="75px" max-height="75px">
       <v-layout>
         <v-btn
           class="iconMenu"
@@ -26,80 +20,94 @@
         </div>
       </v-layout>
     </v-app-bar>
-    <!-- Objeto que muestra la ruta seleccionada -->
+    <!-- Object showing the selected path -->
     <router-view />
-    <!-------- Final del componente superior (Inicio sesion) ----------->
-    <!-------- Inicio del componente del Menu (Menu desplegable lateral) ----------->
+    <!-------- Side drop-down menu ----------->
     <v-navigation-drawer v-model="menu" absolute temporary color="#f5f5f5">
       <v-flex cols="1">
         <v-layout column align-center>
+          <div class="divChangeUser">
+            <router-link to="/" tag="span">
+              <v-btn
+                class="ma-2"
+                tile
+                min-width="258"
+                min-height="50"
+                :elevation="3"
+                @click="setHideMenu(false)"
+              >
+                <v-icon center x-large>{{changeUser}}</v-icon>Cambiar de sesion
+              </v-btn>
+            </router-link>
+          </div>
           <v-avatar id="icon_worker" size="110px">
             <img :src="require('@/assets/' + activeUser.user_photo)" alt="John" />
           </v-avatar>
           <div id="name_worker">
             <h2>{{activeUser.user_name}}</h2>
           </div>
-          <div class="shop">
+          <div class="divShop">
             <router-link to="/shop" tag="span">
-              <v-btn class="ma-2" tile outlined color="black" :elevation="7">
+              <v-btn
+                class="ma-2"
+                tile
+                outlined
+                color="black"
+                :elevation="7"
+                min-width="258"
+                min-height="80"
+              >
                 <v-icon center x-large>{{storeButton}}</v-icon>Tienda
               </v-btn>
             </router-link>
           </div>
-          <div class="calendar">
+          <div class="divCalendar">
             <router-link to="/calendar" tag="span">
-              <v-btn class="ma-2" tile outlined color="black" :elevation="7">
+              <v-btn
+                class="ma-2"
+                tile
+                outlined
+                color="black"
+                :elevation="7"
+                min-width="258"
+                min-height="80"
+              >
                 <v-icon center x-large>{{calendarButton}}</v-icon>Calendario
               </v-btn>
             </router-link>
           </div>
           <v-spacer></v-spacer>
-          <div id="inicio">
+          <div class="divRegister">
             <router-link to="/register" tag="span">
               <v-btn
                 class="ma-2"
                 tile
                 outlined
                 color="black"
-                min-width="50px"
+                min-width="258"
+                min-height="80"
                 :elevation="7"
-                @click="setEsconderMenu(false)"
+                @click="setHideMenu(false)"
               >
                 <v-icon center x-large>{{newUserIcon}}</v-icon>Crear cuenta
-              </v-btn>
-            </router-link>
-          </div>
-          <v-spacer></v-spacer>
-          <div class="changeUser">
-            <router-link to="/" tag="span">
-              <v-btn
-                class="ma-2"
-                tile
-                outlined
-                color="black"
-                :elevation="3"
-                @click="setEsconderMenu(false)"
-              >
-                <v-icon center x-large>{{changeUser}}</v-icon>Cambiar de sesion
               </v-btn>
             </router-link>
           </div>
         </v-layout>
       </v-flex>
     </v-navigation-drawer>
-    <!-------- Final del componente del Menu ----------->
   </v-app>
 </template>
   <script>
-// Import del icono de calendario del menu
+// Import calendar Icon
 import { mdiCalendarMonth } from "@mdi/js";
-// Import del objeto que me permite traer variables del Store
+// Import of the object that allows to fetch variables from the Store
 import { mapState } from "vuex";
-// Import del objeto que me permite manipular funciones del Store
+// Statement of Store methods
 import { mapMutations } from "vuex";
-// Import de icono de la tienda
+// Import store Icono
 import { mdiStore } from "@mdi/js";
-// Import de icono de cambio de sesion
+// Import change session icon
 import { mdiAccount } from "@mdi/js";
 import { mdiAccountPlus } from "@mdi/js";
 import { mdiMenu } from "@mdi/js";
@@ -107,9 +115,9 @@ import { mdiMenu } from "@mdi/js";
 export default {
   data() {
     return {
-      // Variable que permite manejar el open and close del menu
+      // Variable that allows handling the open and close of the menu
       menu: null,
-      // Iconos del menu
+      // Menu icons
       calendarButton: mdiCalendarMonth,
       storeButton: mdiStore,
       changeUser: mdiAccount,
@@ -118,24 +126,17 @@ export default {
     };
   },
   methods: {
-    // Declaracion de los metodos de la Store
-    ...mapMutations(["setEsconderMenu"]),
+    ...mapMutations(["setHideMenu"]),
   },
   mounted() {},
   computed: {
-    // Declaracion de las variables de la Store
-    ...mapState(["esconderMenu", "activeUser"]),
+    // Declaration of Store variables
+    ...mapState(["hideMenu", "activeUser"]),
   },
 };
 </script>
 
 <style>
-#changeUser {
-  margin-top: 115px;
-}
-#men {
-  margin: 55px;
-}
 #icon_worker {
   margin-top: 70px;
   margin-bottom: 20px;
@@ -155,5 +156,14 @@ export default {
 .iconMenu {
   align-self: center;
   align-content: center;
+}
+.divShop {
+  margin-top: 60px;
+}
+.divCalendar {
+  margin-top: 60px;
+}
+.divRegister {
+  margin-top: 60px;
 }
 </style>

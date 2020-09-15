@@ -1,12 +1,12 @@
 <template>
   <v-flex>
-    <!-- Zona intermedia entre el navbar y el calendario -->
+    <!-- Middle area between the navbar and the calendar -->
     <v-layout align-center justify-center>
       <v-btn fab text color="grey darken-2" @click="prev">
         <v-icon x-large>{{arrowLeft}}</v-icon>
       </v-btn>
       <v-toolbar-title v-if="$refs.calendar">{{ $refs.calendar.title }}</v-toolbar-title>
-      <div id="cent">
+      <div id="divCenter">
         <v-btn fab text color="grey darken-2" @click="next">
           <v-icon x-large>{{arrowRight}}</v-icon>
         </v-btn>
@@ -20,10 +20,10 @@
       color="black"
       @click="setActiveEvent(true)"
     >Solicitar evento</v-btn>
-    <!-- Llamando al componente Event -->
+    <!-- Calling the changeEvent component -->
     <changeEvent :edEvent="selectedEvent" ref="childComponent" />
     <v-sheet height="890">
-      <!-- Componente del calendario -->
+      <!-- Calendar component -->
       <v-calendar
         ref="calendar"
         v-model="focus"
@@ -42,7 +42,7 @@
         @mouseenter:event="EnterEvent"
       ></v-calendar>
       <div data-app>
-        <!-- Menu al presionar un evento -->
+        <!-- Menu when pressing an event -->
         <v-menu
           v-model="selectedOpen"
           :close-on-content-click="false"
@@ -54,7 +54,7 @@
               <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
               <v-spacer></v-spacer>
               <v-btn
-                @click="borrar"
+                @click="erase"
                 tile
                 outlined
                 small
@@ -83,76 +83,63 @@
             </v-layout>
           </v-card>
         </v-menu>
-        <v-dialog v-model="open" width="300px">
-          <v-time-picker v-model="picker" ampm-in-title :min="startTime" max="20:00"></v-time-picker>
-          <v-btn elevation="15" color="#008cff" @click="setEvnt">Poner Hora</v-btn>
-        </v-dialog>
       </div>
     </v-sheet>
   </v-flex>
 </template>
 <script>
-// Import del objeto que me permite traer variables del Store
+// Import of the object that allows to fetch variables from the Store
 import { mapState } from "vuex";
-// Import del componente de crear evento
+// Import Create event component
 import changeEvent from "./ChangeEvent";
-// Import del objeto que me permite manipular funciones del Store
+// Statement of Store methods
 import { mapMutations } from "vuex";
-// Import de iconos de moverse entre los dias
+// Import icons to move between days
 import { mdiChevronRight, mdiDogSide } from "@mdi/js";
 import { mdiChevronLeft } from "@mdi/js";
 
 export default {
   components: {
-    // Componente para cambiar el evento
+    // ChangeEvent component
     changeEvent,
   },
   data: () => ({
-    // Variable puntero del componente calendario
+    // Pointer variable of the day of the calendar component
     focus: "",
-    // Variable que almacena cada categoria (Trabajador) de la pagina
-    copyCategories: [],
-    // Variable que almacena el puntero que retorna el evento click:event
+    // Variable that stores the pointer returned by the click:event event
     selectedEvent: {},
-    // Variable que almacena el puntero que retorna el evento click:event
+    // Variable that stores the pointer that the event returns click:event
     selectedElement: null,
-    // Variable que maneja el menu de los eventos
+    // Variable that handles the events menu
     selectedOpen: null,
-    // iconos de las flechas
+    // Arrows icons
     arrowRight: mdiChevronRight,
     arrowLeft: mdiChevronLeft,
-    // Variable para validar que tipo de usuario accede al calendario
+    // Variable to validate what type of user accesses the calendar
     isClient: false,
-    // Variable que almacena el puntero que retorna el event mouseenter:time-category
+    // Variable that stores the pointer returned by the event mouseenter:time-category
     targetCategory: null,
-    // Variable que valida si el mouse esta adentro de un evento
+    // Variable that validates if the mouse is inside an event
     enter: null,
-    // Variable que valida si el mouse esta fuera de un evento
+    // Variable that validates if the mouse is outside an event
     close: null,
-    // Variable que maneja el menu de tiempo
-    open: null,
-    // Variable que almacena el tiempo que retorna el componente picker
-    picker: null,
-    // variable que almacena la ultima hora clickeada
+    // variable that stores the last time clicked
     startTime: null,
-    // variable que almacena la ultima fecha clickeada
+    // variable that stores the last clicked date
     lastDate: null,
-    // Variable que almacena el ultimo evento creado
+    // Variable that stores the last event created
     lastEvent: null,
-    newEvent: null,
   }),
   mounted() {
-    // Metodo que crea las categorias a partir de los usuario
+    // Method that creates the categories from the users
     this.mountCategory();
-    // Metodo que valida que tipo de usuario accede al calendario
+    // Method that validates what type of user accesses the calendar ( TEMPORARY )
     this.valideTypeUser();
   },
   computed: {
-    // Objeto que trate los datos del store
     ...mapState(["events", "activeEvent", "categori", "activeUser"]),
   },
   methods: {
-    // Objeto que trae los metodos del store
     ...mapMutations([
       "setActiveEvent",
       "mountCategory",
@@ -160,44 +147,33 @@ export default {
       "setEvent",
       "eraseEvent",
     ]),
-    // Metodo que retorna el color del evento seleccionado
+    // Function that returns the color of the selected event
     getEventColor(event) {
       return event.color;
     },
+    // Function that shows the ChangeEvent component
     editEvent() {
-      this.$refs.childComponent.mostrar();
+      this.$refs.childComponent.show();
       this.setActiveEvent(true);
     },
-    // Metodo que cambia el dia del calendario
+    // Function that changes the calendar day
     setToday() {
       this.focus = "";
     },
-    // Metodo que guarda la categoria que retorna el evento mouseenter:time-category
+    // Function that saves the category that the mouseenter event returns: time-category
     intervalCategory(nativeEvent, event) {
       this.targetCategory = nativeEvent.category;
     },
-    // Metodo que llama el setEvent del store para cambiar un metodo
-    setEvnt() {
-      try {
-        this.lastEvent.end = this.lastDate + " " + this.picker;
-        this.setEvent(this.lastEvent);
-        this.startTime = null;
-        this.lastEvent = null;
-        this.open = false;
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    // Metodo pra crear evento
+    // Function to create event
     createEvent(nativeEvent, event) {
       if (!this.enter) {
-        // Temporal
+        // ( TEMPORARY )
         this.lastDate = nativeEvent.date;
         this.startTime = nativeEvent.time;
         // ----------
         var end = this.calculateHour(nativeEvent.time);
         var mayor = 0;
-        // Temporal
+        // ( TEMPORARY )
         for (var i = 0; i < this.events.length; i++) {
           if (this.events[i].id >= mayor) {
             mayor = this.events[i].id;
@@ -216,11 +192,9 @@ export default {
         };
         this.lastEvent = evntEvent;
         this.addEvent(evntEvent);
-        //this.open = true;
-        //this.setActiveEvent(true);
       }
     },
-    // Metodo para calcular 1 hora despues de la hora ingresada
+    // Function to calculate 1 hour after the entered time
     calculateHour(hour) {
       var result = "";
       var val = 0;
@@ -244,15 +218,15 @@ export default {
       }
       return result;
     },
-    // Metodo que cambia el bool de enter si el mouse sale de un evento
+    // Function that changes the enter bool if the mouse exits an event
     leaveEvent() {
       this.enter = false;
     },
-    // Metodo que cambia el bool de enter si el mouse entra a un evento
+    // Function that changes the bool of enter if the mouse enters an event
     EnterEvent() {
       this.enter = true;
     },
-    // Metodo que valida que tipo de usuario accede al calendario
+    // Function that validates what type of user accesses the calendar ( TEMPORARY )
     valideTypeUser() {
       if (this.activeUser.user_type == 2) {
         this.isClient = true;
@@ -260,15 +234,15 @@ export default {
         this.isCliente = false;
       }
     },
-    // Metodo que se mueve para la izquierda en el calendario
+    // Function that moves the calendar to the left
     prev() {
       this.$refs.calendar.prev();
     },
-    // Metodo que se mueve para la izquierda en el calendario
+    // Function that moves the calendar to the right
     next() {
       this.$refs.calendar.next();
     },
-    // Metodo que guarda en variables los punteros que retorna el evento showEvent
+    // Function that saves the pointers returned by the showEvent event in variables
     showEvent({ nativeEvent, event }) {
       const open = () => {
         this.selectedEvent = event;
@@ -283,11 +257,9 @@ export default {
       }
       nativeEvent.stopPropagation();
     },
-    showEvente(nativeEvent, event){
-      console.log(nativeEvent)
-    },
-    // Metodo para borrar el evento
-    borrar() {
+    showEvente(nativeEvent, event) {},
+    // Function to delete the event
+    erase() {
       var busqueda = this.selectedEvent.id;
       var num = 0;
       for (var i = 0; i < this.events.length; i++) {
@@ -297,16 +269,14 @@ export default {
         }
       }
       if (num == 0) {
-
       }
       this.selectedOpen = false;
     },
-
   },
 };
 </script>
 <style scoped>
-#cent {
+#divCenter {
   margin-right: -37px;
 }
 </style>
