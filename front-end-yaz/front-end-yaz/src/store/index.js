@@ -246,7 +246,6 @@ export default new Vuex.Store({
     // Function that changes an entire element of the events array
     setEvent(state, eveent) {
       var ind = 0;
-      console.log(eveent)
       for (var i = 0; i < state.events.length; i++) {
         if (state.events[i].id == eveent.id) {
           state.events[i].category = eveent.category;
@@ -255,8 +254,6 @@ export default new Vuex.Store({
           state.events[i].end = eveent.end;
           state.events[i].name = eveent.name;
           state.events[i].start = eveent.start;
-          //state.events[i] = eveent;
-          console.log("Este fue el cambio: " + state.events[i])
           i = state.events.length
         }
       }

@@ -98,7 +98,6 @@ export default {
       this.name = this.edEvent.name;
       this.details = this.edEvent.details;
       this.timeEnd = this.edEvent.end.split(" ")[1];
-      console.log(this.timeEnd);
       this.date = this.edEvent.end.split(" ")[0];
     },
   },

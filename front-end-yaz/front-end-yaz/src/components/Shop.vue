@@ -136,7 +136,6 @@ export default {
       }
       this.quantifyElements();
       this.totalTrolley();
-      console.log(this.totalElements);
     },
     // Function to count the total money of each * product (each product in the cart)
     totalTrolley() {
@@ -174,11 +173,9 @@ export default {
       var total = 0;
       for (var i = 0; i < this.shoopingCar.length; i++) {
         total += this.shoopingCar[i].quantity;
-        console.log("aq");
       }
       this.totalElements = total;
       this.totalTrolley();
-      console.log(this.totalElements);
     },
   },
   computed: {
