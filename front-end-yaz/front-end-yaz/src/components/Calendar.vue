@@ -30,7 +30,7 @@
         type="category"
         first-interval="6"
         category-show-all
-        :categories="categori"
+        :categories="category"
         :events="events"
         category-hide-dynamic
         :event-color="getEventColor"
@@ -137,7 +137,7 @@ export default {
     this.valideTypeUser();
   },
   computed: {
-    ...mapState(["events", "activeEvent", "categori", "activeUser"]),
+    ...mapState(["events", "activeEvent", "category", "activeUser"]),
   },
   methods: {
     ...mapMutations([

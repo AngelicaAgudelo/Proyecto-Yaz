@@ -180,7 +180,7 @@ export default new Vuex.Store({
     // boolean that handles the ChangeEvent component
     activeEvent: false,
     // event categories (workers)
-    categori: [],
+    category: [],
   },
   mutations: {
     // Function to change the state of the variable that handles the menu
@@ -203,7 +203,7 @@ export default new Vuex.Store({
           copy.push(state.users[i].user_name)
         }
       }
-      state.categori = copy;
+      state.category = copy;
     },
     // Function that deletes an event according to its index
     eraseEvent(state, num) {
