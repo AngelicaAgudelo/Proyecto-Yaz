@@ -5,6 +5,7 @@ import bodyParser from 'body-parser'
 import userRoutes from './server/routes/UserRoutes';
 import serviceRoutes from './server/routes/ServiceRoutes';
 import payment_serviceRoutes from './server/routes/Payment_serviceRoutes';
+import payment_itemRoutes from './server/routes/Payment_itemsRoutes';
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.get('/', (req, res) => {
 app.use('/users', userRoutes);
 app.use('/service', serviceRoutes);
 app.use('/payment_service', payment_serviceRoutes);
+app.use('/payment_item', payment_itemRoutes);
 
 app.get('*', (req, res) => res.status(404).send({
   message: 'URL NOT FOUND',
