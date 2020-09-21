@@ -3,7 +3,8 @@ import cors from 'cors';
 import express from 'express';
 import bodyParser from 'body-parser'
 import userRoutes from './server/routes/UserRoutes';
- 
+import serviceRoutes from './server/routes/ServiceRoutes';
+
 const app = express();
 
 app.use(bodyParser.json());
@@ -16,6 +17,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/users', userRoutes);
+app.use('/service', serviceRoutes);
 
 app.get('*', (req, res) => res.status(404).send({
   message: 'URL NOT FOUND',
