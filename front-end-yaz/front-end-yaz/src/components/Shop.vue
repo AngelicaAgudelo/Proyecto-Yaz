@@ -1,8 +1,8 @@
 <template>
   <v-app id="app">
     <!-------- Starting the shopping cart component ----------->
-    <v-navigation-drawer v-model="drawer" absolute temporary right>
-      <v-card min-height="50px">
+    <v-navigation-drawer v-model="drawer" app temporary right width="450">
+      <v-card max-height="50px">
         <div id="total">
           <router-link :to=" '/'+path" tag="span">
             <v-btn
@@ -21,28 +21,36 @@
           Total: ${{totalCar}}
         </div>
       </v-card>
-      <v-col v-for="car in shoopingCar" :key="car.item.id_item">
-        <v-card max-height="200px">
-          <v-list-item-title class="headline">{{car.item.item_name}}</v-list-item-title>
-          <v-list-item-subtitle>$ {{car.item.item_price}}</v-list-item-subtitle>
-          <v-img
-            :src="car.item.src"
-            class="black--text align-end"
-            gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-            height="100px"
-          ></v-img>
-          <v-card-actions>
-            <div id="quantity">cantidad: {{car.quantity}}</div>
-            <v-spacer></v-spacer>
-            <v-btn icon @click="removeAmount(car)">
-              <v-icon center>{{ remove }}</v-icon>
-            </v-btn>
-            <v-btn icon @click="addAmount(car)">
-              <v-icon center>{{ add }}</v-icon>
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-col>
+      <div class="shoppingCarDiv">
+        <v-row row grap>
+          <v-flex lg6 v-for="car in shoopingCar" :key="car.item.id_item">
+            <template>
+              <div class="itemDiv">
+                <v-card max-height="200px" max-width="270">
+                  <v-list-item-title class="headline">{{car.item.item_name}}</v-list-item-title>
+                  <v-list-item-subtitle>$ {{car.item.item_price}}</v-list-item-subtitle>
+                  <v-img
+                    :src="car.item.src"
+                    class="black--text align-end"
+                    gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+                    height="100px"
+                  ></v-img>
+                  <v-card-actions>
+                    <div id="quantity">cantidad: {{car.quantity}}</div>
+                    <v-spacer></v-spacer>
+                    <v-btn icon @click="removeAmount(car)">
+                      <v-icon center>{{ remove }}</v-icon>
+                    </v-btn>
+                    <v-btn icon @click="addAmount(car)">
+                      <v-icon center>{{ add }}</v-icon>
+                    </v-btn>
+                  </v-card-actions>
+                </v-card>
+              </div>
+            </template>
+          </v-flex>
+        </v-row>
+      </div>
     </v-navigation-drawer>
     <!-------- Start of purchase items ----------->
     <v-container class="my-4">
@@ -130,11 +138,13 @@ export default {
       path: "shop",
       // Variable that represent boolean state of pay button
       payButton: true,
-      alert: false,
     };
   },
+  mounted() {
+    this.mountedFunction();
+  },
   methods: {
-    ...mapMutations(["setHideMenu"]),
+    ...mapMutations(["setHideMenu", "setShoppingCar"]),
     // Function to transfer the item to the shopping cart
     buy(vari) {
       var val = false;
@@ -155,6 +165,7 @@ export default {
       this.quantifyElements();
       this.totalTrolley();
       this.payButton = false;
+      this.setShoppingCar(this.shoopingCar);
     },
     // Function to count the total money of each * product (each product in the cart)
     totalTrolley() {
@@ -179,6 +190,7 @@ export default {
       }
       this.quantifyElements();
       this.totalTrolley();
+      this.setShoppingCar(this.shoopingCar);
     },
     // Function to add a quantity of a product from the shopping cart
     addAmount(car) {
@@ -189,6 +201,7 @@ export default {
       this.shoopingCar[index].total += car.item.item_price;
       this.quantifyElements();
       this.totalTrolley();
+      this.setShoppingCar(this.shoopingCar);
     },
     // Function to count the number of items in the cart
     quantifyElements() {
@@ -206,10 +219,19 @@ export default {
         this.path = "payment";
       }
     },
+    // Function that initializes with the component
+    mountedFunction() {
+      this.shoopingCar = this.shoppingCar;
+      this.quantifyElements();
+      this.totalTrolley();
+      if (this.totalElements > 0) {
+        this.payButton = false;
+      }
+    },
   },
   computed: {
     // Declaration of Store variables
-    ...mapState(["items"]),
+    ...mapState(["items", "shoppingCar"]),
   },
 };
 </script>>
@@ -221,5 +243,11 @@ export default {
 }
 #price {
   margin: 10px;
+}
+.itemDiv {
+  margin: 9px;
+}
+.shoppingCarDiv {
+  margin-left: 10px;
 }
 </style>

@@ -181,11 +181,16 @@ export default new Vuex.Store({
     activeEvent: false,
     // event categories (workers)
     category: [],
+    // Shopping car of shop
+    shoppingCar: []
   },
   mutations: {
     // Function to change the state of the variable that handles the menu
     setHideMenu(state, bol) {
       state.hideMenu = bol;
+    },
+    setShoppingCar(state, car) {
+      state.shoppingCar = car;
     },
     // Function that handles the ChangeEvent component
     setActiveEvent(state, bol) {
