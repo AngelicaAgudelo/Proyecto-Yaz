@@ -17,8 +17,8 @@ app.get('/', (req, res) => {
 
 app.use('/users', userRoutes);
 
-app.get('*', (req, res) => res.status(404).send({
-  message: 'URL NOT FOUND',
+app.all('*', (req, res) => res.status(404).send({
+  message: 'URL NOT FOUND OR INCOMPLETE DATA',
 }));
 
 app.listen(process.env.PORT, () =>
