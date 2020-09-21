@@ -11,7 +11,6 @@ class ServiceController {
     }
 
     static async addService(req, res) {
-        const newService = req.body;
         util.setSuccess(200, `New service created!`);
         return util.send(res);
     }

@@ -11,14 +11,8 @@ class UserController {
     }
 
     static async addUser(req, res) {
-        const newUser = req.body;
-        if (!req.body.userType) {
-            util.setError(400, 'Please provide complete data');
-            return util.send(res);
-        } else {
-            util.setSuccess(200, `New user created!`);
-            return util.send(res);
-        }
+        util.setSuccess(200, `New user created!`);
+        return util.send(res);
     }
 
     static async updateUserById(req, res) {
