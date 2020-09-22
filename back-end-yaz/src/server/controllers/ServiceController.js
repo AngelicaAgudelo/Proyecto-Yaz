@@ -1,44 +1,44 @@
-//import UserService from '../services/UserService';
+//import ServiceService from '../services/ServiceService';
 import Util from '../utils/Utils';
 
 const util = new Util();
 
-class UserController {
+class ServiceController {
 
-    static async getAllUsers(req, res) {
-        util.setSuccess(200, `All users returned!`);
+    static async getAllServices(req, res) {
+        util.setSuccess(200, `All services returned!`);
         return util.send(res);
     }
 
-    static async addUser(req, res) {
-        util.setSuccess(200, `New user created!`);
+    static async addService(req, res) {
+        util.setSuccess(200, `New service created!`);
         return util.send(res);
     }
 
-    static async updateUserById(req, res) {
+    static async updateServiceById(req, res) {
         const { id } = req.params;
         if (!Number(id)) {
             util.setError(400, 'Please input a valid numeric value');
             return util.send(res);
         } else {
-            util.setSuccess(200, `User ${id} updated!`);
+            util.setSuccess(200, `Service ${id} updated!`);
             return util.send(res);
         }
     }
 
-    static async getUserById(req, res) {
+    static async getServiceById(req, res) {
         const { id } = req.params;
 
         if (!Number(id)) {
             util.setError(400, 'Please input a valid numeric value');
             return util.send(res);
         } else {
-            util.setSuccess(200, `User ${id} returned!`);
+            util.setSuccess(200, `Service ${id} returned!`);
             return util.send(res);
         }
     }
 
-    static async deleteUserById(req, res) {
+    static async deleteServiceById(req, res) {
         const { id } = req.params;
         if (!Number(id)) {
             util.setError(400, 'Please provide a numeric value');
@@ -47,10 +47,10 @@ class UserController {
             util.setError(400, `You do not have permission to do this!`);
             return util.send(res);
         } else {
-            util.setSuccess(200, `User ${req.body.name} deleted user ${id}!`);
+            util.setSuccess(200, `User ${req.body.name} deleted service ${id}!`);
             return util.send(res);
         }
     }
 }
 
-export default UserController;
+export default ServiceController;

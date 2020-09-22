@@ -1,44 +1,44 @@
-//import UserService from '../services/UserService';
+//import Payment_itemsService from '../services/Payment_itemsService';
 import Util from '../utils/Utils';
 
 const util = new Util();
 
-class UserController {
+class Payment_itemsController {
 
-    static async getAllUsers(req, res) {
-        util.setSuccess(200, `All users returned!`);
+    static async getAllPayment_items(req, res) {
+        util.setSuccess(200, `All payment_items returned!`);
         return util.send(res);
     }
 
-    static async addUser(req, res) {
-        util.setSuccess(200, `New user created!`);
+    static async addPayment_items(req, res) {
+        util.setSuccess(200, `New payment_items created!`);
         return util.send(res);
     }
 
-    static async updateUserById(req, res) {
+    static async updatePayment_itemsById(req, res) {
         const { id } = req.params;
         if (!Number(id)) {
             util.setError(400, 'Please input a valid numeric value');
             return util.send(res);
         } else {
-            util.setSuccess(200, `User ${id} updated!`);
+            util.setSuccess(200, `Payment_items ${id} updated!`);
             return util.send(res);
         }
     }
 
-    static async getUserById(req, res) {
+    static async getPayment_itemsById(req, res) {
         const { id } = req.params;
 
         if (!Number(id)) {
             util.setError(400, 'Please input a valid numeric value');
             return util.send(res);
         } else {
-            util.setSuccess(200, `User ${id} returned!`);
+            util.setSuccess(200, `Payment_items ${id} returned!`);
             return util.send(res);
         }
     }
 
-    static async deleteUserById(req, res) {
+    static async deletePayment_itemsById(req, res) {
         const { id } = req.params;
         if (!Number(id)) {
             util.setError(400, 'Please provide a numeric value');
@@ -47,10 +47,10 @@ class UserController {
             util.setError(400, `You do not have permission to do this!`);
             return util.send(res);
         } else {
-            util.setSuccess(200, `User ${req.body.name} deleted user ${id}!`);
+            util.setSuccess(200, `User ${req.body.name} deleted Payment_items ${id}!`);
             return util.send(res);
         }
     }
 }
 
-export default UserController;
+export default Payment_itemsController;

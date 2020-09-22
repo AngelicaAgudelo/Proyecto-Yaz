@@ -1,44 +1,44 @@
-//import UserService from '../services/UserService';
+//import ItemService from '../services/ItemService';
 import Util from '../utils/Utils';
 
 const util = new Util();
 
-class UserController {
+class ItemController {
 
-    static async getAllUsers(req, res) {
-        util.setSuccess(200, `All users returned!`);
+    static async getAllItems(req, res) {
+        util.setSuccess(200, `All items returned!`);
         return util.send(res);
     }
 
-    static async addUser(req, res) {
-        util.setSuccess(200, `New user created!`);
+    static async addItem(req, res) {
+        util.setSuccess(200, `New item created!`);
         return util.send(res);
     }
 
-    static async updateUserById(req, res) {
+    static async updateItemById(req, res) {
         const { id } = req.params;
         if (!Number(id)) {
             util.setError(400, 'Please input a valid numeric value');
             return util.send(res);
         } else {
-            util.setSuccess(200, `User ${id} updated!`);
+            util.setSuccess(200, `Item ${id} updated!`);
             return util.send(res);
         }
     }
 
-    static async getUserById(req, res) {
+    static async getItemById(req, res) {
         const { id } = req.params;
 
         if (!Number(id)) {
             util.setError(400, 'Please input a valid numeric value');
             return util.send(res);
         } else {
-            util.setSuccess(200, `User ${id} returned!`);
+            util.setSuccess(200, `Item ${id} returned!`);
             return util.send(res);
         }
     }
 
-    static async deleteUserById(req, res) {
+    static async deleteItemById(req, res) {
         const { id } = req.params;
         if (!Number(id)) {
             util.setError(400, 'Please provide a numeric value');
@@ -47,10 +47,10 @@ class UserController {
             util.setError(400, `You do not have permission to do this!`);
             return util.send(res);
         } else {
-            util.setSuccess(200, `User ${req.body.name} deleted user ${id}!`);
+            util.setSuccess(200, `User ${req.body.name} deleted Item ${id}!`);
             return util.send(res);
         }
     }
 }
 
-export default UserController;
+export default ItemController;
