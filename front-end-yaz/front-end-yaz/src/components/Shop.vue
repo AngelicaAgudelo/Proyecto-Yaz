@@ -4,10 +4,20 @@
     <v-navigation-drawer v-model="drawer" absolute temporary right>
       <v-card min-height="50px">
         <div id="total">
-          <v-btn class="ma-2" tile outlined :elevation="3" color="black" enabled="false">
-            Pagar
-            <v-icon center>{{PayIcon}}</v-icon>
-          </v-btn>
+          <router-link :to=" '/'+path" tag="span">
+            <v-btn
+              class="ma-2"
+              tile
+              outlined
+              :elevation="3"
+              @click="payItems"
+              color="black"
+              :disabled="payButton"
+            >
+              Pagar
+              <v-icon center>{{PayIcon}}</v-icon>
+            </v-btn>
+          </router-link>
           Total: ${{totalCar}}
         </div>
       </v-card>
@@ -91,6 +101,8 @@ import { mdiMinus } from "@mdi/js";
 import { mdiCashUsdOutline } from "@mdi/js";
 // Import of the object that allows to fetch variables from the Store
 import { mapState } from "vuex";
+// Import of the object that allows to manipulate Store functions
+import { mapMutations } from "vuex";
 
 export default {
   components: {},
@@ -114,9 +126,15 @@ export default {
       totalCar: 0,
       // Variable that represents the boolean of opening and closing menu
       menu: null,
+      // Variable that represent the current path
+      path: "shop",
+      // Variable that represent boolean state of pay button
+      payButton: true,
+      alert: false,
     };
   },
   methods: {
+    ...mapMutations(["setHideMenu"]),
     // Function to transfer the item to the shopping cart
     buy(vari) {
       var val = false;
@@ -136,6 +154,7 @@ export default {
       }
       this.quantifyElements();
       this.totalTrolley();
+      this.payButton = false;
     },
     // Function to count the total money of each * product (each product in the cart)
     totalTrolley() {
@@ -154,6 +173,9 @@ export default {
       this.shoopingCar[index].total -= car.item.item_price;
       if (this.shoopingCar[index].quantity == 0) {
         this.shoopingCar.splice(index, 1);
+      }
+      if (this.shoopingCar.length == 0) {
+        this.payButton = true;
       }
       this.quantifyElements();
       this.totalTrolley();
@@ -176,6 +198,13 @@ export default {
       }
       this.totalElements = total;
       this.totalTrolley();
+    },
+    // Function that redirect to payment Component
+    payItems() {
+      if (this.totalElements > 0) {
+        this.setHideMenu(false);
+        this.path = "payment";
+      }
     },
   },
   computed: {

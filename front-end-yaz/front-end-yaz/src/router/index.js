@@ -3,8 +3,9 @@ import VueRouter from 'vue-router'
 import Calendar from '../components/Calendar'
 import Shop from '../components/Shop'
 import Register from '../components/Register'
-import Login    from '../components/Login'
+import Login from '../components/Login'
 import Menu from '../components/Menu'
+import Payment from '../components/Payment'
 Vue.use(VueRouter)
 
 const routes = [
@@ -32,6 +33,11 @@ const routes = [
     path: '/menu',
     name: 'menu',
     component: Menu
+  },
+  {
+    path: '/payment',
+    name: 'payment',
+    component: Payment
   },
 ]
 
