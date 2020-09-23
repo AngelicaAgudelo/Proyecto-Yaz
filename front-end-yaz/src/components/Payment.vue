@@ -1,49 +1,50 @@
 <template>
-  <!----- Main div     ----->
-  <div class="mainDiv">
-    <div class="centralDiv">
-      <!----- Choice Table    ----->
-      <v-tabs
-        v-model="tab"
-        class="elevation-8"
-        dark
-        :centered="false"
-        :grow="true"
-        :vertical="false"
-        :right="false"
-        :icons-and-text="false"
-      >
-        <v-tabs-slider></v-tabs-slider>
-        <v-tab v-for="i in data" :key="i">{{ i }}</v-tab>
-        <v-tab-item v-for="i in data" :key="i">
-          <!----- QR payment cart ----->
-          <v-card v-if="i == code" height="800px">
-            <v-img src="../assets/QRCode.png" contain height="750"></v-img>
+  <div class="appDiv">
+    <!----- Main div     ----->
+    <div class="mainDiv">
+      <v-card class="centralDiv" shaped min-height="550" elevation="5">
+        <v-card-title id="cardTitle">
+          <span class="title font-weight-light">Resumen de compra</span>
+        </v-card-title>
+        <v-flex>
+          <!----- PurchaseSummary Component ------>
+          <purchaseSummary @clickButton="totalPayment" />
+          <v-card class="d-flex flex-row-reverse" outlined min-height="50">
+            <div class="total">{{totalLabel}} {{total}}</div>
+            <div class="subTotal">{{subTotalLabel}} {{subTotal}}</div>
           </v-card>
-          <!----- cash cart ----->
-          <v-card v-if="i == cash" height="800px">
-            <div class="purchaseSummaryDiv">
-              <v-expansion-panels :popout="true">
-                <v-expansion-panel>
-                  <v-expansion-panel-header
-                    v-ripple="{ center: true }"
-                    class="text-center elevation-2 pa-3 headline"
-                  >Resumen de compra</v-expansion-panel-header>
-                  <v-expansion-panel-content>
-                    <purchaseSummary />
-                  </v-expansion-panel-content>
-                </v-expansion-panel>
-              </v-expansion-panels>
-            </div>
-          </v-card>
-        </v-tab-item>
-      </v-tabs>
-      <router-link to="/shop" tag="span">
-        <v-btn class="ma-2" tile :elevation="3" @click="returnShop">Regresar tienda</v-btn>
-      </router-link>
+          <div class="radioGroupDiv">
+            <v-radio-group v-model="radioGroup">
+              <!----- radioGroup button ------>
+              <v-row justify="space-around">
+                <v-radio :label="data[0]  " @click="qrCodeDialog = true"></v-radio>
+                <v-radio :label="data[1] "></v-radio>
+              </v-row>
+            </v-radio-group>
+          </div>
+        </v-flex>
+        <div class="separateDiv"></div>
+        <v-card-actions>
+          <!----- route /shop button ------>
+          <router-link to="/shop" tag="span">
+            <v-btn class="ma-2" tile :elevation="3" outlined @click="setHideMenu">Regresar tienda</v-btn>
+          </router-link>
+          <v-spacer></v-spacer>
+          <!----- route /menu button ------>
+          <router-link to="/menu" tag="span">
+            <v-btn class="ma-2" tile outlined :elevation="3" @click="paymentItems">Finalizar comprar</v-btn>
+          </router-link>
+        </v-card-actions>
+      </v-card>
+      <v-dialog v-model="qrCodeDialog" max-width="500">
+        <!----- QR code image  ------>
+        <v-card>
+          <v-img src="../assets/QRCode.png" contain height="490"></v-img>
+        </v-card>
+      </v-dialog>
     </div>
   </div>
-</template>
+</template>      
 <script>
 // Import of the object that allows to manipulate Store functions
 import { mapMutations } from "vuex";
@@ -67,13 +68,41 @@ export default {
       tabs: 2,
       // Array that store the label of tabs
       data: ["Codigo QR", "Efectivo"],
+      // Variable of radiogroup v-model
+      radioGroup: 1,
+      // Variable that represent the cost total of everything shopping cart
+      total: 0,
+      // Variable that represent the cost total of everything shopping cart without the iva
+      subTotal: 0,
+      // Variable of the qr code image inside the v-dialog
+      qrCodeDialog: false,
+      // Variable that represent the label "Total"
+      totalLabel: "Total:  ",
+      // Variable that represent the label "subtotal"
+      subTotalLabel: "Subtotal:  ",
     };
   },
+  mounted() {
+    this.totalPayment();
+  },
   methods: {
-    ...mapMutations(["setHideMenu"]),
-    // Function to return to the shop component
-    returnShop() {
+    ...mapMutations(["setHideMenu", "showAlert"]),
+    // Function to calculate the total and subTotal of shopping cart
+    totalPayment() {
+      this.total = 0;
+      this.subTotal = 0;
+      for (var i = 0; i < this.shoppingCar.length; i++) {
+        this.total += this.shoppingCar[i].total;
+      }
+      this.subTotal = Math.floor(this.total - this.total * 0.19);
+      if (this.subTotal < 0) {
+        this.subTotal = 0;
+      }
+    },
+    // Function to finish the buy and return to menu
+    paymentItems() {
       this.setHideMenu(true);
+      this.showAlert();
     },
   },
   computed: {
@@ -89,10 +118,34 @@ export default {
   align-items: center;
 }
 .centralDiv {
-  margin-top: 12px;
-  width: 1200px;
+  margin-top: 133px;
+  width: 1080px;
 }
-.purchaseSummaryDiv {
-  margin-top: 25px;
+.total {
+  margin-top: 13px;
+  margin-right: 120px;
+}
+.subTotal {
+  margin-top: 13px;
+  margin-right: 120px;
+}
+.radioGroupDiv {
+  margin-top: 70px;
+}
+.appDiv {
+  height: 937px;
+  background-image: url("~@/assets/flores.gif");
+  background-size: auto;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  background-color: #464646;
+}
+#cardTitle {
+  margin-bottom: 20px;
+}
+.separateDiv {
+  height: 35px;
 }
 </style>

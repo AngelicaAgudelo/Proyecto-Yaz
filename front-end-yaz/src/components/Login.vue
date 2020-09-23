@@ -159,7 +159,7 @@ export default {
   margin-top: 10px;
 }
 .divMainLogin {
-  background-image: url("~@/assets/yazBlue.png");
+  background-image: url("~@/assets/flores.gif");
   background-size: auto;
   background-position: center center;
   background-repeat: no-repeat;

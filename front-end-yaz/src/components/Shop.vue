@@ -23,10 +23,10 @@
       </v-card>
       <div class="shoppingCarDiv">
         <v-row row grap>
-          <v-flex lg6 v-for="car in shoopingCar" :key="car.item.id_item">
+          <v-flex lg5 v-for="car in shoopingCar" :key="car.item.id_item">
             <template>
               <div class="itemDiv">
-                <v-card max-height="200px" max-width="270">
+                <v-card max-height="200px" max-width="200">
                   <v-list-item-title class="headline">{{car.item.item_name}}</v-list-item-title>
                   <v-list-item-subtitle>$ {{car.item.item_price}}</v-list-item-subtitle>
                   <v-img
