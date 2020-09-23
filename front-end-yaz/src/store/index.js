@@ -177,14 +177,23 @@ export default new Vuex.Store({
     ],
     // boolean that says the user type
     isClient: 0,
-    // boolean that handles the ChangeEvent component
+    // boolean that handless the ChangeEvent component
     activeEvent: false,
     // event categories (workers)
     category: [],
     // Shopping car of shop
-    shoppingCar: []
+    shoppingCar: [],
+    // boolean that handless the payment alert 
+    alert: false
   },
   mutations: {
+    // Function that show the payment alert for 2 second
+    showAlert(state) {
+      state.alert = true;
+      window.setInterval(() => {
+        state.alert = false;
+      }, 2000)
+    },
     // Function to change the state of the variable that handles the menu
     setHideMenu(state, bol) {
       state.hideMenu = bol;
@@ -195,6 +204,17 @@ export default new Vuex.Store({
     // Function that handles the ChangeEvent component
     setActiveEvent(state, bol) {
       state.activeEvent = bol;
+    },
+    // Function that update the shoppingCar
+    updateShoppingCar(state, update) {
+      for (var i = 0; i < state.shoppingCar.length; i++) {
+        if (state.shoppingCar[i].item.id_item == update.id) {
+          state.shoppingCar[i] = update.item;
+        }
+        if (state.shoppingCar[i].quantity == 0) {
+          state.shoppingCar.splice(i, 1)
+        }
+      }
     },
     // Function to add a user
     addUser(state, user) {
