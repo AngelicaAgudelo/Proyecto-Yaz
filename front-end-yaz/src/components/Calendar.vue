@@ -3,12 +3,14 @@
     <!-- Middle area between the navbar and the calendar -->
     <v-layout align-center justify-center>
       <v-btn fab text color="grey darken-2" @click="prev">
-        <v-icon x-large>{{arrowLeft}}</v-icon>
+        <v-icon x-large>{{ arrowLeft }}</v-icon>
       </v-btn>
-      <v-toolbar-title v-if="$refs.calendar">{{ $refs.calendar.title }}</v-toolbar-title>
+      <v-toolbar-title v-if="$refs.calendar">{{
+        $refs.calendar.title
+      }}</v-toolbar-title>
       <div id="divCenter">
         <v-btn fab text color="grey darken-2" @click="next">
-          <v-icon x-large>{{arrowRight}}</v-icon>
+          <v-icon x-large>{{ arrowRight }}</v-icon>
         </v-btn>
       </div>
     </v-layout>
@@ -19,7 +21,8 @@
       outlined
       color="black"
       @click="setActiveEvent(true)"
-    >Solicitar evento</v-btn>
+      >Solicitar evento</v-btn
+    >
     <!-- Calling the changeEvent component -->
     <changeEvent :edEvent="selectedEvent" ref="childComponent" />
     <v-sheet height="890">
@@ -60,7 +63,8 @@
                 small
                 min-height="38px"
                 :elevation="7"
-              >Finalizar evento</v-btn>
+                >Finalizar evento</v-btn
+              >
             </v-toolbar>
             <v-card-text>
               <span v-html="selectedEvent.details"></span>
@@ -74,11 +78,20 @@
                   outlined
                   :elevation="5"
                   @click="selectedOpen = false"
-                >Cancelar</v-btn>
+                  >Cancelar</v-btn
+                >
               </v-card-actions>
               <v-spacer></v-spacer>
               <v-card-actions>
-                <v-btn text color="black" tile outlined :elevation="5" @click="editEvent">Editar</v-btn>
+                <v-btn
+                  text
+                  color="black"
+                  tile
+                  outlined
+                  :elevation="5"
+                  @click="editEvent"
+                  >Editar</v-btn
+                >
               </v-card-actions>
             </v-layout>
           </v-card>
@@ -171,7 +184,11 @@ export default {
         this.lastDate = nativeEvent.date;
         this.startTime = nativeEvent.time;
         // ----------
-        var end = this.calculateHour(nativeEvent.time);
+        var start = this.calculateMinute(nativeEvent.time);
+        if (start.substring(3, 4) == "0") {
+          start = start + "0";
+        }
+        var end = this.calculateHour(start);
         var mayor = 0;
         // ( TEMPORARY )
         for (var i = 0; i < this.events.length; i++) {
@@ -185,7 +202,7 @@ export default {
           id: evntId,
           name: "(Sin nombrar)",
           details: "(Sin informacion)",
-          start: nativeEvent.date + " " + nativeEvent.time,
+          start: nativeEvent.date + " " + start,
           end: nativeEvent.date + " " + end,
           color: "#1F32BB",
           category: this.targetCategory,
@@ -193,6 +210,40 @@ export default {
         this.lastEvent = evntEvent;
         this.addEvent(evntEvent);
       }
+    },
+    calculateMinute(minute) {
+      var result = "";
+      var val = 0;
+      var newMinute = "";
+      if (
+        minute.substring(3, 5) == "00" ||
+        minute.substring(3, 5) == "15" ||
+        minute.substring(3, 5) == "30" ||
+        minute.substring(3, 5) == "45"
+      ) {
+        result = minute;
+      } else {
+        val = parseInt(minute.substring(3, 5));
+        if (val > 0 && val < 15) {
+          result = minute.substring(0, 3) + this.intervalMinute(val, 0, 15);
+        } else if (val > 15 && val < 30) {
+          result = minute.substring(0, 3) + this.intervalMinute(val, 15, 30);
+        } else if (val > 30 && val < 45) {
+          result = minute.substring(0, 3) + this.intervalMinute(val, 30, 45);
+        } else if (val > 45) {
+          result = minute.substring(0, 3) + this.intervalMinute(val, 45, 0);
+        }
+      }
+      return result;
+    },
+    intervalMinute(value, bottom, top) {
+      var result = "";
+      if (value < bottom + 7) {
+        result = bottom;
+      } else {
+        result = top;
+      }
+      return result;
     },
     // Function to calculate 1 hour after the entered time
     calculateHour(hour) {
