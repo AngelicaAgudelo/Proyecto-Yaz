@@ -185,25 +185,25 @@ export default {
         this.startTime = nativeEvent.time;
         // ----------
         var start = this.calculateMinute(nativeEvent.time);
-        if (start.substring(3, 4) == "0") {
+        if (start.substring(3, 5) == "0") {
           start = start + "0";
+        } else {
         }
-        var end = this.calculateHour(start);
-        var mayor = 0;
         // ( TEMPORARY )
+        var higher = 0;
         for (var i = 0; i < this.events.length; i++) {
-          if (this.events[i].id >= mayor) {
-            mayor = this.events[i].id;
+          if (this.events[i].id >= higher) {
+            higher = this.events[i].id;
           }
         }
-        var evntId = mayor + 1;
+        var evntId = higher + 1;
         //  -------
         var evntEvent = {
           id: evntId,
           name: "(Sin nombrar)",
           details: "(Sin informacion)",
           start: nativeEvent.date + " " + start,
-          end: nativeEvent.date + " " + end,
+          end: nativeEvent.date + " " + this.calculateHour(start),
           color: "#1F32BB",
           category: this.targetCategory,
         };
@@ -230,9 +230,17 @@ export default {
           result = minute.substring(0, 3) + this.intervalMinute(val, 15, 30);
         } else if (val > 30 && val < 45) {
           result = minute.substring(0, 3) + this.intervalMinute(val, 30, 45);
-        } else if (val > 45) {
+        } else if (val > 45 && val < 52) {
           result = minute.substring(0, 3) + this.intervalMinute(val, 45, 0);
+        } else {
+          var advanceHour = parseInt(minute.substring(1, 2)) + 1;
+          result =
+            minute.substring(0, 1) +
+            advanceHour +
+            minute.substring(2, 3) +
+            this.intervalMinute(val, 45, 0);
         }
+        console.log(result);
       }
       return result;
     },
