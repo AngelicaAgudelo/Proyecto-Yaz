@@ -6,7 +6,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     // Boolean to handle the initial menu
-    hideMenu: false,
+    hideMenu: true,
     // List of users coming from the database
     users: [
       {
@@ -110,7 +110,7 @@ export default new Vuex.Store({
     // Open user session
     activeUser: {
       id_user: 0,
-      user_email: "",
+      user_email: "null",
       user_name: "",
       user_type: 0,
       user_photo: "null.png",
@@ -184,7 +184,9 @@ export default new Vuex.Store({
     // Shopping car of shop
     shoppingCar: [],
     // boolean that handless the payment alert 
-    alert: false
+    alert: false,
+    // boolean that represents if the user is in the process of payment
+    paymentProcess: false
   },
   mutations: {
     // Function that show the payment alert for 2 second
@@ -283,6 +285,10 @@ export default new Vuex.Store({
         }
       }
     },
+    // Function that change the variale paymentProcess
+    setPaymentProcess(state, bol) {
+      state.paymentProcess = bol;
+    }
   },
   actions: {
   },

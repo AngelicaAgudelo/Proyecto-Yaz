@@ -1,7 +1,14 @@
  <template>
   <v-app>
     <!-------- Navbar ----------->
-    <v-app-bar v-show="hideMenu" :elevation="5" fade-img-on-scroll height="75px" max-height="75px">
+    <v-app-bar
+      v-show="hideMenu"
+      :elevation="2"
+      color="white"
+      fade-img-on-scroll
+      height="75px"
+      max-height="75px"
+    >
       <v-layout>
         <v-btn
           class="iconMenu"
@@ -11,12 +18,18 @@
           :elevation="5"
           @click.stop="menu = !menu"
         >
-          <v-icon large>{{menuHamburger}}</v-icon>
+          <v-icon large>{{ menuHamburger }}</v-icon>
         </v-btn>
       </v-layout>
       <v-layout>
         <div>
-          <v-img class="imgYaz" extended src="./assets/yaz.png" max-height="95" max-width="170"></v-img>
+          <v-img
+            class="imgYaz"
+            extended
+            src="./assets/yaz.png"
+            max-height="95"
+            max-width="170"
+          ></v-img>
         </div>
       </v-layout>
     </v-app-bar>
@@ -27,7 +40,7 @@
       <v-flex cols="1">
         <v-layout column align-center>
           <div class="divChangeUser">
-            <router-link to="/" tag="span">
+            <router-link to="/login" tag="span">
               <v-btn
                 class="ma-2"
                 tile
@@ -36,18 +49,22 @@
                 :elevation="3"
                 @click="setHideMenu(false)"
               >
-                <v-icon center x-large>{{changeUser}}</v-icon>Cambiar de sesion
+                <v-icon center x-large>{{ changeUser }}</v-icon>
+                {{ loginLabel }}
               </v-btn>
             </router-link>
           </div>
           <v-avatar id="icon_worker" size="110px">
-            <img :src="require('@/assets/' + activeUser.user_photo)" alt="John" />
+            <img
+              :src="require('@/assets/' + activeUser.user_photo)"
+              alt="John"
+            />
           </v-avatar>
           <div id="name_worker">
-            <h2>{{activeUser.user_name}}</h2>
+            <h2>{{ activeUser.user_name }}</h2>
           </div>
           <div class="divShop">
-            <router-link to="/shop" tag="span">
+            <router-link to="/shop" :disabled="valideActiveUser" tag="span">
               <v-btn
                 class="ma-2"
                 tile
@@ -57,22 +74,25 @@
                 min-width="258"
                 min-height="80"
               >
-                <v-icon center x-large>{{storeButton}}</v-icon>Tienda
+                <v-icon center x-large>{{ storeButton }}</v-icon
+                >Tienda
               </v-btn>
             </router-link>
           </div>
           <div class="divCalendar">
-            <router-link to="/calendar" tag="span">
+            <router-link :to="'/' + pathCalendar" tag="span">
               <v-btn
                 class="ma-2"
                 tile
                 outlined
+                :disabled="valideActiveUser"
                 color="black"
                 :elevation="7"
                 min-width="258"
                 min-height="80"
               >
-                <v-icon center x-large>{{calendarButton}}</v-icon>Calendario
+                <v-icon center x-large>{{ calendarButton }}</v-icon
+                >Calendario
               </v-btn>
             </router-link>
           </div>
@@ -89,7 +109,8 @@
                 :elevation="7"
                 @click="setHideMenu(false)"
               >
-                <v-icon center x-large>{{newUserIcon}}</v-icon>Crear cuenta
+                <v-icon center x-large>{{ newUserIcon }}</v-icon
+                >Crear cuenta
               </v-btn>
             </router-link>
           </div>
@@ -116,7 +137,9 @@ export default {
   data() {
     return {
       // Variable that allows handling the open and close of the menu
+      loginLabel: "Iniciar Sesion",
       menu: null,
+      pathCalendar: "",
       // Menu icons
       calendarButton: mdiCalendarMonth,
       storeButton: mdiStore,
@@ -132,6 +155,15 @@ export default {
   computed: {
     // Declaration of Store variables
     ...mapState(["hideMenu", "activeUser"]),
+    valideActiveUser() {
+      if (this.activeUser.user_email == "null") {
+        return true;
+      } else {
+        this.loginLabel = "Cambiar de sesion";
+        this.pathCalendar = "calendar";
+        return false;
+      }
+    },
   },
 };
 </script>

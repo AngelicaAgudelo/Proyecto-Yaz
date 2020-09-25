@@ -45,16 +45,20 @@
                 <v-select
                   v-model="select"
                   :items="items"
-                  :rules="[v => !!v || 'Item is required']"
+                  :rules="[(v) => !!v || 'Item is required']"
                   label="Tipo cuenta"
                   required
                   outlined
                 ></v-select>
                 <!-------- Image input ----------->
-                <v-file-input v-model="photo" accept="image/*" label="File input"></v-file-input>
+                <v-file-input
+                  v-model="photo"
+                  accept="image/*"
+                  label="File input"
+                ></v-file-input>
                 <!-------- Button to create user ----------->
                 <v-row>
-                  <router-link to="/" tag="span">
+                  <router-link :to="'/' + path" tag="span">
                     <v-btn
                       class="ma-2"
                       :disabled="!valid"
@@ -63,12 +67,15 @@
                       :elevation="3"
                       color="black"
                       @click="validate"
-                    >Crear Usuario</v-btn>
+                      >Crear Usuario</v-btn
+                    >
                   </router-link>
                   <v-spacer></v-spacer>
                   <!-------- Button to log in ----------->
-                  <router-link to="/" tag="span">
-                    <v-btn class="ma-2" tile :elevation="3">¿ya tienes cuenta?</v-btn>
+                  <router-link to="/login" tag="span">
+                    <v-btn class="ma-2" tile :elevation="3"
+                      >¿ya tienes cuenta?</v-btn
+                    >
                   </router-link>
                 </v-row>
               </v-form>
@@ -127,6 +134,8 @@ export default {
       select: null,
       // Variable where the address of the photo is saved
       photo: null,
+      // Variable to change the route depending on whether you log in or get an error
+      path: "register",
     };
   },
   methods: {
@@ -155,14 +164,20 @@ export default {
           user_password: this.password,
         };
         this.addUser(user);
-        this.setHideMenu(true);
         this.setActiveUser(user);
+        if (this.paymentProcess == false) {
+          this.setHideMenu(true);
+          this.path = "";
+        } else {
+          this.setHideMenu(false);
+          this.path = "payment";
+        }
       }
     },
   },
   computed: {
     // Declaration of Store variables
-    ...mapState([]),
+    ...mapState(["paymentProcess"]),
   },
 };
 </script>

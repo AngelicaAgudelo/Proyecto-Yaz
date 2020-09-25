@@ -6,9 +6,17 @@
         <v-container>
           <v-form @submit.prevent="addEvent">
             <!-------- Name input ----------->
-            <v-text-field v-model="name" type="text" label="Nombre evento (required)"></v-text-field>
+            <v-text-field
+              v-model="name"
+              type="text"
+              label="Nombre evento (required)"
+            ></v-text-field>
             <!-------- details input ----------->
-            <v-text-field v-model="details" type="text" label="Detalles"></v-text-field>
+            <v-text-field
+              v-model="details"
+              type="text"
+              label="Detalles"
+            ></v-text-field>
             <!-------- Time input ----------->
             <v-text-field
               v-model="timeEnd"
@@ -33,7 +41,8 @@
                 color="black"
                 :elevation="3"
                 @click="addEventComponent"
-              >Editar Evento</v-btn>
+                >Editar Evento</v-btn
+              >
               <v-spacer></v-spacer>
               <!-------- Button to cancel ----------->
               <v-btn
@@ -43,7 +52,8 @@
                 :elevation="3"
                 color="black"
                 @click="setActiveEvent(false)"
-              >Cancelar</v-btn>
+                >Cancelar</v-btn
+              >
             </v-row>
           </v-form>
         </v-container>

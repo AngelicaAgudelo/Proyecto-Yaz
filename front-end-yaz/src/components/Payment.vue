@@ -10,15 +10,18 @@
           <!----- PurchaseSummary Component ------>
           <purchaseSummary @clickButton="totalPayment" />
           <v-card class="d-flex flex-row-reverse" outlined min-height="50">
-            <div class="total">{{totalLabel}} {{total}}</div>
-            <div class="subTotal">{{subTotalLabel}} {{subTotal}}</div>
+            <div class="total">{{ totalLabel }} {{ total }}</div>
+            <div class="subTotal">{{ subTotalLabel }} {{ subTotal }}</div>
           </v-card>
           <div class="radioGroupDiv">
             <v-radio-group v-model="radioGroup">
               <!----- radioGroup button ------>
               <v-row justify="space-around">
-                <v-radio :label="data[0]  " @click="qrCodeDialog = true"></v-radio>
-                <v-radio :label="data[1] "></v-radio>
+                <v-radio
+                  :label="data[0]"
+                  @click="qrCodeDialog = true"
+                ></v-radio>
+                <v-radio :label="data[1]"></v-radio>
               </v-row>
             </v-radio-group>
           </div>
@@ -27,12 +30,26 @@
         <v-card-actions>
           <!----- route /shop button ------>
           <router-link to="/shop" tag="span">
-            <v-btn class="ma-2" tile :elevation="3" outlined @click="setHideMenu">Regresar tienda</v-btn>
+            <v-btn
+              class="ma-2"
+              tile
+              :elevation="3"
+              outlined
+              @click="setHideMenu"
+              >Regresar tienda</v-btn
+            >
           </router-link>
           <v-spacer></v-spacer>
           <!----- route /menu button ------>
-          <router-link to="/menu" tag="span">
-            <v-btn class="ma-2" tile outlined :elevation="3" @click="paymentItems">Finalizar comprar</v-btn>
+          <router-link to="/" tag="span">
+            <v-btn
+              class="ma-2"
+              tile
+              outlined
+              :elevation="3"
+              @click="paymentItems"
+              >Finalizar comprar</v-btn
+            >
           </router-link>
         </v-card-actions>
       </v-card>
