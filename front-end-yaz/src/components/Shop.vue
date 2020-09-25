@@ -4,7 +4,7 @@
     <v-navigation-drawer v-model="drawer" app temporary right width="450">
       <v-card max-height="50px">
         <div id="total">
-          <router-link :to=" '/'+path" tag="span">
+          <router-link :to="'/' + path" tag="span">
             <v-btn
               class="ma-2"
               tile
@@ -15,10 +15,10 @@
               :disabled="payButton"
             >
               Pagar
-              <v-icon center>{{PayIcon}}</v-icon>
+              <v-icon center>{{ PayIcon }}</v-icon>
             </v-btn>
           </router-link>
-          Total: ${{totalCar}}
+          Total: ${{ totalCar }}
         </div>
       </v-card>
       <div class="shoppingCarDiv">
@@ -27,8 +27,12 @@
             <template>
               <div class="itemDiv">
                 <v-card max-height="200px" max-width="200">
-                  <v-list-item-title class="headline">{{car.item.item_name}}</v-list-item-title>
-                  <v-list-item-subtitle>$ {{car.item.item_price}}</v-list-item-subtitle>
+                  <v-list-item-title class="headline">{{
+                    car.item.item_name
+                  }}</v-list-item-title>
+                  <v-list-item-subtitle
+                    >$ {{ car.item.item_price }}</v-list-item-subtitle
+                  >
                   <v-img
                     :src="car.item.src"
                     class="black--text align-end"
@@ -36,7 +40,7 @@
                     height="100px"
                   ></v-img>
                   <v-card-actions>
-                    <div id="quantity">cantidad: {{car.quantity}}</div>
+                    <div id="quantity">cantidad: {{ car.quantity }}</div>
                     <v-spacer></v-spacer>
                     <v-btn icon @click="removeAmount(car)">
                       <v-icon center>{{ remove }}</v-icon>
@@ -62,11 +66,17 @@
                 <v-list-item-content>
                   <v-layout align-center justify-center>
                     <div>
-                      <v-list-item-title class="headline" color="#000000">{{item.item_name}}</v-list-item-title>
+                      <v-list-item-title class="headline" color="#000000">{{
+                        item.item_name
+                      }}</v-list-item-title>
                     </div>
                   </v-layout>
                 </v-list-item-content>
-                <v-img :src="item.src" class="black--text align-end" height="200px">
+                <v-img
+                  :src="item.src"
+                  class="black--text align-end"
+                  height="200px"
+                >
                   <div class="fill-height bottom-gradient"></div>
                 </v-img>
                 <v-card-subtitle class="pb-0">Make-up</v-card-subtitle>
@@ -74,9 +84,18 @@
                   <div>{{ item.item_description }}</div>
                 </v-card-text>
                 <v-card-actions>
-                  <v-btn color="black" tile outlined :elevation="3" @click="buy(item)">Comprar</v-btn>
+                  <v-btn
+                    color="black"
+                    tile
+                    outlined
+                    :elevation="3"
+                    @click="buy(item)"
+                    >Comprar</v-btn
+                  >
                   <v-spacer></v-spacer>
-                  <div id="price" color="green" text>$ {{item.item_price}}</div>
+                  <div id="price" color="green" text>
+                    $ {{ item.item_price }}
+                  </div>
                 </v-card-actions>
               </v-card>
             </div>
@@ -87,7 +106,12 @@
     <!-------- Button Component Home (Shopping Cart Button) ----------->
     <v-footer app>
       <v-layout align-center justify-center>
-        <v-badge :content="totalElements" :value="totalElements" color="green" overlap>
+        <v-badge
+          :content="totalElements"
+          :value="totalElements"
+          color="green"
+          overlap
+        >
           <v-btn color="black" text @click.stop="drawer = !drawer">
             <v-icon center large>{{ IconCar }}</v-icon>
           </v-btn>
@@ -144,7 +168,7 @@ export default {
     this.mountedFunction();
   },
   methods: {
-    ...mapMutations(["setHideMenu", "setShoppingCar"]),
+    ...mapMutations(["setHideMenu", "setShoppingCar", "setPaymentProcess"]),
     // Function to transfer the item to the shopping cart
     buy(vari) {
       var val = false;
@@ -215,8 +239,14 @@ export default {
     // Function that redirect to payment Component
     payItems() {
       if (this.totalElements > 0) {
-        this.setHideMenu(false);
-        this.path = "payment";
+        if (this.activeUser.user_email != "null") {
+          this.setHideMenu(false);
+          this.path = "payment";
+        } else {
+          this.setPaymentProcess(true);
+          this.setHideMenu(false);
+          this.path = "login";
+        }
       }
     },
     // Function that initializes with the component
@@ -231,7 +261,7 @@ export default {
   },
   computed: {
     // Declaration of Store variables
-    ...mapState(["items", "shoppingCar"]),
+    ...mapState(["items", "shoppingCar", "activeUser"]),
   },
 };
 </script>>

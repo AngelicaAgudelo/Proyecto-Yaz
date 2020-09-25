@@ -25,12 +25,12 @@ const routes = [
     component: Register
   },
   {
-    path: '/',
+    path: '/login',
     name: 'login',
     component: Login
   },
   {
-    path: '/menu',
+    path: '/',
     name: 'menu',
     component: Menu
   },

@@ -13,14 +13,18 @@
             <!-------- V-form component to validate user input ----------->
             <v-form ref="form" v-model="valid" lazy-validation>
               <!-------- Email input ----------->
-              <v-text-field v-model="email" :rules="emailRules" label="Email" required outlined></v-text-field>
+              <v-text-field
+                v-model="email"
+                :rules="emailRules"
+                label="Email"
+                outlined
+              ></v-text-field>
               <!-------- Password input ----------->
               <v-text-field
                 v-model="password"
                 :rules="passwordRules"
                 :type="show1 ? 'text' : 'password'"
                 label="Contraseña"
-                required
                 outlined
               ></v-text-field>
               <!-------- Error card ----------->
@@ -28,9 +32,9 @@
                 <v-card>
                   <v-card-title>
                     <span>
-                      <v-icon>{{warningIcon}}</v-icon>
-                      {{error}}
-                      <v-icon>{{warningIcon}}</v-icon>
+                      <v-icon>{{ warningIcon }}</v-icon>
+                      {{ error }}
+                      <v-icon>{{ warningIcon }}</v-icon>
                     </span>
                     <v-spacer></v-spacer>
                     <v-menu bottom left></v-menu>
@@ -38,18 +42,18 @@
                   <v-card-actions>
                     <v-btn
                       class="ma-2"
-                      tile
                       outlined
+                      :elevation="3"
                       color="black"
-                      text
                       @click="bolError = false"
-                    >cerrar</v-btn>
+                      >cerrar</v-btn
+                    >
                   </v-card-actions>
                 </v-card>
               </v-dialog>
               <!-------- Button to start session ----------->
               <v-layout>
-                <router-link :to=" '/'+path" tag="span">
+                <router-link :to="'/' + path" tag="span">
                   <v-btn
                     class="ma-2"
                     tile
@@ -57,7 +61,8 @@
                     color="black"
                     :elevation="3"
                     @click="validateSession"
-                  >Inicio Sesion</v-btn>
+                    >Inicio Sesion</v-btn
+                  >
                 </router-link>
                 <v-spacer></v-spacer>
                 <!-------- Button to register ----------->
@@ -104,7 +109,7 @@ export default {
       // validation of the password input point format
       show1: false,
       // Variable to change the route depending on whether you log in or get an error
-      path: "",
+      path: "login",
       // Variable that stores the type of error when trying to login
       error: "",
       // Variable that handles the error card
@@ -124,8 +129,13 @@ export default {
       this.isUser(emailPass);
       var nume = this.isClient;
       if (nume == 0) {
-        this.path = "menu";
-        this.setHideMenu(true);
+        if (this.paymentProcess == false) {
+          this.setHideMenu(true);
+          this.path = "";
+        } else {
+          this.setHideMenu(false);
+          this.path = "payment";
+        }
       } else if (nume == 1) {
         this.bolError = true;
         this.error = "La contraseña es incorrecta";
@@ -136,7 +146,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(["isClient"]),
+    ...mapState(["isClient", "paymentProcess"]),
   },
 };
 </script>

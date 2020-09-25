@@ -6,7 +6,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     // Boolean to handle the initial menu
-    hideMenu: false,
+    hideMenu: true,
     // List of users coming from the database
     users: [
       {
@@ -56,8 +56,8 @@ export default new Vuex.Store({
         id: 0,
         name: "alejo",
         details: "peluqueado",
-        start: "2020-09-08 09:00",
-        end: "2020-09-08 10:00",
+        start: "2020-09-25 09:00",
+        end: "2020-09-25 10:00",
         color: "green",
         category: "juan duque",
       },
@@ -65,8 +65,8 @@ export default new Vuex.Store({
         id: 1,
         name: "laura",
         details: "cepillado",
-        start: "2020-09-08 07:00",
-        end: "2020-09-08 09:00",
+        start: "2020-09-25 07:00",
+        end: "2020-09-25 09:00",
         color: "red",
         category: "angelica",
       },
@@ -74,43 +74,43 @@ export default new Vuex.Store({
         id: 2,
         name: "kevin",
         details: "tinturacion de pelo",
-        start: "2020-09-08 08:00",
-        end: "2020-09-08 09:00",
-        color: "pink",
+        start: "2020-09-25 08:00",
+        end: "2020-09-25 09:00",
+        color: "blue",
         category: "juan duque",
       },
       {
         id: 3,
         name: "daniela",
         details: "rizos",
-        start: "2020-09-08 12:00",
-        end: "2020-09-08 15:00",
-        color: "pink",
+        start: "2020-09-25 12:00",
+        end: "2020-09-25 15:00",
+        color: "#7986CB",
         category: "angelica",
       },
       {
         id: 4,
         name: "camilo",
         details: "rizos",
-        start: "2020-09-08 07:00",
-        end: "2020-09-08 08:00",
-        color: "black",
+        start: "2020-09-25 07:00",
+        end: "2020-09-25 08:00",
+        color: "#7986CB",
         category: "sebastian",
       },
       {
         id: 5,
         name: "camilo",
         details: "ssss",
-        start: "2020-09-08 10:00",
-        end: "2020-09-08 13:00",
-        color: "blue",
+        start: "2020-09-25 10:00",
+        end: "2020-09-25 13:00",
+        color: "orange",
         category: "sebastian",
       },
     ],
     // Open user session
     activeUser: {
       id_user: 0,
-      user_email: "",
+      user_email: "null",
       user_name: "",
       user_type: 0,
       user_photo: "null.png",
@@ -184,7 +184,9 @@ export default new Vuex.Store({
     // Shopping car of shop
     shoppingCar: [],
     // boolean that handless the payment alert 
-    alert: false
+    alert: false,
+    // boolean that represents if the user is in the process of payment
+    paymentProcess: false
   },
   mutations: {
     // Function that show the payment alert for 2 second
@@ -283,6 +285,10 @@ export default new Vuex.Store({
         }
       }
     },
+    // Function that change the variale paymentProcess
+    setPaymentProcess(state, bol) {
+      state.paymentProcess = bol;
+    }
   },
   actions: {
   },
