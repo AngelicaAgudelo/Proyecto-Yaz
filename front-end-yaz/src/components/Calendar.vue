@@ -166,7 +166,7 @@ export default {
     },
     // Function that shows the ChangeEvent component
     editEvent() {
-      this.$refs.childComponent.show();
+      this.$refs.childComponent.setVariables();
       this.setActiveEvent(true);
     },
     // Function that changes the calendar day
