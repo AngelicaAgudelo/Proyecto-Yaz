@@ -1,4 +1,4 @@
-//import ServiceService from '../services/ServiceService';
+import ServiceService from '../services/ServiceService';
 import Util from '../utils/Utils';
 
 const util = new Util();
@@ -7,8 +7,13 @@ class ServiceController {
 
     static async getAllServices(req, res) {
         try {
-            util.setSuccess(200, `All services returned!`);
-            return util.send(res);
+            const allService = await ServiceService.getAllServices();
+            if(allService.length > 0){
+                util.setSuccess(200, 'Service returned', allService)
+            } else {
+                util.setSuccess(500, 'No service found');
+            }
+            return util.send(res); 
         } catch (error) {
             util.setError(400, error);
             return util.send(res);
@@ -16,8 +21,10 @@ class ServiceController {
     }
 
     static async addService(req, res) {
+        const newService = req.body
         try {
-            util.setSuccess(200, `New service created!`);
+            const createdService = await ServiceService.addService(newService);
+            util.setSuccess(201, `New service created!`, createdService);
             return util.send(res);
         } catch (error) {
             util.setError(400, error);
@@ -27,14 +34,17 @@ class ServiceController {
 
     static async updateServiceById(req, res) {
         const { id } = req.params;
+        const alteredService = req.body;
         try {
+            const updateService = await ServiceService.updateServiceById(id, alteredService)
             if (!Number(id)) {
                 util.setError(400, 'Please input a valid numeric value');
-                return util.send(res);
-            } else {
+            } else if(updateService){
                 util.setSuccess(200, `Service ${id} updated!`);
-                return util.send(res);
+            }else{
+                util.setError(400, `Could not update service ${id}!`)
             }
+            return util.send(res);
         } catch (error) {
             util.setError(400, error);
             return util.send(res);
@@ -44,13 +54,15 @@ class ServiceController {
     static async getServiceById(req, res) {
         const { id } = req.params;
         try {
+            const theService = await ServiceService.getServiceById(id);
             if (!Number(id)) {
                 util.setError(400, 'Please input a valid numeric value');
-                return util.send(res);
-            } else {
+            } else if(theService){
                 util.setSuccess(200, `Service ${id} returned!`);
-                return util.send(res);
+            }else{
+                util.setSuccess(400, `Could not found service ${id}!`);
             }
+            return util.send(res);
         } catch (error) {
             util.setError(400, error);
             return util.send(res);
@@ -60,16 +72,17 @@ class ServiceController {
     static async deleteServiceById(req, res) {
         const { id } = req.params;
         try {
+            const serviceToDelete = await ServiceService.deleteServiceById(id);
             if (!Number(id)) {
                 util.setError(400, 'Please provide a numeric value');
-                return util.send(res);
             } else if (req.body.user_type > 0) {
                 util.setError(400, `You do not have permission to do this!`);
-                return util.send(res);
-            } else {
+            } else if(serviceToDelete){
                 util.setSuccess(200, `User ${req.body.name} deleted service ${id}!`);
-                return util.send(res);
+            }else{
+                util.setError(400, `User with the id ${id} cannot be found`);
             }
+            return util.send(res);
         } catch (error) {
             util.setError(400, error);
             return util.send(res);
