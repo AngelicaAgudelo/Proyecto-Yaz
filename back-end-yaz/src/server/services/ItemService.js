@@ -1,4 +1,4 @@
-import database from '../src/models';
+import database from '.../src/models';
 
 class ItemService {
   static async getAllItems() {
