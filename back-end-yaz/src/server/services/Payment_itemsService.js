@@ -20,11 +20,11 @@ class Payment_itemsService {
   static async updatePayment_itemsById(id, updatePayment_items) {
     try {
       const payment_itemsToUpdate = await database.Payment_items.findOne({
-        where: { id: Number(id) }
+        where: { id_payment_item: Number(id_payment_item) }
       });
 
       if (payment_itemsToUpdate) {
-        await database.Payment_items.update(updatePayment_items, { where: { id: Number(id) } });
+        await database.Payment_items.update(updatePayment_items, { where: { id_payment_item: Number(id_payment_item) } });
 
         return updatePayment_items;
       }
@@ -37,7 +37,7 @@ class Payment_itemsService {
   static async getPayment_itemsById(id) {
     try {
       const returnedPayment_items = await database.Payment_items.findOne({
-        where: { id: Number(id) }
+        where: { id_payment_item: Number(id_payment_item) }
       });
 
       return returnedPayment_items;
@@ -48,11 +48,11 @@ class Payment_itemsService {
 
   static async deletePayment_itemsById(id) {
     try {
-      const payment_itemsToDelete = await database.Payment_items.findOne({ where: { id: Number(id) } });
+      const payment_itemsToDelete = await database.Payment_items.findOne({ where: { id_payment_item: Number(id_payment_item) } });
 
       if (payment_itemsToDelete) {
         const deletedPayment_items = await database.Payment_items.destroy({
-          where: { id: Number(id) }
+          where: { id_payment_item: Number(id_payment_item) }
         });
         return deletedPayment_items;
       }

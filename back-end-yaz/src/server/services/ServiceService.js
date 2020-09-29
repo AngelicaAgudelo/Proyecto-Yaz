@@ -20,11 +20,11 @@ class ServiceService {
   static async updateServiceById(id, updateService) {
     try {
       const serviceToUpdate = await database.Service.findOne({
-        where: { id: Number(id) }
+        where: { id_service: Number(id_service) }
       });
 
       if (serviceToUpdate) {
-        await database.Service.update(updateService, { where: { id: Number(id) } });
+        await database.Service.update(updateService, { where: { id_service: Number(id_service) } });
 
         return updateService;
       }
@@ -37,7 +37,7 @@ class ServiceService {
   static async getServiceById(id) {
     try {
       const returnedService = await database.Service.findOne({
-        where: { id: Number(id) }
+        where: { id_service: Number(id_service) }
       });
 
       return returnedService;
@@ -48,11 +48,11 @@ class ServiceService {
 
   static async deleteServiceById(id) {
     try {
-      const serviceToDelete = await database.Service.findOne({ where: { id: Number(id) } });
+      const serviceToDelete = await database.Service.findOne({ where: { id_service: Number(id_service) } });
 
       if (serviceToDelete) {
         const deletedService = await database.Service.destroy({
-          where: { id: Number(id) }
+          where: { id_service: Number(id_service) }
         });
         return deletedService;
       }

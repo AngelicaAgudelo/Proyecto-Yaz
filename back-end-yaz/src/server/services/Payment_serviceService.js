@@ -20,11 +20,11 @@ class Payment_serviceService {
   static async updatePayment_serviceById(id, updatePayment_service) {
     try {
       const payment_serviceToUpdate = await database.Payment_service.findOne({
-        where: { id: Number(id) }
+        where: { id_payment_service: Number(id_payment_service) }
       });
 
       if (payment_serviceToUpdate) {
-        await database.Payment_service.update(updatePayment_service, { where: { id: Number(id) } });
+        await database.Payment_service.update(updatePayment_service, { where: { id_payment_service: Number(id_payment_service) } });
 
         return updatePayment_service;
       }
@@ -37,7 +37,7 @@ class Payment_serviceService {
   static async getPayment_serviceById(id) {
     try {
       const returnedPayment_service = await database.Payment_service.findOne({
-        where: { id: Number(id) }
+        where: { id_payment_service: Number(id_payment_service) }
       });
 
       return returnedPayment_service;
@@ -48,11 +48,11 @@ class Payment_serviceService {
 
   static async deletePayment_serviceById(id) {
     try {
-      const payment_serviceToDelete = await database.Payment_service.findOne({ where: { id: Number(id) } });
+      const payment_serviceToDelete = await database.Payment_service.findOne({ where: { id_payment_service: Number(id_payment_service) } });
 
       if (payment_serviceToDelete) {
         const deletedPayment_service = await database.Payment_service.destroy({
-          where: { id: Number(id) }
+          where: { id_payment_service: Number(id_payment_service) }
         });
         return deletedPayment_service;
       }
