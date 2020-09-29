@@ -36,11 +36,11 @@ class ItemService {
 
   static async getItemById(id) {
     try {
-      const theItem = await database.Item.findOne({
+      const returnedItem = await database.Item.findOne({
         where: { id: Number(id) }
       });
 
-      return theItem;
+      return returnedItem;
     } catch (error) {
       throw error;
     }

@@ -36,11 +36,11 @@ class Payment_serviceService {
 
   static async getPayment_serviceById(id) {
     try {
-      const thePayment_service = await database.Payment_service.findOne({
+      const returnedPayment_service = await database.Payment_service.findOne({
         where: { id: Number(id) }
       });
 
-      return thePayment_service;
+      return returnedPayment_service;
     } catch (error) {
       throw error;
     }

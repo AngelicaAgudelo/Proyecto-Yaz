@@ -36,11 +36,11 @@ class ServiceService {
 
   static async getServiceById(id) {
     try {
-      const theService = await database.Service.findOne({
+      const returnedService = await database.Service.findOne({
         where: { id: Number(id) }
       });
 
-      return theService;
+      return returnedService;
     } catch (error) {
       throw error;
     }

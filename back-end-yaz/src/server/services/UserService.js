@@ -36,11 +36,11 @@ class UserService {
 
   static async getUserById(id) {
     try {
-      const theUser = await database.User.findOne({
+      const returnedUser = await database.User.findOne({
         where: { id: Number(id) }
       });
 
-      return theUser;
+      return returnedUser;
     } catch (error) {
       throw error;
     }
