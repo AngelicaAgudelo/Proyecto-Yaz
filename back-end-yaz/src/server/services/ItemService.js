@@ -20,11 +20,11 @@ class ItemService {
   static async updateItemById(id, updateItem) {
     try {
       const itemToUpdate = await database.Item.findOne({
-        where: { id_item: Number(id_item) }
+        where: { id_item: Number(id) }
       });
 
       if (itemToUpdate) {
-        await database.Item.update(updateItem, { where: { id_item: Number(id_item) } });
+        await database.Item.update(updateItem, { where: { id_item: Number(id) } });
 
         return updateItem;
       }
@@ -37,7 +37,7 @@ class ItemService {
   static async getItemById(id) {
     try {
       const returnedItem = await database.Item.findOne({
-        where: { id_item: Number(id_item) }
+        where: { id_item: Number(id) }
       });
 
       return returnedItem;
@@ -48,11 +48,11 @@ class ItemService {
 
   static async deleteItemById(id) {
     try {
-      const itemToDelete = await database.Item.findOne({ where: { id_item: Number(id_item) } });
+      const itemToDelete = await database.Item.findOne({ where: { id_item: Number(id) } });
 
       if (itemToDelete) {
         const deletedItem = await database.Item.destroy({
-          where: { id_item: Number(id_item) }
+          where: { id_item: Number(id) }
         });
         return deletedItem;
       }
