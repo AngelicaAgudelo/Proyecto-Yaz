@@ -36,10 +36,10 @@ class ItemController {
         const { id } = req.params;
         const alteredItem = req.body;
         try {
-            const updateUser = await ItemService.updateItemById(id, alteredItem)
+            const updateItem = await ItemService.updateItemById(id, alteredItem)
             if (!Number(id)) {
                 util.setError(400, 'Please input a valid numeric value');
-            } else if(updateUser){
+            } else if(updateItem){
                 util.setSuccess(200, `Item ${id} updated!`);
             }else{
                 util.setError(400, `Could not update item ${id}!`)

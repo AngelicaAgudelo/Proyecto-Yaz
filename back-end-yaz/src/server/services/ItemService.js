@@ -1,4 +1,4 @@
-import database from '../src/models';
+import database from '.../src/models';
 
 class ItemService {
   static async getAllItems() {
@@ -20,11 +20,11 @@ class ItemService {
   static async updateItemById(id, updateItem) {
     try {
       const itemToUpdate = await database.Item.findOne({
-        where: { id: Number(id) }
+        where: { id_item: Number(id) }
       });
 
       if (itemToUpdate) {
-        await database.Item.update(updateItem, { where: { id: Number(id) } });
+        await database.Item.update(updateItem, { where: { id_item: Number(id) } });
 
         return updateItem;
       }
@@ -36,11 +36,11 @@ class ItemService {
 
   static async getItemById(id) {
     try {
-      const theItem = await database.Item.findOne({
-        where: { id: Number(id) }
+      const returnedItem = await database.Item.findOne({
+        where: { id_item: Number(id) }
       });
 
-      return theItem;
+      return returnedItem;
     } catch (error) {
       throw error;
     }
@@ -48,11 +48,11 @@ class ItemService {
 
   static async deleteItemById(id) {
     try {
-      const itemToDelete = await database.Item.findOne({ where: { id: Number(id) } });
+      const itemToDelete = await database.Item.findOne({ where: { id_item: Number(id) } });
 
       if (itemToDelete) {
         const deletedItem = await database.Item.destroy({
-          where: { id: Number(id) }
+          where: { id_item: Number(id) }
         });
         return deletedItem;
       }
