@@ -1,9 +1,9 @@
-import database from '.../src/models';
+import models from '../models';
 
 class Payment_serviceService {
   static async getAllPayment_services() {
     try {
-      return await database.Payment_service.findAll();
+      return await models.Payment_service.findAll();
     } catch (error) {
       throw error;
     }
@@ -11,7 +11,7 @@ class Payment_serviceService {
 
   static async addPayment_service(newPayment_service) {
     try {
-      return await database.Payment_service.create(newPayment_service);
+      return await models.Payment_service.create(newPayment_service);
     } catch (error) {
       throw error;
     }
@@ -19,12 +19,12 @@ class Payment_serviceService {
 
   static async updatePayment_serviceById(id, updatePayment_service) {
     try {
-      const payment_serviceToUpdate = await database.Payment_service.findOne({
+      const payment_serviceToUpdate = await models.Payment_service.findOne({
         where: { id_payment_service: Number(id) }
       });
 
       if (payment_serviceToUpdate) {
-        await database.Payment_service.update(updatePayment_service, { where: { id_payment_service: Number(id) } });
+        await models.Payment_service.update(updatePayment_service, { where: { id_payment_service: Number(id) } });
 
         return updatePayment_service;
       }
@@ -36,7 +36,7 @@ class Payment_serviceService {
 
   static async getPayment_serviceById(id) {
     try {
-      const returnedPayment_service = await database.Payment_service.findOne({
+      const returnedPayment_service = await models.Payment_service.findOne({
         where: { id_payment_service: Number(id) }
       });
 
@@ -48,10 +48,10 @@ class Payment_serviceService {
 
   static async deletePayment_serviceById(id) {
     try {
-      const payment_serviceToDelete = await database.Payment_service.findOne({ where: { id_payment_service: Number(id) } });
+      const payment_serviceToDelete = await models.Payment_service.findOne({ where: { id_payment_service: Number(id) } });
 
       if (payment_serviceToDelete) {
-        const deletedPayment_service = await database.Payment_service.destroy({
+        const deletedPayment_service = await models.Payment_service.destroy({
           where: { id_payment_service: Number(id) }
         });
         return deletedPayment_service;

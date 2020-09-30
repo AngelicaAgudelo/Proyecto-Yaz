@@ -7,7 +7,7 @@ import serviceRoutes from './server/routes/ServiceRoutes';
 import payment_serviceRoutes from './server/routes/Payment_serviceRoutes';
 import payment_itemRoutes from './server/routes/Payment_itemsRoutes';
 import itemRoutes from './server/routes/ItemRoutes';
-import models, { sequelize } from './models';
+import models, { sequelize } from './server/models';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
