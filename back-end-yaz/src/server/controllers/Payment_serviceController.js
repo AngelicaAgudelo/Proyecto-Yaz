@@ -11,7 +11,7 @@ class Payment_serviceController {
             if(allPayment_service.length > 0){
                 util.setSuccess(200, 'Payment_service returned', allPayment_service)
             } else {
-                util.setSuccess(500, 'No payment_service found');
+                util.setSuccess(204, 'No payment_service found');
             }
             return util.send(res);            
         } catch (error) {
@@ -39,9 +39,9 @@ class Payment_serviceController {
             if (!Number(id)) {
                 util.setError(400, 'Please input a valid numeric value');
             } else if(updatePayment_service){
-                util.setSuccess(200, `Item ${id} updated!`);
+                util.setSuccess(202, `Item ${id} updated!`);
             }else{
-                util.setError(400, `Could not update item ${id}!`)
+                util.setSuccess(204, `Could not update item ${id}!`)
             }
             return util.send(res);
         } catch (error) {
@@ -59,7 +59,7 @@ class Payment_serviceController {
             } else if(thePayment_service){
                 util.setSuccess(200, `Item ${id} returned!`);
             }else{
-                util.setSuccess(400, `Could not found item ${id}!`);
+                util.setSuccess(204, `Could not found item ${id}!`);
             }
             return util.send(res);
         } catch (error) {
@@ -75,11 +75,11 @@ class Payment_serviceController {
             if (!Number(id)) {
                 util.setError(400, 'Please provide a numeric value');
             } else if (req.body.user_type > 0) {
-                util.setError(400, `You do not have permission to do this!`);
+                util.setError(403, `You do not have permission to do this!`);
             } else if(payment_serviceToDelete){
                 util.setSuccess(200, `User ${req.body.name} deleted Item ${id}!`);
             }else{
-                util.setError(400, `User with the id ${id} cannot be found`);
+                util.setSuccess(204, `User with the id ${id} cannot be found`);
             }
             return util.send(res);
         } catch (error) {

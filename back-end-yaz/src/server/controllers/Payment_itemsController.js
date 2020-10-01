@@ -11,7 +11,7 @@ class Payment_itemsController {
             if(allPayment_items.length > 0){
                 util.setSuccess(200, 'Payment_items returned', allPayment_items)
             } else {
-                util.setSuccess(500, 'No payment_items found');
+                util.setSuccess(204, 'No payment_items found');
             }
             return util.send(res);               
         } catch (error) {
@@ -40,9 +40,9 @@ class Payment_itemsController {
             if (!Number(id)) {
                 util.setError(400, 'Please input a valid numeric value');
             }if(updatePayment_items){
-                util.setSuccess(200, `Payment_items ${id} updated!`);
+                util.setSuccess(202, `Payment_items ${id} updated!`);
             } else {
-                util.setError(400, `Payment_items ${id} could not be updated!`);
+                util.setSuccess(204, `Payment_items ${id} could not be updated!`);
             }
             return util.send(res);
         } catch (error) {
@@ -60,7 +60,7 @@ class Payment_itemsController {
             } if(thePayment_items) {
                 util.setSuccess(200, `Payment_items ${id} returned!`);
             }else {
-                util.setError(400, 'Could not return any payment_items');
+                util.setSuccess(204, 'Could not return any payment_items');
             }
             return util.send(res);
         } catch (error) {
@@ -76,11 +76,11 @@ class Payment_itemsController {
             if (!Number(id)) {
                 util.setError(400, 'Please provide a numeric value');
             } else if (req.body.user_type > 0) {
-                util.setError(400, `You do not have permission to do this!`);
+                util.setError(403, `You do not have permission to do this!`);
             } else if(payment_itemsToDelete){
                 util.setSuccess(200, `User ${req.body.name} deleted payment_items ${id}!`);
             }else{
-                util.setError(400, `User with the id ${id} cannot be found`);
+                util.setSuccess(204, `User with the id ${id} cannot be found`);
             }
             return util.send(res);           
         } catch (error) {
