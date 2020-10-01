@@ -64,45 +64,50 @@ export default new Vuex.Store({
       {
         id: 1,
         name: "laura",
+        user_email: "duque@du",
         details: "cepillado",
-        start: "2020-09-25 07:00",
-        end: "2020-09-25 09:00",
+        start: "2020-10-01 07:00",
+        end: "2020-10-01 09:00",
         color: "red",
         category: "angelica",
       },
       {
         id: 2,
         name: "kevin",
+        user_email: "angelica@an",
         details: "tinturacion de pelo",
-        start: "2020-09-25 08:00",
-        end: "2020-09-25 09:00",
+        start: "2020-10-01 08:00",
+        end: "2020-10-01 09:00",
         color: "blue",
         category: "juan duque",
       },
       {
         id: 3,
         name: "daniela",
+        user_email: "alejo@al",
         details: "rizos",
-        start: "2020-09-25 12:00",
-        end: "2020-09-25 15:00",
+        start: "2020-10-01 12:00",
+        end: "2020-10-01 15:00",
         color: "#7986CB",
         category: "angelica",
       },
       {
         id: 4,
         name: "camilo",
+        user_email: "sebastian@se",
         details: "rizos",
-        start: "2020-09-25 07:00",
-        end: "2020-09-25 08:00",
+        start: "2020-10-01 07:00",
+        end: "2020-10-01 08:00",
         color: "#7986CB",
         category: "sebastian",
       },
       {
         id: 5,
         name: "camilo",
+        user_email: "duque@du",
         details: "ssss",
-        start: "2020-09-25 10:00",
-        end: "2020-09-25 13:00",
+        start: "2020-10-01 10:00",
+        end: "2020-10-01 13:00",
         color: "orange",
         category: "sebastian",
       },
@@ -186,9 +191,31 @@ export default new Vuex.Store({
     // boolean that handless the payment alert 
     alert: false,
     // boolean that represents if the user is in the process of payment
-    paymentProcess: false
+    paymentProcess: false,
+    selectEvent: {},
+    editEvent: false,
+    checkEmail: false
   },
   mutations: {
+    setEditEvent(state, bol) {
+      state.editEvent = bol;
+    },
+    editSelectedEvent(state, selectedEvent) {
+      state.selectEvent = selectedEvent;
+    },
+    verifyEmail(state, email) {
+      var notFound = false;
+      for (var i = 0; i < state.users.length; i++) {
+        if (state.users[i].user_email == email) {
+          notFound = true;
+        }
+      }
+      if (notFound) {
+        state.checkEmail = true;
+      } else {
+        state.checkEmail = false;
+      }
+    },
     // Function that show the payment alert for 2 second
     showAlert(state) {
       state.alert = true;

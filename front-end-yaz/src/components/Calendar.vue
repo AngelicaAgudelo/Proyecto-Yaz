@@ -24,7 +24,7 @@
       >Solicitar evento</v-btn
     >
     <!-- Calling the changeEvent component -->
-    <changeEvent :edEvent="selectedEvent" ref="childComponent" />
+    <changeEvent ref="childComponent" />
     <v-sheet height="890">
       <!-- Calendar component -->
       <v-calendar
@@ -53,15 +53,14 @@
           offset-x
         >
           <v-card color="grey lighten-4" min-width="350px" flat>
-            <v-toolbar :color="selectedEvent.color" dark>
+            <v-toolbar :color="selectedEvent.color" max-height="58px" dark>
               <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
               <v-spacer></v-spacer>
               <v-btn
                 @click="erase"
-                tile
                 outlined
                 small
-                min-height="38px"
+                min-height="32px"
                 :elevation="7"
                 >Finalizar evento</v-btn
               >
@@ -156,9 +155,10 @@ export default {
     ...mapMutations([
       "setActiveEvent",
       "mountCategory",
-      "addEvent",
       "setEvent",
       "eraseEvent",
+      "editSelectedEvent",
+      "setEditEvent",
     ]),
     // Function that returns the color of the selected event
     getEventColor(event) {
@@ -166,6 +166,7 @@ export default {
     },
     // Function that shows the ChangeEvent component
     editEvent() {
+      this.setEditEvent(true);
       this.$refs.childComponent.setVariables();
       this.setActiveEvent(true);
     },
@@ -200,15 +201,19 @@ export default {
         //  -------
         var evntEvent = {
           id: evntId,
-          name: "(Sin nombrar)",
-          details: "(Sin informacion)",
+          name: "",
+          user_email: "",
+          details: "",
           start: nativeEvent.date + " " + start,
           end: nativeEvent.date + " " + this.calculateHour(start),
           color: "#1F32BB",
           category: this.targetCategory,
         };
+        this.setEditEvent(false);
         this.lastEvent = evntEvent;
-        this.addEvent(evntEvent);
+        this.editSelectedEvent(evntEvent);
+        this.$refs.childComponent.setVariables();
+        this.setActiveEvent(true);
       }
     },
     calculateMinute(minute) {
@@ -234,13 +239,19 @@ export default {
           result = minute.substring(0, 3) + this.intervalMinute(val, 45, 0);
         } else {
           var advanceHour = parseInt(minute.substring(1, 2)) + 1;
-          result =
-            minute.substring(0, 1) +
-            advanceHour +
-            minute.substring(2, 3) +
-            this.intervalMinute(val, 45, 0);
+          if (minute.substring(1, 2) == "9") {
+            result =
+              advanceHour +
+              minute.substring(2, 3) +
+              this.intervalMinute(val, 45, 0);
+          } else {
+            result =
+              minute.substring(0, 1) +
+              advanceHour +
+              minute.substring(2, 3) +
+              this.intervalMinute(val, 45, 0);
+          }
         }
-        console.log(result);
       }
       return result;
     },
@@ -305,6 +316,7 @@ export default {
     showEvent({ nativeEvent, event }) {
       const open = () => {
         this.selectedEvent = event;
+        this.editSelectedEvent(event);
         this.selectedElement = nativeEvent.target;
         setTimeout(() => (this.selectedOpen = true), 10);
       };
