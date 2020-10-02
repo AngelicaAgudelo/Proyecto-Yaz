@@ -1,7 +1,7 @@
 import Sequelize from 'sequelize';
 
 const sequelize = new Sequelize(
-    configprocess.env.DB_NAME,
+    process.env.DB_NAME,
     process.env.DB_USER,
     process.env.DB_PASS,
     {
