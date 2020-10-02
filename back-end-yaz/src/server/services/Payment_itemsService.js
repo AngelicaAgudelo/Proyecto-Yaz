@@ -1,4 +1,4 @@
-import models from '../models';
+import models from '../src/models';
 
 class Payment_itemsService {
   static async getAllPayment_itemss() {
