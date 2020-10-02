@@ -13,7 +13,6 @@ class UserService {
     try {
       return await models.User.create(newUser);
     } catch (error) {
-      console.log("Estoy aquí")
       throw error;
     }
   }
