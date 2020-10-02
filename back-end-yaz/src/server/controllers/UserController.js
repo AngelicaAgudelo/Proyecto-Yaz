@@ -40,7 +40,7 @@ class UserController {
             if (!Number(id)) {
                 util.setError(400, 'Please input a valid numeric value');
             } else if(updateUser){
-                util.setSuccess(202, `User ${id} updated!`);
+                util.setSuccess(201, `User ${id} updated!`);
             }else{
                 util.setSuccess(204, `Could not update user ${id}!`)
             }

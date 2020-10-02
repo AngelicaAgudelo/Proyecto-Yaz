@@ -39,7 +39,7 @@ class Payment_serviceController {
             if (!Number(id)) {
                 util.setError(400, 'Please input a valid numeric value');
             } else if(updatePayment_service){
-                util.setSuccess(202, `Item ${id} updated!`);
+                util.setSuccess(201, `Item ${id} updated!`);
             }else{
                 util.setSuccess(204, `Could not update item ${id}!`)
             }

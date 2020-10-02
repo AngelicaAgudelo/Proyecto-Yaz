@@ -40,7 +40,7 @@ class ServiceController {
             if (!Number(id)) {
                 util.setError(400, 'Please input a valid numeric value');
             } else if(updateService){
-                util.setSuccess(202, `Service ${id} updated!`);
+                util.setSuccess(201, `Service ${id} updated!`);
             }else{
                 util.setSuccess(204, `Could not update service ${id}!`)
             }
