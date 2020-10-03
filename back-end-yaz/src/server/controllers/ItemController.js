@@ -11,7 +11,7 @@ class ItemController {
             if(allItems.length > 0){
                 util.setSuccess(200, 'Items returned', allItems)
             } else {
-                util.setSuccess(500, 'No items found');
+                util.setSuccess(204, 'No items found');
             }
             return util.send(res);            
         } catch (error) {
@@ -40,9 +40,9 @@ class ItemController {
             if (!Number(id)) {
                 util.setError(400, 'Please input a valid numeric value');
             } else if(updateItem){
-                util.setSuccess(200, `Item ${id} updated!`);
+                util.setSuccess(201, `Item ${id} updated!`);
             }else{
-                util.setError(400, `Could not update item ${id}!`)
+                util.setSuccess(204, `Could not update item ${id}!`)
             }
             return util.send(res);
         } catch (error) {
@@ -60,7 +60,7 @@ class ItemController {
             } else if(theItem){
                 util.setSuccess(200, `Item ${id} returned!`);
             }else{
-                util.setSuccess(400, `Could not found item ${id}!`);
+                util.setSuccess(204, `Could not found item ${id}!`);
             }
             return util.send(res);
         } catch (error) {
@@ -76,11 +76,11 @@ class ItemController {
             if (!Number(id)) {
                 util.setError(400, 'Please provide a numeric value');
             } else if (req.body.user_type > 0) {
-                util.setError(400, `You do not have permission to do this!`);
+                util.setError(403, `You do not have permission to delete items!`);
             } else if(itemToDelete){
                 util.setSuccess(200, `User ${req.body.name} deleted Item ${id}!`);
             }else{
-                util.setError(400, `User with the id ${id} cannot be found`);
+                util.setSuccess(204, `The item you are looking for can not be found`);
             }
             return util.send(res);
         } catch (error) {
