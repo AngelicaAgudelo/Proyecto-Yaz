@@ -76,11 +76,11 @@ class ItemController {
             if (!Number(id)) {
                 util.setError(400, 'Please provide a numeric value');
             } else if (req.body.user_type > 0) {
-                util.setError(403, `You do not have permission to do this!`);
+                util.setError(403, `You do not have permission to delete items!`);
             } else if(itemToDelete){
                 util.setSuccess(200, `User ${req.body.name} deleted Item ${id}!`);
             }else{
-                util.setSuccess(204, `User with the id ${id} cannot be found`);
+                util.setSuccess(204, `The item you are looking for can not be found`);
             }
             return util.send(res);
         } catch (error) {

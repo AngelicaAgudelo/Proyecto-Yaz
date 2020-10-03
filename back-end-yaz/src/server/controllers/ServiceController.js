@@ -80,7 +80,7 @@ class ServiceController {
             } else if(serviceToDelete){
                 util.setSuccess(200, `User ${req.body.name} deleted service ${id}!`);
             }else{
-                util.setSuccess(204, `User with the id ${id} cannot be found`);
+                util.setSuccess(204, `The service you are looking for can not be found`);
             }
             return util.send(res);
         } catch (error) {
