@@ -5,7 +5,7 @@ const sequelize = new Sequelize(
     process.env.DB_USER,
     process.env.DB_PASS,
     {
-        host: 'localhost',
+        host: process.env.DB_HOST,
         port: process.env.DB_PORT,
         dialect: 'postgres',
     },
@@ -16,7 +16,7 @@ const models = {
     Item: require('./item'),
     Payment_Item: require('./payment_item'),
     Service: require('./service'),
-    Payment_Service: require('./payment_service'),
+    Payment_Service: require('./payment_service')
 };
 
 Object.keys(models).forEach(key => {
