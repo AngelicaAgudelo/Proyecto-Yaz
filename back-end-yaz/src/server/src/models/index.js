@@ -1,4 +1,9 @@
 import Sequelize from 'sequelize';
+import user from './user';
+import item from './item';
+import payment_item from './payment_item';
+import payment_service from './payment_service';
+import service from './service';
 
 const sequelize = new Sequelize(
     process.env.DB_NAME,
@@ -11,20 +16,15 @@ const sequelize = new Sequelize(
     },
 );
 
-const models = {
-    User: require('./user'),
-    Item: require('./item'),
-    Payment_Item: require('./payment_item'),
-    Service: require('./service'),
-    Payment_Service: require('./payment_service')
-};
+const models = {};
 
-Object.keys(models).forEach(key => {
-    if ('associate' in models[key]) {
-        models[key].associate(models);
-    }
-});
+models.Sequelize = Sequelize;
+models.sequelize = sequelize;
 
-export { sequelize };
+models.user = user (sequelize, Sequelize);
+models.item = item (sequelize, Sequelize);
+models.payment_item = payment_item (sequelize, Sequelize);
+models.payment_service = payment_service (sequelize, Sequelize);
+models.service = service (sequelize, Sequelize);
 
-export default models;
+module.exports = models;

@@ -7,7 +7,7 @@ import serviceRoutes from './server/routes/ServiceRoutes';
 import payment_serviceRoutes from './server/routes/Payment_serviceRoutes';
 import payment_itemRoutes from './server/routes/Payment_itemsRoutes';
 import itemRoutes from './server/routes/ItemRoutes';
-import models, { sequelize } from './server/src/models';
+import models from './server/src/models';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -31,7 +31,7 @@ app.all('*', (req, res) => res.status(404).send({
   message: 'URL NOT FOUND',
 }));
 
-sequelize.sync().then(() => {
+models.sequelize.sync({ alter: true }).then(() => {
   app.listen(PORT, err => {
     if (err) {
       return console.log("Error: ", err);
