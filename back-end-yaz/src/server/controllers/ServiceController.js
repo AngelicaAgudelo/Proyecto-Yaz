@@ -40,7 +40,7 @@ class ServiceController {
             if (!Number(id)) {
                 util.setError(400, 'Please input a valid numeric value');
             } else if(updateService){
-                util.setSuccess(201, `Service ${id} updated!`);
+                util.setSuccess(201, `Service ${id} updated!`, updateService);
             }else{
                 util.setSuccess(204, `Could not update service ${id}!`)
             }
@@ -58,7 +58,7 @@ class ServiceController {
             if (!Number(id)) {
                 util.setError(400, 'Please input a valid numeric value');
             } else if(theService){
-                util.setSuccess(200, `Service ${id} returned!`);
+                util.setSuccess(200, `Service ${id} returned!`, theService);
             }else{
                 util.setSuccess(204, `Could not found service ${id}!`);
             }
@@ -78,7 +78,7 @@ class ServiceController {
             } else if (req.body.user_type > 0) {
                 util.setError(403, `You do not have permission to do this!`);
             } else if(serviceToDelete){
-                util.setSuccess(200, `User ${req.body.name} deleted service ${id}!`);
+                util.setSuccess(200, `User ${req.body.name} deleted service ${id}!`, serviceToDelete);
             }else{
                 util.setSuccess(204, `The service you are looking for can not be found`);
             }
