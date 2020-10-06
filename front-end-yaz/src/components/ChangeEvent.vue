@@ -3,20 +3,42 @@
     <v-dialog v-model="activeEvent" persistent max-width="500">
       <!-------- V-card ----------->
       <v-card>
+        <v-alert v-model="activeAlert" max-height="50px" type="error"
+          >El correo del usuario no existe</v-alert
+        >
         <v-container>
           <v-form @submit.prevent="addEvent">
-            <h2>Editor de videos</h2>
+            <v-layout align-center justify-center>
+              <v-card-title id="cardTitle">
+                <h2>{{ title }}</h2>
+              </v-card-title>
+            </v-layout>
             <!-------- Name input ----------->
             <v-text-field
               v-model="name"
               type="text"
-              label="Nombre evento (required)"
+              label="Nombre evento"
             ></v-text-field>
             <!-------- details input ----------->
             <v-text-field
               v-model="details"
               type="text"
               label="Detalles"
+            ></v-text-field>
+            <!-------- User input ----------->
+            <v-text-field
+              v-model="email"
+              type="text"
+              label="Email"
+            ></v-text-field>
+            <!-------- Time start ----------->
+            <v-text-field
+              :disabled="true"
+              v-model="timeStart"
+              type="time"
+              label="Hora Inicio"
+              value="12:30:00"
+              suffix="PST"
             ></v-text-field>
             <!-------- Time input ----------->
             <v-text-field
@@ -53,7 +75,7 @@
                 color="black"
                 :elevation="3"
                 @click="addEventComponent"
-                >Editar Evento</v-btn
+                >{{ confirmButton }}</v-btn
               >
             </v-row>
           </v-form>
@@ -71,7 +93,9 @@ import { mapMutations } from "vuex";
 export default {
   data() {
     return {
-      // Time
+      // Time start
+      timeStart: "13:00",
+      // Time end
       timeEnd: "13:00",
       // Name
       name: "",
@@ -83,38 +107,76 @@ export default {
       date: "",
       // Color
       color: "",
+      // Title
+      title: "",
+      // Email
+      email: "",
+      // Variable to edit the label of confirm Button
+      confirmButton: "",
+      // Variable to show or hide the alert component
+      activeAlert: false,
     };
   },
   // Connection with parent component
-  props: ["edEvent"],
   created() {},
   methods: {
-    ...mapMutations(["setActiveEvent", "setEvent"]),
+    ...mapMutations(["setActiveEvent", "setEvent", "addEvent", "verifyEmail"]),
     // Function to edit the event
     addEventComponent() {
+      var nameEvent = this.name;
+      var detailsEvent = this.details;
+      if (this.name == "") {
+        nameEvent = "(Sin nombrar)";
+      }
+      if (this.details == "") {
+        detailsEvent = "(Sin informacion)";
+      }
       var event = {
-        category: this.edEvent.category,
+        category: this.selectEvent.category,
         color: this.color,
-        details: this.details,
+        details: detailsEvent,
         end: this.date + " " + this.timeEnd,
-        id: this.edEvent.id,
-        name: this.name,
-        start: this.edEvent.start,
+        id: this.selectEvent.id,
+        name: nameEvent,
+        start: this.selectEvent.start,
+        user_email: this.email,
       };
-      this.setEvent(event);
-      this.setActiveEvent(false);
+      this.verifyEmail(this.email);
+      if (this.checkEmail) {
+        if (this.editEvent) {
+          this.setEvent(event);
+        } else {
+          this.addEvent(event);
+        }
+        this.setActiveEvent(false);
+        this.verifyEmail("null");
+      } else {
+        this.activeAlert = true;
+        setTimeout(() => {
+          this.activeAlert = false;
+        }, 1500);
+      }
     },
     // Function to show component
     setVariables() {
-      this.name = this.edEvent.name;
-      this.color = this.edEvent.color;
-      this.details = this.edEvent.details;
-      this.timeEnd = this.edEvent.end.split(" ")[1];
-      this.date = this.edEvent.end.split(" ")[0];
+      if (this.editEvent) {
+        this.title = "Editor de Evento";
+        this.confirmButton = "Editar evento";
+      } else {
+        this.title = "Creador de Evento";
+        this.confirmButton = "Crear evento";
+      }
+      this.name = this.selectEvent.name;
+      this.email = this.selectEvent.user_email;
+      this.color = this.selectEvent.color;
+      this.details = this.selectEvent.details;
+      this.timeStart = this.selectEvent.start.split(" ")[1];
+      this.timeEnd = this.selectEvent.end.split(" ")[1];
+      this.date = this.selectEvent.end.split(" ")[0];
     },
   },
   computed: {
-    ...mapState(["activeEvent"]),
+    ...mapState(["activeEvent", "selectEvent", "editEvent", "checkEmail"]),
   },
 };
 </script>

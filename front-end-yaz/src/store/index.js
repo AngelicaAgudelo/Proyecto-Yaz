@@ -64,45 +64,50 @@ export default new Vuex.Store({
       {
         id: 1,
         name: "laura",
+        user_email: "duque@du",
         details: "cepillado",
-        start: "2020-09-25 07:00",
-        end: "2020-09-25 09:00",
+        start: "2020-10-01 07:00",
+        end: "2020-10-01 09:00",
         color: "red",
         category: "angelica",
       },
       {
         id: 2,
         name: "kevin",
+        user_email: "angelica@an",
         details: "tinturacion de pelo",
-        start: "2020-09-25 08:00",
-        end: "2020-09-25 09:00",
+        start: "2020-10-01 08:00",
+        end: "2020-10-01 09:00",
         color: "blue",
         category: "juan duque",
       },
       {
         id: 3,
         name: "daniela",
+        user_email: "alejo@al",
         details: "rizos",
-        start: "2020-09-25 12:00",
-        end: "2020-09-25 15:00",
+        start: "2020-10-01 12:00",
+        end: "2020-10-01 15:00",
         color: "#7986CB",
         category: "angelica",
       },
       {
         id: 4,
         name: "camilo",
+        user_email: "sebastian@se",
         details: "rizos",
-        start: "2020-09-25 07:00",
-        end: "2020-09-25 08:00",
+        start: "2020-10-01 07:00",
+        end: "2020-10-01 08:00",
         color: "#7986CB",
         category: "sebastian",
       },
       {
         id: 5,
         name: "camilo",
+        user_email: "duque@du",
         details: "ssss",
-        start: "2020-09-25 10:00",
-        end: "2020-09-25 13:00",
+        start: "2020-10-01 10:00",
+        end: "2020-10-01 13:00",
         color: "orange",
         category: "sebastian",
       },
@@ -186,9 +191,37 @@ export default new Vuex.Store({
     // boolean that handless the payment alert 
     alert: false,
     // boolean that represents if the user is in the process of payment
-    paymentProcess: false
+    paymentProcess: false,
+    // Variable that store the event selected
+    selectEvent: {},
+    // Boolean that identify if the selected event will be edited or created
+    editEvent: false,
+    // Boolean that says if the email exists or not
+    checkEmail: false
   },
   mutations: {
+    // set variable editEvent
+    setEditEvent(state, bol) {
+      state.editEvent = bol;
+    },
+    // set variable selectEvent
+    setSelectedEvent(state, selectedEvent) {
+      state.selectEvent = selectedEvent;
+    },
+    // Function to check if the email entered exist
+    verifyEmail(state, email) {
+      var notFound = false;
+      for (var i = 0; i < state.users.length; i++) {
+        if (state.users[i].user_email == email) {
+          notFound = true;
+        }
+      }
+      if (notFound) {
+        state.checkEmail = true;
+      } else {
+        state.checkEmail = false;
+      }
+    },
     // Function that show the payment alert for 2 second
     showAlert(state) {
       state.alert = true;
@@ -271,16 +304,17 @@ export default new Vuex.Store({
       state.events.push(event);
     },
     // Function that changes an entire element of the events array
-    setEvent(state, eveent) {
+    setEvent(state, event) {
       var ind = 0;
       for (var i = 0; i < state.events.length; i++) {
-        if (state.events[i].id == eveent.id) {
-          state.events[i].category = eveent.category;
-          state.events[i].color = eveent.color;
-          state.events[i].details = eveent.details;
-          state.events[i].end = eveent.end;
-          state.events[i].name = eveent.name;
-          state.events[i].start = eveent.start;
+        if (state.events[i].id == event.id) {
+          state.events[i].category = event.category;
+          state.events[i].color = event.color;
+          state.events[i].details = event.details;
+          state.events[i].end = event.end;
+          state.events[i].name = event.name;
+          state.events[i].start = event.start;
+          state.events[i].user_email = event.user_email;
           i = state.events.length
         }
       }
