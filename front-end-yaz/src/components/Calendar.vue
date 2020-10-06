@@ -199,7 +199,7 @@ export default {
         }
         var evntId = higher + 1;
         //  -------
-        var evntEvent = {
+        var event = {
           id: evntId,
           name: "",
           user_email: "",
@@ -210,8 +210,8 @@ export default {
           category: this.targetCategory,
         };
         this.setEditEvent(false);
-        this.lastEvent = evntEvent;
-        this.setSelectedEvent(evntEvent);
+        this.lastEvent = event;
+        this.setSelectedEvent(event);
         this.$refs.childComponent.setVariables();
         this.setActiveEvent(true);
       }
