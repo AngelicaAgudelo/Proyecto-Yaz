@@ -39,7 +39,7 @@ class Payment_serviceController {
             if (!Number(id)) {
                 util.setError(400, 'Please input a valid numeric value');
             } else if(updatePayment_service){
-                util.setSuccess(201, `Service receipt ${id} updated!`);
+                util.setSuccess(201, `Service receipt ${id} updated!`, updatePayment_service);
             }else{
                 util.setSuccess(204, `Could not update the service repeat ${id}!`)
             }
@@ -57,7 +57,7 @@ class Payment_serviceController {
             if (!Number(id)) {
                 util.setError(400, 'Please input a valid numeric value');
             } else if(thePayment_service){
-                util.setSuccess(200, `Receipt service ${id} returned!`);
+                util.setSuccess(200, `Receipt service ${id} returned!`, thePayment_service);
             }else{
                 util.setSuccess(204, `Could not found receipt service ${id}!`);
             }
@@ -77,7 +77,7 @@ class Payment_serviceController {
             } else if (req.body.user_type > 0) {
                 util.setError(403, `You do not have permission to delete this service receipt!`);
             } else if(payment_serviceToDelete){
-                util.setSuccess(200, `User ${req.body.name} deleted service receipt ${id}!`);
+                util.setSuccess(200, `User ${req.body.name} deleted service receipt ${id}!`, payment_serviceToDelete);
             }else{
                 util.setSuccess(204, `The payment receipt you are looking for can not be found`);
             }
