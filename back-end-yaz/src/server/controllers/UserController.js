@@ -40,7 +40,7 @@ class UserController {
             if (!Number(id)) {
                 util.setError(400, 'Please input a valid numeric value');
             } else if(updateUser){
-                util.setSuccess(201, `User ${id} updated!`);
+                util.setSuccess(201, `User ${id} updated!`, alteredUser);
             }else{
                 util.setSuccess(204, `Could not update user ${id}!`)
             }
@@ -58,7 +58,7 @@ class UserController {
             if (!Number(id)) {
                 util.setError(400, 'Please input a valid numeric value');
             } else if(theUser){
-                util.setSuccess(200, `User ${id} returned!`);
+                util.setSuccess(200, `User ${id} returned!`, theUser);
             }else{
                 util.setSuccess(204, `Could not found user ${id}!`);
             }
@@ -78,7 +78,7 @@ class UserController {
             } else if (req.body.user_type > 0) {
                 util.setError(403, `You do not have permission to do this!`);
             } else if(userToDelete){
-                util.setSuccess(200, `User ${req.body.name} deleted user ${id}!`);
+                util.setSuccess(200, `User ${req.body.name} deleted user ${id}!`, userToDelete);
             }else{
                 util.setSuccess(204, `The user you are looking for can not be found`);
             }

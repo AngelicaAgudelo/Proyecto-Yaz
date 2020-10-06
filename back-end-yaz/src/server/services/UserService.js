@@ -3,7 +3,7 @@ import models from '../src/models';
 class UserService {
   static async getAllUsers() {
     try {
-      return await models.User.findAll();
+      return await models.user.findAll();
     } catch (error) {
       throw error;
     }
@@ -11,7 +11,7 @@ class UserService {
 
   static async addUser(newUser) {
     try {
-      return await models.User.create(newUser);
+      return await models.user.create(newUser);
     } catch (error) {
       throw error;
     }
@@ -19,12 +19,12 @@ class UserService {
 
   static async updateUserById(id, updateUser) {
     try {
-      const userToUpdate = await models.User.findOne({
+      const userToUpdate = await models.user.findOne({
         where: { id_user: Number(id) }
       });
 
       if (userToUpdate) {
-        await models.User.update(updateUser, { where: { id_user: Number(id) } });
+        await models.user.update(updateUser, { where: { id_user: Number(id) } });
 
         return updateUser;
       }
@@ -36,7 +36,7 @@ class UserService {
 
   static async getUserById(id) {
     try {
-      const returnedUser = await models.User.findOne({
+      const returnedUser = await models.user.findOne({
         where: { id_user: Number(id) }
       });
 
@@ -48,10 +48,10 @@ class UserService {
 
   static async deleteUserById(id) {
     try {
-      const userToDelete = await models.User.findOne({ where: { id_user: Number(id) } });
+      const userToDelete = await models.user.findOne({ where: { id_user: Number(id) } });
 
       if (userToDelete) {
-        const deletedUser = await models.User.destroy({
+        const deletedUser = await models.user.destroy({
           where: { id_user: Number(id) }
         });
         return deletedUser;
