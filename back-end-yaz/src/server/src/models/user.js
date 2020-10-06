@@ -34,6 +34,20 @@ const user = (sequelize, DataTypes) => {
     },
   });
 
+  User.associate = models => {
+    User.hasMany(models.Service,
+      { foreignKey: 'id_user', as: 'user_service' }
+    );
+
+    User.hasMany(models.Service,
+      { foreignKey: 'id_user', as: 'worker_service' }
+    );
+
+    User.hasMany(models.Payment_Item,
+      { foreignKey: 'id_user', as: 'user_payment_item' }
+    )
+  };
+
   return User;
 };
 

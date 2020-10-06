@@ -20,6 +20,16 @@ const payment_item = (sequelize, DataTypes) => {
     },
   });
 
+  Payment_Item.associate = models => {
+    Payment_Item.belongsTo(models.Item,
+      { foreignKey: 'id_item', as: 'item_payment_item' }
+    );
+
+    Payment_Item.belongsTo(models.User,
+      { foreignKey: 'id_client', as: 'user_payment_item' }
+    );
+  }
+
   return Payment_Item;
 };
 

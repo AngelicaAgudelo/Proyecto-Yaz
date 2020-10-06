@@ -27,6 +27,12 @@ const item = (sequelize, DataTypes) => {
     },
   });
 
+  Item.associate = models => {
+    Item.hasMany(models.Payment_Item,
+      { foreignKey: 'id_item', as: 'item_payment_item' }
+    )
+  };
+
   return Item;
 };
 

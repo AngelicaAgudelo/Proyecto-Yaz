@@ -1,9 +1,9 @@
-import database from '.../src/models';
+import models from '../src/models';
 
 class ItemService {
   static async getAllItems() {
     try {
-      return await database.Item.findAll();
+      return await models.Item.findAll();
     } catch (error) {
       throw error;
     }
@@ -11,7 +11,7 @@ class ItemService {
 
   static async addItem(newItem) {
     try {
-      return await database.Item.create(newItem);
+      return await models.Item.create(newItem);
     } catch (error) {
       throw error;
     }
@@ -19,12 +19,12 @@ class ItemService {
 
   static async updateItemById(id, updateItem) {
     try {
-      const itemToUpdate = await database.Item.findOne({
+      const itemToUpdate = await models.Item.findOne({
         where: { id_item: Number(id) }
       });
 
       if (itemToUpdate) {
-        await database.Item.update(updateItem, { where: { id_item: Number(id) } });
+        await models.Item.update(updateItem, { where: { id_item: Number(id) } });
 
         return updateItem;
       }
@@ -36,7 +36,7 @@ class ItemService {
 
   static async getItemById(id) {
     try {
-      const returnedItem = await database.Item.findOne({
+      const returnedItem = await models.Item.findOne({
         where: { id_item: Number(id) }
       });
 
@@ -48,10 +48,10 @@ class ItemService {
 
   static async deleteItemById(id) {
     try {
-      const itemToDelete = await database.Item.findOne({ where: { id_item: Number(id) } });
+      const itemToDelete = await models.Item.findOne({ where: { id_item: Number(id) } });
 
       if (itemToDelete) {
-        const deletedItem = await database.Item.destroy({
+        const deletedItem = await models.Item.destroy({
           where: { id_item: Number(id) }
         });
         return deletedItem;

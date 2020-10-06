@@ -16,6 +16,12 @@ const payment_service = (sequelize, DataTypes) => {
     },
   });
 
+  Payment_Service.associate = models => {
+    Payment_Service.belongsTo(models.Service,
+      { foreignKey: 'id_service', as: 'service_payment_service', onDelete: 'CASCADE' }
+    )
+  };
+
   return Payment_Service;
 };
 

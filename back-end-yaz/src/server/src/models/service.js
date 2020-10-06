@@ -42,6 +42,20 @@ const service = (sequelize, DataTypes) => {
     },
   });
 
+  Service.associate = models => {
+    Service.belongsToMany(models.User,
+      { foreignKey: 'id_client', as: 'user_service' }
+    );
+
+    Service.belongsToMany(models.User,
+      { foreignKey: 'id_worker', as: 'worker_service' }
+    );
+
+    Service.hasOne(models.Payment_Service,
+      { foreignKey: 'id_service', as: 'service_payment_service' }
+    )
+  };
+
   return Service;
 };
 
