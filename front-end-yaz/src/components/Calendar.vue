@@ -157,7 +157,7 @@ export default {
       "mountCategory",
       "setEvent",
       "eraseEvent",
-      "editSelectedEvent",
+      "setSelectedEvent",
       "setEditEvent",
     ]),
     // Function that returns the color of the selected event
@@ -211,7 +211,7 @@ export default {
         };
         this.setEditEvent(false);
         this.lastEvent = evntEvent;
-        this.editSelectedEvent(evntEvent);
+        this.setSelectedEvent(evntEvent);
         this.$refs.childComponent.setVariables();
         this.setActiveEvent(true);
       }
@@ -316,7 +316,7 @@ export default {
     showEvent({ nativeEvent, event }) {
       const open = () => {
         this.selectedEvent = event;
-        this.editSelectedEvent(event);
+        this.setSelectedEvent(event);
         this.selectedElement = nativeEvent.target;
         setTimeout(() => (this.selectedOpen = true), 10);
       };

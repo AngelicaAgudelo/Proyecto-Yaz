@@ -107,10 +107,13 @@ export default {
       date: "",
       // Color
       color: "",
+      // Title
       title: "",
-      confirmButton: "",
-      value: null,
+      // Email
       email: "",
+      // Variable to edit the label of confirm Button
+      confirmButton: "",
+      // Variable to show or hide the alert component
       activeAlert: false,
     };
   },
@@ -136,6 +139,7 @@ export default {
         id: this.selectEvent.id,
         name: nameEvent,
         start: this.selectEvent.start,
+        user_email: this.email,
       };
       this.verifyEmail(this.email);
       if (this.checkEmail) {
@@ -145,7 +149,7 @@ export default {
           this.addEvent(event);
         }
         this.setActiveEvent(false);
-        this.verifyEmail("asdad");
+        this.verifyEmail("null");
       } else {
         this.activeAlert = true;
         setTimeout(() => {
@@ -162,7 +166,6 @@ export default {
         this.title = "Creador de Evento";
         this.confirmButton = "Crear evento";
       }
-      console.log(this.selectEvent.user_email);
       this.name = this.selectEvent.name;
       this.email = this.selectEvent.user_email;
       this.color = this.selectEvent.color;
@@ -171,7 +174,6 @@ export default {
       this.timeEnd = this.selectEvent.end.split(" ")[1];
       this.date = this.selectEvent.end.split(" ")[0];
     },
-    setTitle() {},
   },
   computed: {
     ...mapState(["activeEvent", "selectEvent", "editEvent", "checkEmail"]),

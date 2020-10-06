@@ -192,17 +192,23 @@ export default new Vuex.Store({
     alert: false,
     // boolean that represents if the user is in the process of payment
     paymentProcess: false,
+    // Variable that store the event selected
     selectEvent: {},
+    // Boolean that identify if the selected event will be edited or created
     editEvent: false,
+    // Boolean that says if the email exists or not
     checkEmail: false
   },
   mutations: {
+    // set variable editEvent
     setEditEvent(state, bol) {
       state.editEvent = bol;
     },
-    editSelectedEvent(state, selectedEvent) {
+    // set variable selectEvent
+    setSelectedEvent(state, selectedEvent) {
       state.selectEvent = selectedEvent;
     },
+    // Function to check if the email entered exist
     verifyEmail(state, email) {
       var notFound = false;
       for (var i = 0; i < state.users.length; i++) {
@@ -298,16 +304,17 @@ export default new Vuex.Store({
       state.events.push(event);
     },
     // Function that changes an entire element of the events array
-    setEvent(state, eveent) {
+    setEvent(state, event) {
       var ind = 0;
       for (var i = 0; i < state.events.length; i++) {
-        if (state.events[i].id == eveent.id) {
-          state.events[i].category = eveent.category;
-          state.events[i].color = eveent.color;
-          state.events[i].details = eveent.details;
-          state.events[i].end = eveent.end;
-          state.events[i].name = eveent.name;
-          state.events[i].start = eveent.start;
+        if (state.events[i].id == event.id) {
+          state.events[i].category = event.category;
+          state.events[i].color = event.color;
+          state.events[i].details = event.details;
+          state.events[i].end = event.end;
+          state.events[i].name = event.name;
+          state.events[i].start = event.start;
+          state.events[i].user_email = event.user_email;
           i = state.events.length
         }
       }
