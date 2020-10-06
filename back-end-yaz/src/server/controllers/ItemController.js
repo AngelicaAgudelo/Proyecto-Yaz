@@ -40,7 +40,7 @@ class ItemController {
             if (!Number(id)) {
                 util.setError(400, 'Please input a valid numeric value');
             } else if(updateItem){
-                util.setSuccess(201, `Item ${id} updated!`);
+                util.setSuccess(201, `Item ${id} updated!`, updateItem);
             }else{
                 util.setSuccess(204, `Could not update item ${id}!`)
             }
@@ -58,7 +58,7 @@ class ItemController {
             if (!Number(id)) {
                 util.setError(400, 'Please input a valid numeric value');
             } else if(theItem){
-                util.setSuccess(200, `Item ${id} returned!`);
+                util.setSuccess(200, `Item ${id} returned!`, theItem);
             }else{
                 util.setSuccess(204, `Could not found item ${id}!`);
             }
@@ -78,7 +78,7 @@ class ItemController {
             } else if (req.body.user_type > 0) {
                 util.setError(403, `You do not have permission to delete items!`);
             } else if(itemToDelete){
-                util.setSuccess(200, `User ${req.body.name} deleted Item ${id}!`);
+                util.setSuccess(200, `User ${req.body.name} deleted Item ${id}!`,itemToDelete);
             }else{
                 util.setSuccess(204, `The item you are looking for can not be found`);
             }
