@@ -31,7 +31,7 @@ app.all('*', (req, res) => res.status(404).send({
   message: 'URL NOT FOUND',
 }));
 
-models.sequelize.sync({ alter: true }).then(() => {
+models.sequelize.sync({ alter: true, logging: false }).then(() => {
   app.listen(PORT, err => {
     if (err) {
       return console.log("Error: ", err);

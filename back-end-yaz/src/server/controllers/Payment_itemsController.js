@@ -54,11 +54,11 @@ class Payment_itemsController {
     static async getPayment_itemsById(req, res) {
         const { id } = req.params;
         try {
-            const thePayment_items = await Payment_itemsService.getPayment_itemsById(id);
+            const returnedPayment_items = await Payment_itemsService.getPayment_itemsById(id);
             if (!Number(id)) {
                 util.setError(400, 'Please input a valid numeric value');
-            } if(thePayment_items) {
-                util.setSuccess(200, `Item receipt ${id} returned!`);
+            } if(returnedPayment_items) {
+                util.setSuccess(200, `Item receipt ${id} returned!`, returnedPayment_items);
             }else {
                 util.setSuccess(204, 'Could not return any item receipt');
             }

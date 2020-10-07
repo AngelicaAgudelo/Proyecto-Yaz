@@ -3,7 +3,7 @@ import models from '../src/models';
 class ServiceService {
   static async getAllServices() {
     try {
-      return await models.Service.findAll();
+      return await models.service.findAll();
     } catch (error) {
       throw error;
     }
@@ -11,7 +11,7 @@ class ServiceService {
 
   static async addService(newService) {
     try {
-      return await models.Service.create(newService);
+      return await models.service.create(newService);
     } catch (error) {
       throw error;
     }
@@ -19,12 +19,12 @@ class ServiceService {
 
   static async updateServiceById(id, updateService) {
     try {
-      const serviceToUpdate = await models.Service.findOne({
+      const serviceToUpdate = await models.service.findOne({
         where: { id_service: Number(id) }
       });
 
       if (serviceToUpdate) {
-        await models.Service.update(updateService, { where: { id_service: Number(id) } });
+        await models.service.update(updateService, { where: { id_service: Number(id) } });
 
         return updateService;
       }
@@ -36,7 +36,7 @@ class ServiceService {
 
   static async getServiceById(id) {
     try {
-      const returnedService = await models.Service.findOne({
+      const returnedService = await models.service.findOne({
         where: { id_service: Number(id) }
       });
 
@@ -48,10 +48,10 @@ class ServiceService {
 
   static async deleteServiceById(id) {
     try {
-      const serviceToDelete = await models.Service.findOne({ where: { id_service: Number(id) } });
+      const serviceToDelete = await models.service.findOne({ where: { id_service: Number(id) } });
 
       if (serviceToDelete) {
-        const deletedService = await models.Service.destroy({
+        const deletedService = await models.service.destroy({
           where: { id_service: Number(id) }
         });
         return deletedService;
