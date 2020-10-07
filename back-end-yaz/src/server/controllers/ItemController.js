@@ -54,11 +54,11 @@ class ItemController {
     static async getItemById(req, res) {
         const { id } = req.params;
         try {
-            const theItem = await ItemService.getItemById(id);
+            const returnedItem = await ItemService.getItemById(id);
             if (!Number(id)) {
                 util.setError(400, 'Please input a valid numeric value');
-            } else if(theItem){
-                util.setSuccess(200, `Item ${id} returned!`, theItem);
+            } else if(returnedItem){
+                util.setSuccess(200, `Item ${id} returned!`, returnedItem);
             }else{
                 util.setSuccess(204, `Could not found item ${id}!`);
             }

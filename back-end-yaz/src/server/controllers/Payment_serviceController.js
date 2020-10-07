@@ -53,11 +53,11 @@ class Payment_serviceController {
     static async getPayment_serviceById(req, res) {
         const { id } = req.params;
         try {
-            const thePayment_service = await Payment_serviceService.getPayment_serviceById(id);
+            const returnedPayment_service = await Payment_serviceService.getPayment_serviceById(id);
             if (!Number(id)) {
                 util.setError(400, 'Please input a valid numeric value');
-            } else if(thePayment_service){
-                util.setSuccess(200, `Receipt service ${id} returned!`, thePayment_service);
+            } else if(returnedPayment_service){
+                util.setSuccess(200, `Receipt service ${id} returned!`, returnedPayment_service);
             }else{
                 util.setSuccess(204, `Could not found receipt service ${id}!`);
             }

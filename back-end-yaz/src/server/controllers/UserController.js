@@ -54,11 +54,11 @@ class UserController {
     static async getUserById(req, res) {
         const { id } = req.params;
         try {
-            const theUser = await UserService.getUserById(id);
+            const returnedUser = await UserService.getUserById(id);
             if (!Number(id)) {
                 util.setError(400, 'Please input a valid numeric value');
-            } else if(theUser){
-                util.setSuccess(200, `User ${id} returned!`, theUser);
+            } else if(returnedUser){
+                util.setSuccess(200, `User ${id} returned!`, returnedUser);
             }else{
                 util.setSuccess(204, `Could not found user ${id}!`);
             }

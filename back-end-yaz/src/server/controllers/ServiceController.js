@@ -54,11 +54,11 @@ class ServiceController {
     static async getServiceById(req, res) {
         const { id } = req.params;
         try {
-            const theService = await ServiceService.getServiceById(id);
+            const returnedService = await ServiceService.getServiceById(id);
             if (!Number(id)) {
                 util.setError(400, 'Please input a valid numeric value');
-            } else if(theService){
-                util.setSuccess(200, `Service ${id} returned!`, theService);
+            } else if(returnedService){
+                util.setSuccess(200, `Service ${id} returned!`, returnedService);
             }else{
                 util.setSuccess(204, `Could not found service ${id}!`);
             }
