@@ -9,34 +9,68 @@
       height="75px"
       max-height="75px"
     >
-      <v-layout>
-        <v-btn
-          class="iconMenu"
-          outlined
-          fab
-          color="black"
-          :elevation="5"
-          @click.stop="menu = !menu"
-        >
-          <v-icon large>{{ menuHamburger }}</v-icon>
-        </v-btn>
-      </v-layout>
-      <v-layout>
-        <div>
-          <v-img
-            class="imgYaz"
-            extended
-            src="./assets/yaz.png"
-            max-height="95"
-            max-width="170"
-          ></v-img>
-        </div>
-      </v-layout>
+      <v-spacer></v-spacer>
+      <div>
+        <router-link :to="'/' + pathCalendar" tag="span">
+          <v-btn
+            v-show="loginUser"
+            class="ma-2"
+            text
+            :disabled="valideActiveUser"
+          >
+            <v-icon center x-large>{{ calendarButton }}</v-icon
+            >Calendario
+          </v-btn>
+        </router-link>
+      </div>
+      <div>
+        <router-link to="/shop" :disabled="valideActiveUser" tag="span">
+          <v-btn class="ma-2" text>
+            <v-icon center x-large>{{ storeButton }}</v-icon
+            >Tienda
+          </v-btn>
+        </router-link>
+      </div>
+      <v-btn text>
+        <v-icon center large>{{ newUserIcon }}</v-icon
+        >Contactenos
+      </v-btn>
+      <div>
+        <router-link to="/register" tag="span">
+          <v-btn v-show="!loginUser" text @click="setHideMenu(false)">
+            <v-icon center large>{{ newUserIcon }}</v-icon
+            >Crear cuenta
+          </v-btn>
+        </router-link>
+      </div>
+      <div class="divChangeUser">
+        <router-link to="/login" tag="span">
+          <v-btn v-show="!loginUser" text @click="setHideMenu(false)">
+            <v-icon center large>{{ changeUser }}</v-icon>
+            {{ loginLabel }}
+          </v-btn>
+        </router-link>
+      </div>
+      <v-btn
+        v-show="loginUser"
+        class="iconMenu"
+        outlined
+        fab
+        @click.stop="menu = !menu"
+      >
+        <v-icon large>{{ changeUser }}</v-icon>
+      </v-btn>
     </v-app-bar>
     <!-- Object showing the selected path -->
     <router-view />
     <!-------- Side drop-down menu ----------->
-    <v-navigation-drawer v-model="menu" absolute temporary color="#f5f5f5">
+    <v-navigation-drawer
+      v-model="menu"
+      absolute
+      right
+      temporary
+      color="#f5f5f5"
+    >
       <v-flex cols="1">
         <v-layout column align-center>
           <div class="divChangeUser">
@@ -146,6 +180,8 @@ export default {
       changeUser: mdiAccount,
       newUserIcon: mdiAccountPlus,
       menuHamburger: mdiMenu,
+      // Boolean that represents if the user has logged in
+      loginUser: false,
     };
   },
   methods: {
@@ -161,6 +197,7 @@ export default {
       } else {
         this.loginLabel = "Cambiar de sesion";
         this.pathCalendar = "calendar";
+        this.loginUser = true;
         return false;
       }
     },
