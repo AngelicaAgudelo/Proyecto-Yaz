@@ -66,29 +66,15 @@
     <!-------- Side drop-down menu ----------->
     <v-navigation-drawer
       v-model="menu"
-      absolute
+      app
       right
       temporary
       color="#f5f5f5"
+      width="350"
     >
       <v-flex cols="1">
         <v-layout column align-center>
-          <div class="divChangeUser">
-            <router-link to="/login" tag="span">
-              <v-btn
-                class="ma-2"
-                tile
-                min-width="258"
-                min-height="50"
-                :elevation="3"
-                @click="setHideMenu(false)"
-              >
-                <v-icon center x-large>{{ changeUser }}</v-icon>
-                {{ loginLabel }}
-              </v-btn>
-            </router-link>
-          </div>
-          <v-avatar id="icon_worker" size="110px">
+          <v-avatar id="icon_worker" size="230px">
             <img
               :src="require('@/assets/' + activeUser.user_photo)"
               alt="John"
@@ -97,59 +83,32 @@
           <div id="name_worker">
             <h2>{{ activeUser.user_name }}</h2>
           </div>
-          <div class="divShop">
-            <router-link to="/shop" :disabled="valideActiveUser" tag="span">
-              <v-btn
-                class="ma-2"
-                tile
-                outlined
-                color="black"
-                :elevation="7"
-                min-width="258"
-                min-height="80"
-              >
-                <v-icon center x-large>{{ storeButton }}</v-icon
-                >Tienda
-              </v-btn>
-            </router-link>
-          </div>
-          <div class="divCalendar">
-            <router-link :to="'/' + pathCalendar" tag="span">
-              <v-btn
-                class="ma-2"
-                tile
-                outlined
-                :disabled="valideActiveUser"
-                color="black"
-                :elevation="7"
-                min-width="258"
-                min-height="80"
-              >
-                <v-icon center x-large>{{ calendarButton }}</v-icon
-                >Calendario
-              </v-btn>
-            </router-link>
-          </div>
-          <v-spacer></v-spacer>
-          <div class="divRegister">
-            <router-link to="/register" tag="span">
-              <v-btn
-                class="ma-2"
-                tile
-                outlined
-                color="black"
-                min-width="258"
-                min-height="80"
-                :elevation="7"
-                @click="setHideMenu(false)"
-              >
-                <v-icon center x-large>{{ newUserIcon }}</v-icon
-                >Crear cuenta
-              </v-btn>
-            </router-link>
+          <div id="email_worker">
+            <h2>{{ activeUser.user_email }}</h2>
           </div>
         </v-layout>
       </v-flex>
+      <v-layout row align-center justify-center>
+        <div class="signOffDiv">
+          <router-link to="/login" tag="span">
+            <v-btn
+              class="ma-2"
+              tile
+              min-width="258"
+              min-height="60"
+              :elevation="3"
+              @click="setHideMenu(false)"
+            >
+              Editar Perfil
+            </v-btn>
+          </router-link>
+
+          <v-btn class="ma-2" tile min-width="258" min-height="60" :elevation="3">
+            CERRAR SESION
+          </v-btn>
+        </div>
+      </v-layout>
+      <v-row justify="center"> </v-row>
     </v-navigation-drawer>
   </v-app>
 </template>
@@ -211,7 +170,12 @@ export default {
   margin-bottom: 20px;
 }
 #name_worker {
-  margin-bottom: 50px;
+  margin-top: 30px;
+  margin-bottom: 15px;
+  font-size:x-large;
+}
+#email_worker {
+  font-size:x-large;
 }
 .divImg {
   top: 25px;
@@ -219,8 +183,6 @@ export default {
 }
 #shop {
   margin-right: 610px;
-}
-.imgYaz {
 }
 .iconMenu {
   align-self: center;
@@ -234,5 +196,12 @@ export default {
 }
 .divRegister {
   margin-top: 60px;
+}
+.signOffDiv {
+  left: 28px;
+  margin: 17px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
 }
 </style>
