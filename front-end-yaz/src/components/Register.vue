@@ -92,6 +92,7 @@
 import { mapState } from "vuex";
 // Import of the object that allows manipulating Store functions
 import { mapMutations } from "vuex";
+import UsersService from "../services/UsersService";
 
 export default {
   data() {
@@ -136,6 +137,7 @@ export default {
       photo: null,
       // Variable to change the route depending on whether you log in or get an error
       path: "register",
+      email: "cal@cal",
     };
   },
   methods: {
@@ -165,6 +167,7 @@ export default {
         };
         this.addUser(user);
         this.setActiveUser(user);
+        this.createUser();
         if (this.paymentProcess == false) {
           this.setHideMenu(true);
           this.path = "";
@@ -173,6 +176,19 @@ export default {
           this.path = "payment";
         }
       }
+    },
+    async createUser() {
+      var data = {
+        user_name: this.name,
+        user_type: 2,
+        user_photo: this.photo.name,
+        user_password: this.password,
+        user_email: this.email,
+        user_phone: "523",
+        user_address: "cra 49",
+      };
+      const response = await UsersService.addUser(data);
+      console.log(response);
     },
   },
   computed: {
