@@ -1,7 +1,6 @@
 const chai = require("chai");
 const expect = require("chai").expect;
 const chaiHttp = require('chai-http');
-const request = require("request");
 
 chai.use(chaiHttp);
 const url = "http://localhost:3000";
@@ -17,6 +16,7 @@ describe("User Test", function () {
         });
     });
   });
+
   describe("Insert a 'user' endpoint", function () {
     it('Should insert a user', function (done) {
       chai.request(url)
@@ -28,6 +28,7 @@ describe("User Test", function () {
         });
     });
   });
+
   describe("Get 'one user' endpoint", function () {
     it("Should return a user with id 2", function (done) {
       chai.request(url)
@@ -38,6 +39,7 @@ describe("User Test", function () {
         });
     });
   });
+
   describe("Update 'one user' endpoint", () => {
     it('Should update the user phone number', (done) => {
       chai.request(url)
@@ -50,6 +52,7 @@ describe("User Test", function () {
         });
     });
   });
+
   describe("Delete 'one user' endpoint", () => {
     it('Should delete the user with id 2', (done) => {
       chai.request(url)
