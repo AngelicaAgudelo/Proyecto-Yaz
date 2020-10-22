@@ -109,6 +109,7 @@ import { mapMutations } from "vuex";
 // Import icons to move between days
 import { mdiChevronRight, mdiDogSide } from "@mdi/js";
 import { mdiChevronLeft } from "@mdi/js";
+import EventsService from "../services/EventsService";
 
 export default {
   components: {
@@ -141,6 +142,7 @@ export default {
     lastDate: null,
     // Variable that stores the last event created
     lastEvent: null,
+    listEvents: [],
   }),
   mounted() {
     // Method that creates the categories from the users
@@ -160,6 +162,13 @@ export default {
       "setSelectedEvent",
       "setEditEvent",
     ]),
+    async addEvent(data) {
+      const response = await EventsService.addEvent(data);
+      console.log(response);
+    },
+    async getEvents() {
+      const response = await EventsService.getEvents();
+    },
     // Function that returns the color of the selected event
     getEventColor(event) {
       return event.color;
@@ -198,6 +207,21 @@ export default {
           }
         }
         var evntId = higher + 1;
+        //  -------
+
+        //  Event form -------
+        
+        // id_service
+        // email_client
+        // id_worker
+        // service_date_start
+        // service_date_end
+        // service_color  
+        // service_name
+        // service_description
+        // service_price
+        // service_status
+
         //  -------
         var event = {
           id: evntId,
@@ -301,7 +325,7 @@ export default {
       if (this.activeUser.user_type == 2) {
         this.isClient = true;
       } else {
-        this.isCliente = false;
+        this.isClient = false;
       }
     },
     // Function that moves the calendar to the left
