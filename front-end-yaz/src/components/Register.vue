@@ -3,7 +3,7 @@
     <!-------- Div to center the v-card ----------->
     <div class="divCenter">
       <!-------- V-card ----------->
-      <v-card width="600px" height="760px" shaped>
+      <v-card width="600px" height="800px" shaped>
         <div class="divCentral">
           <v-col cols="10">
             <!-------- Image Yaz ----------->
@@ -15,17 +15,17 @@
               <v-form ref="form" v-model="valid" lazy-validation>
                 <!-------- ID input ----------->
                 <v-text-field
-                  v-model="id"
-                  :counter="9"
-                  :rules="idRules"
-                  label="Identificacion"
+                  v-model="email"
+                  :counter="24"
+                  :rules="emailRules"
+                  label="Email"
                   required
                   outlined
                 ></v-text-field>
                 <!-------- Name input ----------->
                 <v-text-field
                   v-model="name"
-                  :counter="12"
+                  :counter="32"
                   :rules="nameRules"
                   label="Nombre"
                   required
@@ -34,27 +34,34 @@
                 <!-------- Password input ----------->
                 <v-text-field
                   v-model="password"
-                  :counter="15"
+                  :counter="24"
                   :rules="passwordRules"
                   :type="show1 ? 'text' : 'password'"
                   label="Contraseña"
                   required
                   outlined
                 ></v-text-field>
-                <!-------- type user input ----------->
-                <v-select
-                  v-model="select"
-                  :items="items"
-                  :rules="[(v) => !!v || 'Item is required']"
-                  label="Tipo cuenta"
-                  required
+                <!-------- phone input ----------->
+                <v-text-field
+                  v-model="phone"
+                  :counter="10"
+                  :rules="phoneRules"
+                  label="Teléfono"
                   outlined
-                ></v-select>
+                ></v-text-field>
+                <!-------- Address input ----------->
+                <v-text-field
+                  v-model="address"
+                  :counter="64"
+                  :rules="addressRules"
+                  label="Dirección"
+                  outlined
+                ></v-text-field>
                 <!-------- Image input ----------->
                 <v-file-input
                   v-model="photo"
                   accept="image/*"
-                  label="File input"
+                  label="Foto de perfil"
                 ></v-file-input>
                 <!-------- Button to create user ----------->
                 <v-row>
@@ -103,26 +110,24 @@ export default {
       nameRules: [
         (v) => !!v || "Se requiere un nombre",
         (v) =>
-          (v && v.length <= 12) ||
-          "El nombre no puede pasar de los 12 caracteres",
+          (v && v.length <= 32) ||
+          "El nombre no puede exceder los 32 caracteres",
       ],
       // Password field validations to ensure its integrity
       passwordRules: [
-        (v) => !!v || "Se requiere un nombre",
+        (v) => !!v || "Se requiere una contraseña",
         (v) =>
-          (v && v.length <= 15) ||
-          "La contraseña no puede pasar de los 15 digitos",
+          (v && v.length <= 24) ||
+          "La contraseña no puede exceder los 24 dígitos",
       ],
-      // Validations of the Identification field to guarantee its integrity
-      idRules: [
-        (v) => !!v || "Se requiere una identificacion",
-        (v) => !isNaN(parseFloat(v)) || "Solo se permite numeros",
+      // Email field validations to ensure its integrity
+      emailRules: [
+        (v) => !!v || "Se requiere un email",
+        (v) => /.+@.+/.test(v) || "El email no es válido",
         (v) =>
-          (v >= 0 && v <= 999999999) ||
-          "La identificacion es maximo de 9 Digitos",
+          (v && v.length <= 24) ||
+          "La contraseña no puede exceder los 24 dígitos",
       ],
-      // Combobox data to choose the type of user
-      items: ["Usuario", "Trabajador"],
       // ID
       id: "",
       // Name
@@ -131,13 +136,13 @@ export default {
       password: "",
       // validation of the password input point format
       show1: false,
-      // Variable where the user type is saved
-      select: null,
       // Variable where the address of the photo is saved
       photo: null,
       // Variable to change the route depending on whether you log in or get an error
       path: "register",
-      email: "cal@cal",
+      email: "",
+      phone: "",
+      address: "",
     };
   },
   methods: {
@@ -145,14 +150,8 @@ export default {
     ...mapMutations(["addUser", "activeUser", "setHideMenu", "setActiveUser"]),
     // Function to validate the input data, create the user and return to the previous route
     validate() {
-      var type = 0;
       var photo = null;
       if (this.$refs.form.validate()) {
-        if (this.select === "Trabajador") {
-          type = 1;
-        } else {
-          type = 2;
-        }
         if (this.photo == null) {
           photo = "null.png";
         } else {
@@ -161,7 +160,8 @@ export default {
         var user = {
           id_user: this.id,
           user_name: this.name,
-          user_type: type,
+          user_email: this.email,
+          user_type: 2,
           user_photo: photo,
           user_password: this.password,
         };
@@ -194,6 +194,32 @@ export default {
   computed: {
     // Declaration of Store variables
     ...mapState(["paymentProcess"]),
+    // Validations of the Identification field to guarantee its integrity
+    phoneRules() {
+      const rules = [];
+      if (this.phone != "") {
+        const rule = (v) => !isNaN(parseFloat(v)) || "Solo se permite números";
+        rules.push(rule);
+      }
+      if (this.phone != "") {
+        const rule = (v) =>
+          (v >= 0 && v <= 9999999999) ||
+          "El teléfono no puede exceder los 10 Dígitos";
+        rules.push(rule);
+      }
+      return rules;
+    },
+    // Address field validations to ensure its integrity
+    addressRules() {
+      const rules = [];
+      if (this.address != "") {
+        const rule = (v) =>
+          (v && v.length <= 64) ||
+          "La dirección no puede exceder los 64 caracteres";
+        rules.push(rule);
+      }
+      return rules;
+    },
   },
 };
 </script>
@@ -223,8 +249,8 @@ export default {
   background-position: center center;
   background-repeat: no-repeat;
   background-attachment: fixed;
-  background-size: cover;
   background-color: #464646;
+  height: 100vh;
 }
 .imageyaz {
   height: 30px;
