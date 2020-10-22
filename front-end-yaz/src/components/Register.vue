@@ -108,25 +108,25 @@ export default {
       valid: true,
       // Name field validations to ensure its integrity
       nameRules: [
-        (v) => !!v || "Se requiere un Nombre",
+        (v) => !!v || "Se requiere un nombre",
         (v) =>
-          (v && v.length <= 12) ||
-          "El nombre no puede exceder de los 12 caracteres",
+          (v && v.length <= 32) ||
+          "El nombre no puede exceder los 32 caracteres",
       ],
       // Password field validations to ensure its integrity
       passwordRules: [
-        (v) => !!v || "Se requiere una Contraseña",
+        (v) => !!v || "Se requiere una contraseña",
         (v) =>
           (v && v.length <= 24) ||
-          "La contraseña no puede exceder de los 24 dígitos",
+          "La contraseña no puede exceder los 24 dígitos",
       ],
       // Email field validations to ensure its integrity
       emailRules: [
-        (v) => !!v || "Se requiere un Email",
+        (v) => !!v || "Se requiere un email",
         (v) => /.+@.+/.test(v) || "El email no es válido",
         (v) =>
           (v && v.length <= 24) ||
-          "La contraseña no puede exceder de los 24 dígitos",
+          "La contraseña no puede exceder los 24 dígitos",
       ],
       // ID
       id: "",
@@ -215,7 +215,7 @@ export default {
       if (this.address != "") {
         const rule = (v) =>
           (v && v.length <= 64) ||
-          "La dirección no puede exceder de los 64 caracteres";
+          "La dirección no puede exceder los 64 caracteres";
         rules.push(rule);
       }
       return rules;
