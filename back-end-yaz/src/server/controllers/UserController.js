@@ -90,7 +90,7 @@ class UserController {
     }
 
     static async getUserByEmail(req, res) {
-        const requiredUser = req.body.user_email;
+        const requiredUser = req.params.email;
         try {
             const returnedUser = await UserService.getUserByEmail(requiredUser)
             if (returnedUser) {

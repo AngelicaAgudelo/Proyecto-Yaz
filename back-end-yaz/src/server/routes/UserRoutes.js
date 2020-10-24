@@ -8,7 +8,7 @@ router.get('/id=:id', UserController.getUserById);
 router.put('/id=:id', UserController.updateUserById);
 router.delete('/id=:id', UserController.deleteUserById);
 
-router.get('/email', UserController.getUserByEmail);
+router.get('/email=:email', UserController.getUserByEmail);
 router.get('/workers', UserController.getAllWorkers);
 
 export default router;
