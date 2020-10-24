@@ -61,7 +61,7 @@ class UserService {
       throw error;
     }
   }
-  
+
   static async getUserByEmail(email) {
     try {
       const returnedUser = await models.user.findOne({
@@ -76,7 +76,7 @@ class UserService {
 
   static async getAllWorkers() {
     try {
-      return await models.user.findAll({ where: { user_type: 1}});
+      return await models.user.findAll({ where: { user_type: 1 } });
     } catch (error) {
       throw error;
     }
