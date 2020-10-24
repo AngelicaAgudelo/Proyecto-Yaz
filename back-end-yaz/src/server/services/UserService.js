@@ -61,6 +61,18 @@ class UserService {
       throw error;
     }
   }
+  
+  static async getUserByEmail(email) {
+    try {
+      const returnedUser = await models.user.findOne({
+        where: { user_email: email }
+      });
+
+      return returnedUser;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export default UserService;

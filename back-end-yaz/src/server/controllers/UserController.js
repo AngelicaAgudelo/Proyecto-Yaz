@@ -88,6 +88,22 @@ class UserController {
             return util.send(res);
         }
     }
+
+    static async getUserByEmail(req, res){
+        const requiredUser = req.body.user_email;
+        try {
+            const returnedUser = await UserService.getUserByEmail(requiredUser)
+            if(returnedUser){
+                util.setSuccess(200, `User ${requiredUser} returned!`, returnedUser);
+            }else{
+                util.setSuccess(204, `Could not found user ${requiredUser}!`);
+            }
+            return util.send(res);
+        } catch (error) {
+            util.setError(400, error);
+            return util.send(res);
+        }
+    }
 }
 
 export default UserController;
