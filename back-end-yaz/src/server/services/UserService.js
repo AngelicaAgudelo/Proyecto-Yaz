@@ -73,6 +73,14 @@ class UserService {
       throw error;
     }
   }
+
+  static async getAllWorkers() {
+    try {
+      return await models.user.findAll({ where: { user_type: 1}});
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export default UserService;

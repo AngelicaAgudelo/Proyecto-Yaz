@@ -104,6 +104,21 @@ class UserController {
             return util.send(res);
         }
     }
+
+    static async getAllWorkers(req, res) {
+        try {
+            const allWorkers = await UserService.getAllWorkers();
+            if(allWorkers.length > 0){
+                util.setSuccess(200, 'Users returned', allWorkers)
+            } else {
+                util.setSuccess(204, 'No users found');
+            }
+            return util.send(res);   
+        } catch (error) {
+            util.setError(400, error);
+            return util.send(res);
+        }
+    }
 }
 
 export default UserController;
