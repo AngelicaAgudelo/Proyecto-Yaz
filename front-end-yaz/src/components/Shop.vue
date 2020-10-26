@@ -239,7 +239,7 @@ export default {
     // Function that redirect to payment Component
     payItems() {
       if (this.totalElements > 0) {
-        if (this.activeUser.user_email != "null") {
+        if (this.activeUser.user_email != "") {
           this.setHideMenu(false);
           this.path = "payment";
         } else {

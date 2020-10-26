@@ -9,7 +9,10 @@ export default {
         return Api().post('/users', data)
     },
     getUserById(id) {
-        return Api().get(`/users/${id}`)
+        return Api().get(`/users/id=${id}`)
+    },
+    getUserByEmail(email) {
+        return Api().get(`/users/email=${email}`)
     },
     updateUser(id, data) {
         return Api().put(`/users/${id}`, data)
