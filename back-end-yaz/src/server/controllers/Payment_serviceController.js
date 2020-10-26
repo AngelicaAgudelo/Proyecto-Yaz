@@ -34,8 +34,9 @@ class Payment_serviceController {
 
     static async updatePayment_serviceById(req, res) {
         const { id } = req.params;
+        const alteredPayment_service = req.body;
         try {
-            const updatePayment_service = await Payment_serviceService.updatePayment_serviceById(id, alteredItem)
+            const updatePayment_service = await Payment_serviceService.updatePayment_serviceById(id, alteredPayment_service)
             if (!Number(id)) {
                 util.setError(400, 'Please input a valid numeric value');
             } else if(updatePayment_service){
