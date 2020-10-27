@@ -9,6 +9,7 @@ const user = (sequelize, DataTypes) => {
     user_name: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
     user_type: {
       type: DataTypes.INTEGER,
@@ -36,11 +37,11 @@ const user = (sequelize, DataTypes) => {
 
   User.associate = models => {
     User.hasMany(models.Service,
-      { foreignKey: 'id_user', as: 'user_service' }
+      { foreignKey: 'user_name', as: 'user_service' }
     );
 
     User.hasMany(models.Service,
-      { foreignKey: 'id_user', as: 'worker_service' }
+      { foreignKey: 'user_name', as: 'worker_service' }
     );
 
     User.hasMany(models.Payment_Item,

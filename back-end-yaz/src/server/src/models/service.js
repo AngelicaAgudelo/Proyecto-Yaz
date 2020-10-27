@@ -6,20 +6,20 @@ const service = (sequelize, DataTypes) => {
       primaryKey: true,
       allowNull: false,
     },
-    id_client: {
-      type: DataTypes.INTEGER,
+    client_name: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
-    id_worker: {
-      type: DataTypes.INTEGER,
+    worker_name: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
     service_date_start: {
-      type: DataTypes.DATE,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     service_date_end: {
-      type: DataTypes.DATE,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     service_color: {
@@ -44,11 +44,11 @@ const service = (sequelize, DataTypes) => {
 
   Service.associate = models => {
     Service.belongsToMany(models.User,
-      { foreignKey: 'id_client', as: 'user_service' }
+      { foreignKey: 'client_name', as: 'user_service' }
     );
 
     Service.belongsToMany(models.User,
-      { foreignKey: 'id_worker', as: 'worker_service' }
+      { foreignKey: 'worker_name', as: 'worker_service' }
     );
 
     Service.hasOne(models.Payment_Service,
