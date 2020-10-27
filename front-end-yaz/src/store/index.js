@@ -114,12 +114,13 @@ export default new Vuex.Store({
     ],
     // Open user session
     activeUser: {
-      id_user: 0,
-      user_email: "null",
       user_name: "",
       user_type: 0,
       user_photo: "null.png",
       user_password: "",
+      user_email: "",
+      user_phone: "",
+      user_address: ""
     },
     // boolean that says the user type
     isClient: 0,
@@ -213,6 +214,15 @@ export default new Vuex.Store({
     },
     // Function to change user session
     setActiveUser(state, user) {
+      if (user.user_photo == null) {
+        user.user_photo = "null.png"
+      }
+      if (user.user_address == null) {
+        user.user_address = "";
+      }
+      if (user.user_phone == null) {
+        user.user_phone = "";
+      }
       state.activeUser = user;
     },
     // Function to validate that the user entered if it exists
