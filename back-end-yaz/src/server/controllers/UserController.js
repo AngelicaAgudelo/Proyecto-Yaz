@@ -105,13 +105,16 @@ class UserController {
         }
     }
 
-    static async getAllWorkers(req, res) {
+    static async getAllUsersByType(req, res) {
+        const { type } = req.params;
         try {
-            const allWorkers = await UserService.getAllWorkers();
-            if (allWorkers.length > 0) {
-                util.setSuccess(200, 'Users returned', allWorkers)
+            const returnedUser = await UserService.getAllUsersByType(type);
+            if (!Number(type)) {
+                util.setError(400, 'Please input a valid numeric value');
+            } else if (returnedUser) {
+                util.setSuccess(200, `User with type ${type} returned!`, returnedUser);
             } else {
-                util.setSuccess(204, 'No users found');
+                util.setSuccess(204, `Could not found user ${type}!`);
             }
             return util.send(res);
         } catch (error) {

@@ -9,6 +9,6 @@ router.put('/id=:id', UserController.updateUserById);
 router.delete('/id=:id', UserController.deleteUserById);
 
 router.get('/email=:email', UserController.getUserByEmail);
-router.get('/workers', UserController.getAllWorkers);
+router.get('/type=:type', UserController.getAllUsersByType);
 
 export default router;
