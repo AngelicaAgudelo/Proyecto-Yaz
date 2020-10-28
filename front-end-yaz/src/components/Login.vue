@@ -85,6 +85,8 @@ import { mapMutations } from "vuex";
 import { mapState } from "vuex";
 // Import of the login warning icon
 import { mdiAlert } from "@mdi/js";
+import UsersService from "../services/UsersService";
+
 export default {
   data() {
     return {
@@ -97,8 +99,8 @@ export default {
       passwordRules: [
         (v) => !!v || "Se requiere una contraseña",
         (v) =>
-          (v && v.length <= 15) ||
-          "La contraseña no puede pasar de los 15 digitos",
+          (v && v.length <= 32) ||
+          "La contraseña no puede pasar de los 32 digitos",
       ],
       // Variable to validate that all registry data is correct
       valid: true,
@@ -119,29 +121,34 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(["isUser", "setHideMenu"]),
+    ...mapMutations(["setHideMenu", "setActiveUser"]),
     // Method that verifies if the user exists, and if it exists
-    validateSession() {
-      var emailPass = {
-        email: this.email,
-        password: this.password,
-      };
-      this.isUser(emailPass);
-      var nume = this.isClient;
-      if (nume == 0) {
-        if (this.paymentProcess == false) {
-          this.setHideMenu(true);
-          this.path = "";
+    async validateSession() {
+      try {
+        const response = await UsersService.getUserByEmail(this.email);
+        if (response.data != "") {
+          if (response.data.data.user_password == this.password) {
+            this.setActiveUser({
+              user_name: response.data.data.user_name,
+              user_type: response.data.data.user_type,
+              user_photo: response.data.data.user_photo,
+              user_password: response.data.data.user_password,
+              user_email: response.data.data.user_email,
+              user_phone: response.data.data.user_phone,
+              user_address: response.data.data.user_address,
+            });
+            this.setHideMenu(true);
+            this.$router.go(-1);
+          } else {
+            this.bolError = true;
+            this.error = "La contraseña es incorrecta";
+          }
         } else {
-          this.setHideMenu(false);
-          this.path = "payment";
+          this.bolError = true;
+          this.error = "El usuario no existe";
         }
-      } else if (nume == 1) {
-        this.bolError = true;
-        this.error = "La contraseña es incorrecta";
-      } else {
-        this.bolError = true;
-        this.error = "El usuario no existe";
+      } catch (error) {
+        console.log(error);
       }
     },
   },

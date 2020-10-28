@@ -151,7 +151,7 @@ export default {
     // Declaration of Store variables
     ...mapState(["hideMenu", "activeUser"]),
     valideActiveUser() {
-      if (this.activeUser.user_email == "null") {
+      if (this.activeUser.user_email == "") {
         return true;
       } else {
         this.loginLabel = "Cambiar de sesion";
