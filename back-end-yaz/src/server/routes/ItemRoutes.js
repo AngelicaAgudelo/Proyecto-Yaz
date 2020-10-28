@@ -4,8 +4,8 @@ const router = Router();
 
 router.get('/', ItemController.getAllItems);
 router.post('/', ItemController.addItem);
-router.get('/:id', ItemController.getItemById);
-router.put('/:id', ItemController.updateItemById);
-router.delete('/:id', ItemController.deleteItemById);
+router.get('/id=:id', ItemController.getItemById);
+router.put('/id=:id', ItemController.updateItemById);
+router.delete('/id=:id', ItemController.deleteItemById);
 
 export default router;

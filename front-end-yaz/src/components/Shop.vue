@@ -34,7 +34,7 @@
                     >$ {{ car.item.item_price }}</v-list-item-subtitle
                   >
                   <v-img
-                    :src="car.item.src"
+                    :src="require('@/assets/' + car.item.item_photo)"
                     class="black--text align-end"
                     gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
                     height="100px"
@@ -59,7 +59,7 @@
     <!-------- Start of purchase items ----------->
     <v-container class="my-4">
       <v-row row grap>
-        <v-flex xs12 sm6 md5 lg3 v-for="item in items" :key="item.id_item">
+        <v-flex xs12 sm6 md5 lg3 v-for="item in listItems" :key="item.id_item">
           <template>
             <div id="divCart">
               <v-card class="mx-auto" :elevation="3" max-width="350">
@@ -73,7 +73,7 @@
                   </v-layout>
                 </v-list-item-content>
                 <v-img
-                  :src="item.src"
+                  :src="require('@/assets/' + item.item_photo)"
                   class="black--text align-end"
                   height="200px"
                 >
@@ -135,6 +135,7 @@ import { mdiCashUsdOutline } from "@mdi/js";
 import { mapState } from "vuex";
 // Import of the object that allows to manipulate Store functions
 import { mapMutations } from "vuex";
+import ItemsService from "../services/ItemsService";
 
 export default {
   components: {},
@@ -162,13 +163,23 @@ export default {
       path: "shop",
       // Variable that represent boolean state of pay button
       payButton: true,
+      // Shop items
+      listItems: [],
     };
   },
   mounted() {
     this.mountedFunction();
   },
+  created() {
+    this.getItems();
+  },
   methods: {
     ...mapMutations(["setHideMenu", "setShoppingCar", "setPaymentProcess"]),
+    //Function that obtains the items of the database
+    async getItems() {
+      const response = await ItemsService.getItems();
+      this.listItems = response.data.data;
+    },
     // Function to transfer the item to the shopping cart
     buy(vari) {
       var val = false;
@@ -261,7 +272,7 @@ export default {
   },
   computed: {
     // Declaration of Store variables
-    ...mapState(["items", "shoppingCar", "activeUser"]),
+    ...mapState(["shoppingCar", "activeUser"]),
   },
 };
 </script>>
