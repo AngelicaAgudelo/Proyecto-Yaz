@@ -149,7 +149,7 @@ export default {
     // Statement of Store methods
     ...mapMutations(["addUser", "activeUser", "setHideMenu", "setActiveUser"]),
     // Function to validate the input data, create the user and return to the previous route
-    validate() {
+    async validate() {
       var photo = null;
       if (this.$refs.form.validate()) {
         if (this.photo == null) {
@@ -158,38 +158,51 @@ export default {
           photo = this.photo.name;
         }
         var user = {
-          id_user: this.id,
           user_name: this.name,
-          user_email: this.email,
           user_type: 2,
           user_photo: photo,
           user_password: this.password,
+          user_email: this.email,
+          user_phone: this.phone,
+          user_address: this.address,
         };
-        this.addUser(user);
-        this.setActiveUser(user);
-        this.createUser();
-        if (this.paymentProcess == false) {
-          this.setHideMenu(true);
-          this.path = "";
+        const response = await UsersService.getUserByEmail(user.user_email);
+        //console.log(response);
+        if (response.data == "") {
+          this.createUser(user);
         } else {
-          this.setHideMenu(false);
-          this.path = "payment";
+          console.log("Ya existe el email asociado a una cuenta");
         }
       }
     },
-    async createUser() {
-      var data = {
+    async createUser(user) {
+      const response = await UsersService.addUser(user);
+      this.addUser(user);
+      this.setActiveUser(user);
+      if (this.paymentProcess == false) {
+        this.setHideMenu(true);
+        this.path = "";
+      } else {
+        this.setHideMenu(false);
+        this.path = "payment";
+      }
+
+      /*var data = {
         user_name: this.name,
         user_type: 2,
-        user_photo: this.photo.name,
+        user_photo: this.photo,
         user_password: this.password,
         user_email: this.email,
-        user_phone: "523",
-        user_address: "cra 49",
+        user_phone: this.phone,
+        user_address: this.address,
       };
       const response = await UsersService.addUser(data);
       console.log(response);
+      */
     },
+  },
+  created() {
+    this.verifyNameKey();
   },
   computed: {
     // Declaration of Store variables
