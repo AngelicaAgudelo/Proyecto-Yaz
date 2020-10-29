@@ -74,9 +74,9 @@ class UserService {
     }
   }
 
-  static async getAllWorkers() {
+  static async getAllUsersByType(type) {
     try {
-      return await models.user.findAll({ where: { user_type: 1 } });
+      return await models.user.findAll({ where: { user_type: Number(type) } });
     } catch (error) {
       throw error;
     }
