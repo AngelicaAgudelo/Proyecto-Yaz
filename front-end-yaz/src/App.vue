@@ -76,7 +76,7 @@
         <v-layout column align-center>
           <v-avatar id="icon_worker" size="230px">
             <img
-              :src="require('@/assets/' + activeUser.user_photo)"
+              :src="activeUser.user_photo"
               alt="John"
             />
           </v-avatar>

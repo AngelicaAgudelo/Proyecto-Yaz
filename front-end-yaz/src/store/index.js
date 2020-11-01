@@ -1,5 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+// Import firebase to be able to upload images
+import { storage } from "../services/firebase";
+const ref = storage.ref();
 
 Vue.use(Vuex)
 
@@ -116,7 +119,7 @@ export default new Vuex.Store({
     activeUser: {
       user_name: "",
       user_type: 0,
-      user_photo: "null.png",
+      user_photo: "https://firebasestorage.googleapis.com/v0/b/yaz-85eb7.appspot.com/o/Users%2Fnull.png?alt=media&token=22b0ab1c-e1ea-4e90-9e66-3ccb11b78768",
       user_password: "",
       user_email: "",
       user_phone: "",
@@ -140,6 +143,12 @@ export default new Vuex.Store({
     editEvent: false,
     // Boolean that says if the email exists or not
     checkEmail: false
+  },
+  putImage(){
+    ref.child('Users/'+ this.activeUser.user_photo)
+    .then( (url) => {
+      this.activeUser.user
+    })
   },
   mutations: {
     // set variable editEvent
