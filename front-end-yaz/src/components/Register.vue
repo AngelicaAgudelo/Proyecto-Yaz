@@ -156,24 +156,24 @@ export default {
     ...mapMutations(["addUser", "activeUser", "setHideMenu", "setActiveUser"]),
     // Function to validate the input data, create the user and return to the previous route
     validate() {
-      var photo = null;
       if (this.$refs.form.validate()) {
-        if (this.photo == null) {
-          photo = "null.png";
-        } else {
-          this.sendImage()
-        }
         var user = {
           id_user: this.id,
           user_name: this.name,
           user_email: this.email,
           user_type: 2,
-          user_photo: photo,
+          user_photo: this.photo,
           user_password: this.password,
         };
+        if (this.photo == null) {
+          this.photo =
+            "https://firebasestorage.googleapis.com/v0/b/yaz-85eb7.appspot.com/o/Users%2Fnull.png?alt=media&token=22b0ab1c-e1ea-4e90-9e66-3ccb11b78768";
+          this.createUser();
+        } else {
+          this.sendImage();
+        }
+
         this.addUser(user);
-        this.setActiveUser(user);
-        this.createUser();
         if (this.paymentProcess == false) {
           this.setHideMenu(true);
           this.path = "";
@@ -187,23 +187,30 @@ export default {
       var data = {
         user_name: this.name,
         user_type: 2,
-        user_photo: this.photo.name,
+        user_photo: this.photo,
         user_password: this.password,
         user_email: this.email,
         user_phone: "523",
         user_address: "cra 49",
       };
       const response = await UsersService.addUser(data);
-      console.log(response);
+      this.setActiveUser(data);
     },
     clickImage(e) {
       this.image = e;
     },
-    sendImage(){
+    sendImage() {
       const refImg = ref.child("Users/" + this.image.name);
       const metaData = { contentType: "jpeg" };
-      refImg.put(this.image, metaData).then((e) => console.log(e));
-    }
+      refImg.put(this.image, metaData).then((e) => {
+        ref.child("Users/" + this.image.name)
+          .getDownloadURL()
+          .then((url) => {
+            this.photo = url;
+            this.createUser();
+          });
+      });
+    },
   },
   computed: {
     // Declaration of Store variables
