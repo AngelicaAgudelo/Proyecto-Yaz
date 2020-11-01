@@ -59,6 +59,7 @@
                 ></v-text-field>
                 <!-------- Image input ----------->
                 <v-file-input
+                  @change="clickImage($event)"
                   v-model="photo"
                   accept="image/*"
                   label="Foto de perfil"
@@ -100,6 +101,9 @@ import { mapState } from "vuex";
 // Import of the object that allows manipulating Store functions
 import { mapMutations } from "vuex";
 import UsersService from "../services/UsersService";
+// Import firebase to be able to upload images
+import { storage } from "../services/firebase";
+const ref = storage.ref();
 
 export default {
   data() {
@@ -138,6 +142,8 @@ export default {
       show1: false,
       // Variable where the address of the photo is saved
       photo: null,
+      images: [],
+      image: null,
       // Variable to change the route depending on whether you log in or get an error
       path: "register",
       email: "",
@@ -155,7 +161,7 @@ export default {
         if (this.photo == null) {
           photo = "null.png";
         } else {
-          photo = this.photo.name;
+          this.sendImage()
         }
         var user = {
           id_user: this.id,
@@ -190,6 +196,14 @@ export default {
       const response = await UsersService.addUser(data);
       console.log(response);
     },
+    clickImage(e) {
+      this.image = e;
+    },
+    sendImage(){
+      const refImg = ref.child("Users/" + this.image.name);
+      const metaData = { contentType: "jpeg" };
+      refImg.put(this.image, metaData).then((e) => console.log(e));
+    }
   },
   computed: {
     // Declaration of Store variables
