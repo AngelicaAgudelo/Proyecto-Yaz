@@ -22,7 +22,7 @@ describe("Service Test", function () {
             chai.request(url)
                 .post('/service')
                 .send({
-                    id_service: 123456789, id_client: 1, id_worker: 2, service_date_start: "2008-11-11 13:23:44",
+                    id_service: 123456789, id_client: 1, client_name: "Juanito", worker_name: "Pepito", service_date_start: "2008-11-11 13:23:44",
                     service_date_end: "2008-11-11 13:23:44", service_color: "Red", service_name: "blower", service_status: "Open"
                 })
                 .end(function (err, res) {

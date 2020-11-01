@@ -35,11 +35,13 @@ class Payment_serviceController {
     static async updatePayment_serviceById(req, res) {
         const { id } = req.params;
         const alteredPayment_service = req.body;
+        if (!Number.isInteger(Number(id))) {
+            util.setError(400, 'Please input a valid numeric value');
+            return util.send(res);
+        }
         try {
             const updatePayment_service = await Payment_serviceService.updatePayment_serviceById(id, alteredPayment_service)
-            if (!Number(id)) {
-                util.setError(400, 'Please input a valid numeric value');
-            } else if(updatePayment_service){
+            if(updatePayment_service){
                 util.setSuccess(201, `Service receipt ${id} updated!`, updatePayment_service);
             }else{
                 util.setSuccess(204, `Could not update the service repeat ${id}!`)
@@ -53,11 +55,13 @@ class Payment_serviceController {
 
     static async getPayment_serviceById(req, res) {
         const { id } = req.params;
+        if (!Number.isInteger(Number(id))) {
+            util.setError(400, 'Please input a valid numeric value');
+            return util.send(res);
+        }
         try {
             const returnedPayment_service = await Payment_serviceService.getPayment_serviceById(id);
-            if (!Number(id)) {
-                util.setError(400, 'Please input a valid numeric value');
-            } else if(returnedPayment_service){
+            if(returnedPayment_service){
                 util.setSuccess(200, `Receipt service ${id} returned!`, returnedPayment_service);
             }else{
                 util.setSuccess(204, `Could not found receipt service ${id}!`);
@@ -71,13 +75,13 @@ class Payment_serviceController {
 
     static async deletePayment_serviceById(req, res) {
         const { id } = req.params;
+        if (!Number.isInteger(Number(id))) {
+            util.setError(400, 'Please input a valid numeric value');
+            return util.send(res);
+        }
         try {
             const payment_serviceToDelete = await Payment_serviceService.deletePayment_serviceById(id);
-            if (!Number(id)) {
-                util.setError(400, 'Please provide a numeric value');
-            } else if (req.body.user_type > 0) {
-                util.setError(403, `You do not have permission to delete this service receipt!`);
-            } else if(payment_serviceToDelete){
+            if(payment_serviceToDelete){
                 util.setSuccess(200, `User ${req.body.name} deleted service receipt ${id}!`, payment_serviceToDelete);
             }else{
                 util.setSuccess(204, `The payment receipt you are looking for can not be found`);

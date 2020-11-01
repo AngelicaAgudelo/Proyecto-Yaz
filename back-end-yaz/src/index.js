@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import cors from 'cors';
 import express from 'express';
-import bodyParser from 'body-parser'
+import bodyParser from 'body-parser';
 import userRoutes from './server/routes/UserRoutes';
 import serviceRoutes from './server/routes/ServiceRoutes';
 import payment_serviceRoutes from './server/routes/Payment_serviceRoutes';
@@ -27,9 +27,11 @@ app.use('/payment_service', payment_serviceRoutes);
 app.use('/payment_item', payment_itemRoutes);
 app.use('/item', itemRoutes);
 
-app.all('*', (req, res) => res.status(404).send({
-  message: 'URL NOT FOUND',
-}));
+app.all('*', (req, res) => {
+  res.status(404).send({
+    message: 'URL NOT FOUND',
+  })
+});
 
 models.sequelize.sync({ alter: true, logging: false }).then(() => {
   app.listen(PORT, err => {

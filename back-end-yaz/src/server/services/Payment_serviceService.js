@@ -5,7 +5,7 @@ class Payment_serviceService {
     try {
       return await models.payment_service.findAll();
     } catch (error) {
-      throw error;
+      throw error.errors[0].message.toString();
     }
   }
 
@@ -13,7 +13,7 @@ class Payment_serviceService {
     try {
       return await models.payment_service.create(newPayment_service);
     } catch (error) {
-      throw error;
+      throw error.errors[0].message.toString();
     }
   }
 
@@ -30,7 +30,7 @@ class Payment_serviceService {
       }
       return null;
     } catch (error) {
-      throw error;
+      throw error.errors[0].message.toString();
     }
   }
 
@@ -42,7 +42,7 @@ class Payment_serviceService {
 
       return returnedPayment_service;
     } catch (error) {
-      throw error;
+      throw error.errors[0].message.toString();
     }
   }
 
@@ -58,7 +58,7 @@ class Payment_serviceService {
       }
       return null;
     } catch (error) {
-      throw error;
+      throw error.errors[0].message.toString();
     }
   }
 }

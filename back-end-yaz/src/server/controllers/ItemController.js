@@ -35,11 +35,13 @@ class ItemController {
     static async updateItemById(req, res) {
         const { id } = req.params;
         const alteredItem = req.body;
+        if (!Number.isInteger(Number(id))) {
+            util.setError(400, 'Please input a valid numeric value');
+            return util.send(res);
+        }
         try {
             const updateItem = await ItemService.updateItemById(id, alteredItem)
-            if (!Number(id)) {
-                util.setError(400, 'Please input a valid numeric value');
-            } else if(updateItem){
+            if(updateItem){
                 util.setSuccess(201, `Item ${id} updated!`, updateItem);
             }else{
                 util.setSuccess(204, `Could not update item ${id}!`)
@@ -53,11 +55,13 @@ class ItemController {
 
     static async getItemById(req, res) {
         const { id } = req.params;
+        if (!Number.isInteger(Number(id))) {
+            util.setError(400, 'Please input a valid numeric value');
+            return util.send(res);
+        }
         try {
             const returnedItem = await ItemService.getItemById(id);
-            if (!Number(id)) {
-                util.setError(400, 'Please input a valid numeric value');
-            } else if(returnedItem){
+            if(returnedItem){
                 util.setSuccess(200, `Item ${id} returned!`, returnedItem);
             }else{
                 util.setSuccess(204, `Could not found item ${id}!`);
@@ -71,13 +75,13 @@ class ItemController {
 
     static async deleteItemById(req, res) {
         const { id } = req.params;
+        if (!Number.isInteger(Number(id))) {
+            util.setError(400, 'Please input a valid numeric value');
+            return util.send(res);
+        }
         try {
             const itemToDelete = await ItemService.deleteItemById(id);
-            if (!Number(id)) {
-                util.setError(400, 'Please provide a numeric value');
-            } else if (req.body.user_type > 0) {
-                util.setError(403, `You do not have permission to delete items!`);
-            } else if(itemToDelete){
+            if(itemToDelete){
                 util.setSuccess(200, `User ${req.body.name} deleted Item ${id}!`,itemToDelete);
             }else{
                 util.setSuccess(204, `The item you are looking for can not be found`);
