@@ -5,7 +5,7 @@ class ItemService {
     try {
       return await models.item.findAll();
     } catch (error) {
-      throw error;
+      throw error.errors[0].message.toString();
     }
   }
 
@@ -13,7 +13,7 @@ class ItemService {
     try {
       return await models.item.create(newItem);
     } catch (error) {
-      throw error;
+      throw error.errors[0].message.toString();
     }
   }
 
@@ -30,7 +30,7 @@ class ItemService {
       }
       return null;
     } catch (error) {
-      throw error;
+      throw error.errors[0].message.toString();
     }
   }
 
@@ -42,7 +42,7 @@ class ItemService {
 
       return returnedItem;
     } catch (error) {
-      throw error;
+      throw error.errors[0].message.toString();
     }
   }
 
@@ -58,7 +58,7 @@ class ItemService {
       }
       return null;
     } catch (error) {
-      throw error;
+      throw error.errors[0].message.toString();
     }
   }
 }

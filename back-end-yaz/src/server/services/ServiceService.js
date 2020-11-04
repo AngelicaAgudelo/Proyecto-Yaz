@@ -13,7 +13,7 @@ class ServiceService {
     try {
       return await models.service.create(newService);
     } catch (error) {
-      throw error;
+      throw error.errors[0].message.toString();
     }
   }
 
@@ -30,7 +30,7 @@ class ServiceService {
       }
       return null;
     } catch (error) {
-      throw error;
+      throw error.errors[0].message.toString();
     }
   }
 
@@ -42,7 +42,7 @@ class ServiceService {
 
       return returnedService;
     } catch (error) {
-      throw error;
+      throw error.errors[0].message.toString();
     }
   }
 
@@ -58,7 +58,7 @@ class ServiceService {
       }
       return null;
     } catch (error) {
-      throw error;
+      throw error.errors[0].message.toString();
     }
   }
 }

@@ -5,7 +5,7 @@ class UserService {
     try {
       return await models.user.findAll();
     } catch (error) {
-      throw error;
+      throw error.errors[0].message.toString();
     }
   }
 
@@ -13,7 +13,7 @@ class UserService {
     try {
       return await models.user.create(newUser);
     } catch (error) {
-      throw error;
+      throw error.errors[0].message.toString();
     }
   }
 
@@ -30,7 +30,7 @@ class UserService {
       }
       return null;
     } catch (error) {
-      throw error;
+      throw error.errors[0].message.toString();
     }
   }
 
@@ -42,7 +42,7 @@ class UserService {
 
       return returnedUser;
     } catch (error) {
-      throw error;
+      throw error.errors[0].message.toString();
     }
   }
 
@@ -58,7 +58,7 @@ class UserService {
       }
       return null;
     } catch (error) {
-      throw error;
+      throw error.errors[0].message.toString();
     }
   }
 
@@ -70,15 +70,15 @@ class UserService {
 
       return returnedUser;
     } catch (error) {
-      throw error;
+      throw error.errors[0].message.toString();
     }
   }
 
-  static async getAllWorkers() {
+  static async getAllUsersByType(type) {
     try {
-      return await models.user.findAll({ where: { user_type: 1 } });
+      return await models.user.findAll({ where: { user_type: Number(type) } });
     } catch (error) {
-      throw error;
+      throw error.errors[0].message.toString();
     }
   }
 }

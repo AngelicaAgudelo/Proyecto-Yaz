@@ -7,7 +7,7 @@ class Payment_itemsController {
 
     static async getAllPayment_items(req, res) {
         try {
-            const allPayment_items = await Payment_itemsService.getAllPayment_itemss();
+            const allPayment_items = await Payment_itemsService.getAllPayment_items();
             if(allPayment_items.length > 0){
                 util.setSuccess(200, 'Item receipt returned', allPayment_items)
             } else {
@@ -40,7 +40,7 @@ class Payment_itemsController {
             if (!Number(id)) {
                 util.setError(400, 'Please input a valid numeric value');
             }if(updatePayment_items){
-                util.setSuccess(201, `Item receipt ${id} updated!`);
+                util.setSuccess(201, `Item receipt ${id} updated!`, updatePayment_items);
             } else {
                 util.setSuccess(204, `Item receipt ${id} could not be updated!`);
             }
@@ -71,14 +71,14 @@ class Payment_itemsController {
 
     static async deletePayment_itemsById(req, res) {
         const { id } = req.params;
+        if (!Number.isInteger(Number(id))) {
+            util.setError(400, 'Please input a valid numeric value');
+            return util.send(res);
+        }
         try {
             const payment_itemsToDelete = await Payment_itemsService.deletePayment_itemsById(id);
-            if (!Number(id)) {
-                util.setError(400, 'Please provide a numeric value');
-            } else if (req.body.user_type > 0) {
-                util.setError(403, `You do not have permission to delete items receipts!`);
-            } else if(payment_itemsToDelete){
-                util.setSuccess(200, `User ${req.body.name} deleted items receipt ${id}!`);
+            if(payment_itemsToDelete){
+                util.setSuccess(200, `User ${req.body.name} deleted items receipt ${id}!`, payment_itemsToDelete);
             }else{
                 util.setSuccess(204, `The item receipt you are looking for can not be found`);
             }
