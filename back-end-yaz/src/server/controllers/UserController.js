@@ -35,11 +35,13 @@ class UserController {
     static async updateUserById(req, res) {
         const { id } = req.params;
         const alteredUser = req.body;
+        if (!Number.isInteger(Number(id))) {
+            util.setError(400, 'Please input a valid numeric value');
+            return util.send(res);
+        }
         try {
             const updateUser = await UserService.updateUserById(id, alteredUser)
-            if (!Number(id)) {
-                util.setError(400, 'Please input a valid numeric value');
-            } else if (updateUser) {
+            if (updateUser) {
                 util.setSuccess(201, `User ${id} updated!`, alteredUser);
             } else {
                 util.setSuccess(204, `Could not update user ${id}!`)
@@ -53,11 +55,13 @@ class UserController {
 
     static async getUserById(req, res) {
         const { id } = req.params;
+        if (!Number.isInteger(Number(id))) {
+            util.setError(400, 'Please input a valid numeric value');
+            return util.send(res);
+        }
         try {
             const returnedUser = await UserService.getUserById(id);
-            if (!Number(id)) {
-                util.setError(400, 'Please input a valid numeric value');
-            } else if (returnedUser) {
+            if (returnedUser) {
                 util.setSuccess(200, `User ${id} returned!`, returnedUser);
             } else {
                 util.setSuccess(204, `Could not found user ${id}!`);
@@ -71,14 +75,14 @@ class UserController {
 
     static async deleteUserById(req, res) {
         const { id } = req.params;
+        if (!Number.isInteger(Number(id))) {
+            util.setError(400, 'Please input a valid numeric value');
+            return util.send(res);
+        }
         try {
             const userToDelete = await UserService.deleteUserById(id);
-            if (!Number(id)) {
-                util.setError(400, 'Please provide a numeric value');
-            } else if (req.body.user_type > 0) {
-                util.setError(403, `You do not have permission to do this!`);
-            } else if (userToDelete) {
-                util.setSuccess(200, `User ${req.body.name} deleted user ${id}!`, userToDelete);
+            if (userToDelete) {
+                util.setSuccess(200, `Deleted user ${id}!`, userToDelete);
             } else {
                 util.setSuccess(204, `The user you are looking for can not be found`);
             }
@@ -105,13 +109,16 @@ class UserController {
         }
     }
 
-    static async getAllWorkers(req, res) {
+    static async getAllUsersByType(req, res) {
+        const { type } = req.params;
         try {
-            const allWorkers = await UserService.getAllWorkers();
-            if (allWorkers.length > 0) {
-                util.setSuccess(200, 'Users returned', allWorkers)
+            const returnedUser = await UserService.getAllUsersByType(type);
+            if (!Number(type)) {
+                util.setError(400, 'Please input a valid numeric value');
+            } else if (returnedUser) {
+                util.setSuccess(200, `User with type ${type} returned!`, returnedUser);
             } else {
-                util.setSuccess(204, 'No users found');
+                util.setSuccess(204, `Could not found user ${type}!`);
             }
             return util.send(res);
         } catch (error) {

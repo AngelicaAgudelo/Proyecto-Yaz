@@ -35,11 +35,13 @@ class ServiceController {
     static async updateServiceById(req, res) {
         const { id } = req.params;
         const alteredService = req.body;
+        if (!Number.isInteger(Number(id))) {
+            util.setError(400, 'Please input a valid numeric value');
+            return util.send(res);
+        }
         try {
             const updateService = await ServiceService.updateServiceById(id, alteredService)
-            if (!Number(id)) {
-                util.setError(400, 'Please input a valid numeric value');
-            } else if(updateService){
+            if(updateService){
                 util.setSuccess(201, `Service ${id} updated!`, updateService);
             }else{
                 util.setSuccess(204, `Could not update service ${id}!`)
@@ -53,11 +55,13 @@ class ServiceController {
 
     static async getServiceById(req, res) {
         const { id } = req.params;
+        if (!Number.isInteger(Number(id))) {
+            util.setError(400, 'Please input a valid numeric value');
+            return util.send(res);
+        }
         try {
             const returnedService = await ServiceService.getServiceById(id);
-            if (!Number(id)) {
-                util.setError(400, 'Please input a valid numeric value');
-            } else if(returnedService){
+            if(returnedService){
                 util.setSuccess(200, `Service ${id} returned!`, returnedService);
             }else{
                 util.setSuccess(204, `Could not found service ${id}!`);
@@ -71,13 +75,13 @@ class ServiceController {
 
     static async deleteServiceById(req, res) {
         const { id } = req.params;
+        if (!Number.isInteger(Number(id))) {
+            util.setError(400, 'Please input a valid numeric value');
+            return util.send(res);
+        }
         try {
             const serviceToDelete = await ServiceService.deleteServiceById(id);
-            if (!Number(id)) {
-                util.setError(400, 'Please provide a numeric value');
-            } else if (req.body.user_type > 0) {
-                util.setError(403, `You do not have permission to do this!`);
-            } else if(serviceToDelete){
+            if(serviceToDelete){
                 util.setSuccess(200, `User ${req.body.name} deleted service ${id}!`, serviceToDelete);
             }else{
                 util.setSuccess(204, `The service you are looking for can not be found`);

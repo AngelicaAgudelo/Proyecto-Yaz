@@ -59,6 +59,7 @@
                 ></v-text-field>
                 <!-------- Image input ----------->
                 <v-file-input
+                  @change="clickImage($event)"
                   v-model="photo"
                   accept="image/*"
                   label="Foto de perfil"
@@ -100,6 +101,9 @@ import { mapState } from "vuex";
 // Import of the object that allows manipulating Store functions
 import { mapMutations } from "vuex";
 import UsersService from "../services/UsersService";
+// Import firebase to be able to upload images
+import { storage } from "../services/firebase";
+const ref = storage.ref();
 
 export default {
   data() {
@@ -138,6 +142,8 @@ export default {
       show1: false,
       // Variable where the address of the photo is saved
       photo: null,
+      images: [],
+      image: null,
       // Variable to change the route depending on whether you log in or get an error
       path: "register",
       email: "",
@@ -149,32 +155,35 @@ export default {
     // Statement of Store methods
     ...mapMutations(["addUser", "activeUser", "setHideMenu", "setActiveUser"]),
     // Function to validate the input data, create the user and return to the previous route
-    async validate() {
-      var photo = null;
+    validate() {
       if (this.$refs.form.validate()) {
-        if (this.photo == null) {
-          photo = "null.png";
-        } else {
-          photo = this.photo.name;
-        }
         var user = {
           user_name: this.name,
           user_type: 2,
-          user_photo: photo,
+          user_photo: this.photo,
           user_password: this.password,
           user_email: this.email,
           user_phone: this.phone,
           user_address: this.address,
         };
-        const response = await UsersService.getUserByEmail(user.user_email);
-        //console.log(response);
-        if (response.data == "") {
-          this.createUser(user);
+        if (this.photo == null) {
+          this.photo =
+            "https://firebasestorage.googleapis.com/v0/b/yaz-85eb7.appspot.com/o/Users%2Fnull.png?alt=media&token=22b0ab1c-e1ea-4e90-9e66-3ccb11b78768";
+          this.createUser();
+        } else {
+          this.sendImage();
+        }
+
+        this.addUser(user);
+        if (this.paymentProcess == false) {
+          this.setHideMenu(true);
+          this.path = "";
         } else {
           console.log("Ya existe el email asociado a una cuenta");
         }
       }
     },
+
     async createUser(user) {
       const response = await UsersService.addUser(user);
       this.addUser(user);
@@ -186,23 +195,25 @@ export default {
         this.setHideMenu(false);
         this.path = "payment";
       }
-
-      /*var data = {
-        user_name: this.name,
-        user_type: 2,
-        user_photo: this.photo,
-        user_password: this.password,
-        user_email: this.email,
-        user_phone: this.phone,
-        user_address: this.address,
-      };
-      const response = await UsersService.addUser(data);
-      console.log(response);
-      */
+    },
+    clickImage(e) {
+      this.image = e;
+    },
+    sendImage() {
+      const refImg = ref.child("Users/" + this.image.name);
+      const metaData = { contentType: "jpeg" };
+      refImg.put(this.image, metaData).then((e) => {
+        ref
+          .child("Users/" + this.image.name)
+          .getDownloadURL()
+          .then((url) => {
+            this.photo = url;
+            this.createUser();
+          });
+      });
     },
   },
   created() {
-    this.verifyNameKey();
   },
   computed: {
     // Declaration of Store variables
