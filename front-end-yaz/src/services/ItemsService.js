@@ -12,7 +12,7 @@ export default {
         return Api().get(`/item/${id}`)
     },
     updateItem(id, data) {
-        return Api().put(`/item/${id}`, data)
+        return Api().put(`/item/id=${id}`, data)
     },
     deleteItem(id) {
         return Api().delete(`/item/${id}`)

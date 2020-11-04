@@ -12,9 +12,9 @@ export default {
         return Api().get(`/service/${id}`)
     },
     updateEvent(id, data) {
-        return Api().put(`/service/${id}`, data)
+        return Api().put(`/service/id=${id}`, data)
     },
     deleteEvent(id) {
-        return Api().delete(`/service/${id}`)
+        return Api().delete(`/service/id=${id}`)
     }
 }

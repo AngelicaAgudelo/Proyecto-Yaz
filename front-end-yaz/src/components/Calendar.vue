@@ -24,7 +24,7 @@
       >Solicitar evento</v-btn
     >
     <!-- Calling the changeEvent component -->
-    <changeEvent ref="childComponent" />
+    <changeEvent ref="childComponent" v-on:getService="getEvents" />
     <v-sheet height="890">
       <!-- Calendar component -->
       <v-calendar
@@ -34,7 +34,7 @@
         first-interval="6"
         category-show-all
         :categories="category"
-        :events="events"
+        :events="listEvents"
         category-hide-dynamic
         :event-color="getEventColor"
         event-text-color="white"
@@ -57,7 +57,7 @@
               <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
               <v-spacer></v-spacer>
               <v-btn
-                @click="erase"
+                @click="deleteEvent"
                 outlined
                 small
                 min-height="32px"
@@ -66,7 +66,7 @@
               >
             </v-toolbar>
             <v-card-text>
-              <span v-html="selectedEvent.details"></span>
+              <span v-html="selectedEvent.description"></span>
             </v-card-text>
             <v-layout>
               <v-card-actions>
@@ -138,27 +138,23 @@ export default {
     close: null,
     // variable that stores the last time clicked
     startTime: null,
-    // variable that stores the last clicked date
-    lastDate: null,
-    // Variable that stores the last event created
-    lastEvent: null,
     listEvents: [],
   }),
   mounted() {
     // Method that creates the categories from the users
     this.mountCategory();
-    // Method that validates what type of user accesses the calendar ( TEMPORARY )
-    this.valideTypeUser();
   },
   computed: {
     ...mapState(["events", "activeEvent", "category", "activeUser"]),
+  },
+  created() {
+    this.getEvents();
   },
   methods: {
     ...mapMutations([
       "setActiveEvent",
       "mountCategory",
       "setEvent",
-      "eraseEvent",
       "setSelectedEvent",
       "setEditEvent",
     ]),
@@ -168,6 +164,20 @@ export default {
     },
     async getEvents() {
       const response = await EventsService.getEvents();
+      this.listEvents = response.data.data.map((item) => {
+        return {
+          id_event: item.id_service,
+          client_name: item.client_name,
+          category: item.worker_name,
+          start: item.service_date_start,
+          end: item.service_date_end,
+          color: item.service_color,
+          name: item.service_name,
+          description: item.service_description,
+          price: item.service_price,
+          status: item.service_status,
+        };
+      });
     },
     // Function that returns the color of the selected event
     getEventColor(event) {
@@ -190,51 +200,21 @@ export default {
     // Function to create event
     createEvent(nativeEvent, event) {
       if (!this.enter) {
-        // ( TEMPORARY )
-        this.lastDate = nativeEvent.date;
-        this.startTime = nativeEvent.time;
-        // ----------
         var start = this.calculateMinute(nativeEvent.time);
         if (start.substring(3, 5) == "0") {
           start = start + "0";
-        } else {
         }
-        // ( TEMPORARY )
-        var higher = 0;
-        for (var i = 0; i < this.events.length; i++) {
-          if (this.events[i].id >= higher) {
-            higher = this.events[i].id;
-          }
-        }
-        var evntId = higher + 1;
-        //  -------
-
-        //  Event form -------
-        
-        // id_service
-        // email_client
-        // id_worker
-        // service_date_start
-        // service_date_end
-        // service_color  
-        // service_name
-        // service_description
-        // service_price
-        // service_status
-
-        //  -------
         var event = {
-          id: evntId,
           name: "",
-          user_email: "",
-          details: "",
+          price: 0,
+          client_name: "",
+          description: "",
           start: nativeEvent.date + " " + start,
           end: nativeEvent.date + " " + this.calculateHour(start),
           color: "#1F32BB",
           category: this.targetCategory,
         };
         this.setEditEvent(false);
-        this.lastEvent = event;
         this.setSelectedEvent(event);
         this.$refs.childComponent.setVariables();
         this.setActiveEvent(true);
@@ -320,14 +300,6 @@ export default {
     EnterEvent() {
       this.enter = true;
     },
-    // Function that validates what type of user accesses the calendar ( TEMPORARY )
-    valideTypeUser() {
-      if (this.activeUser.user_type == 2) {
-        this.isClient = true;
-      } else {
-        this.isClient = false;
-      }
-    },
     // Function that moves the calendar to the left
     prev() {
       this.$refs.calendar.prev();
@@ -352,19 +324,11 @@ export default {
       }
       nativeEvent.stopPropagation();
     },
-    showEvente(nativeEvent, event) {},
     // Function to delete the event
-    erase() {
-      var busqueda = this.selectedEvent.id;
-      var num = 0;
-      for (var i = 0; i < this.events.length; i++) {
-        if (this.events[i].id == busqueda) {
-          num = i;
-          this.eraseEvent(num);
-        }
-      }
-      if (num == 0) {
-      }
+    async deleteEvent() {
+      var id = this.selectedEvent.id_event;
+      const response = await EventsService.deleteEvent(id);
+      this.getEvents();
       this.selectedOpen = false;
     },
   },
