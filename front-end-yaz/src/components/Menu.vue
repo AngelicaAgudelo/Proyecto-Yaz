@@ -74,6 +74,7 @@ export default {
 </script>
 <style scopet>
 .backGroundDiv {
+  margin-top: 70px;
   background-color: #35618a;
   background-image: url("~@/assets/yazBlanco.png");
   background-position: center center;
