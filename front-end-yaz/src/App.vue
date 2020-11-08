@@ -76,9 +76,7 @@
       <v-flex cols="1">
         <v-layout column align-center>
           <v-avatar id="icon_worker" size="80%">
-            <img
-              :src="activeUser.user_photo"
-            />
+            <img :src="activeUser.user_photo" />
           </v-avatar>
           <div id="name_worker">
             <h2>{{ activeUser.user_name }}</h2>
@@ -89,24 +87,30 @@
         </v-layout>
       </v-flex>
 
-        <div class="signOffDiv">
-          <router-link to="/login" tag="span">
-            <v-btn
-              class="ma-2"
-              tile
-              min-width="100%"
-              min-height="60"
-              :elevation="0"
-              @click="setHideMenu(false)"
-            >
-              Editar Perfil
-            </v-btn>
-          </router-link>
-
-          <v-btn class="ma-2" tile min-width="100%" min-height="60" :elevation="0">
-            CERRAR SESION
+      <div class="signOffDiv">
+        <router-link to="/login" tag="span">
+          <v-btn
+            class="ma-2"
+            tile
+            min-width="100%"
+            min-height="60"
+            :elevation="0"
+            @click="setHideMenu(false)"
+          >
+            Editar Perfil
           </v-btn>
-        </div>
+        </router-link>
+
+        <v-btn
+          class="ma-2"
+          tile
+          min-width="100%"
+          min-height="60"
+          :elevation="0"
+        >
+          CERRAR SESION
+        </v-btn>
+      </div>
       <v-row justify="center"> </v-row>
     </v-navigation-drawer>
   </v-app>
@@ -171,11 +175,10 @@ export default {
 #name_worker {
   margin-top: 30px;
   margin-bottom: 15px;
-  font-size:0.73vw;
+  font-size: 0.73vw;
 }
 #email_worker {
-
-  font-size:0.73vw;
+  font-size: 0.73vw;
 }
 .divImg {
   top: 25px;
@@ -201,6 +204,6 @@ export default {
   position: fixed;
   bottom: 0;
   align-items: center;
-  justify-content: center ;
+  justify-content: center;
 }
 </style>

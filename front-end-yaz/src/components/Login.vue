@@ -149,7 +149,6 @@ export default {
             this.overlayError = false;
             this.$router.go(-1);
           } else {
-
             this.bolError = true;
             this.error = "La contraseña es incorrecta";
             this.overlayError = false;

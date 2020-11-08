@@ -79,7 +79,6 @@ export default {
   background-image: url("~@/assets/yazBlanco.png");
   background-position: center center;
   height: 47vh;
-  
 }
 .carousselDiv {
   height: 43%;
