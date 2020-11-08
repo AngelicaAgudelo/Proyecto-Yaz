@@ -34,7 +34,7 @@
                     >$ {{ car.item.item_price }}</v-list-item-subtitle
                   >
                   <v-img
-                    :src="require('@/assets/' + car.item.item_photo)"
+                    :src="car.item.item_photo"
                     class="black--text align-end"
                     gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
                     height="100px"
@@ -58,50 +58,52 @@
     </v-navigation-drawer>
     <!-------- Start of purchase items ----------->
     <v-container class="my-4">
-      <v-row row grap>
-        <v-flex xs12 sm6 md5 lg3 v-for="item in listItems" :key="item.id_item">
-          <template>
-            <div id="divCart">
-              <v-card class="mx-auto" :elevation="3" max-width="350">
-                <v-list-item-content>
-                  <v-layout align-center justify-center>
-                    <div>
-                      <v-list-item-title class="headline" color="#000000">{{
-                        item.item_name
-                      }}</v-list-item-title>
-                    </div>
-                  </v-layout>
-                </v-list-item-content>
-                <v-img
-                  :src="require('@/assets/' + item.item_photo)"
-                  class="black--text align-end"
-                  height="200px"
-                >
-                  <div class="fill-height bottom-gradient"></div>
-                </v-img>
-                <v-card-subtitle class="pb-0">Make-up</v-card-subtitle>
-                <v-card-text class="text--primary">
-                  <div>{{ item.item_description }}</div>
-                </v-card-text>
-                <v-card-actions>
-                  <v-btn
-                    color="black"
-                    tile
-                    outlined
-                    :elevation="3"
-                    @click="buy(item)"
-                    >Comprar</v-btn
+      <div class="item_container">
+        <v-row row grap>
+          <v-flex xs12 sm6 md5 lg3 v-for="item in listItems" :key="item.id_item">
+            <template>
+              <div id="divCart">
+                <v-card class="mx-auto" :elevation="3" max-width="350">
+                  <v-list-item-content>
+                    <v-layout align-center justify-center>
+                      <div>
+                        <v-list-item-title class="headline" color="#000000">{{
+                          item.item_name
+                        }}</v-list-item-title>
+                      </div>
+                    </v-layout>
+                  </v-list-item-content>
+                  <v-img
+                    :src="item.item_photo"
+                    class="black--text align-end"
+                    height="200px"
                   >
-                  <v-spacer></v-spacer>
-                  <div id="price" color="green" text>
-                    $ {{ item.item_price }}
-                  </div>
-                </v-card-actions>
-              </v-card>
-            </div>
-          </template>
-        </v-flex>
-      </v-row>
+                    <div class="fill-height bottom-gradient"></div>
+                  </v-img>
+                  <v-card-subtitle class="pb-0">Make-up</v-card-subtitle>
+                  <v-card-text class="text--primary">
+                    <div>{{ item.item_description }}</div>
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-btn
+                      color="black"
+                      tile
+                      outlined
+                      :elevation="3"
+                      @click="buy(item)"
+                      >Comprar</v-btn
+                    >
+                    <v-spacer></v-spacer>
+                    <div id="price" color="green" text>
+                      $ {{ item.item_price }}
+                    </div>
+                  </v-card-actions>
+                </v-card>
+              </div>
+            </template>
+          </v-flex>
+        </v-row>
+      </div>
     </v-container>
     <!-------- Button Component Home (Shopping Cart Button) ----------->
     <v-footer app>
@@ -290,5 +292,8 @@ export default {
 }
 .shoppingCarDiv {
   margin-left: 10px;
+}
+.item_container{
+  margin-top: 50px;
 }
 </style>

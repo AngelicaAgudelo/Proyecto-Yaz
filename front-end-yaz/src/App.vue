@@ -2,6 +2,7 @@
   <v-app>
     <!-------- Navbar ----------->
     <v-app-bar
+      app
       v-show="hideMenu"
       :elevation="2"
       color="white"
