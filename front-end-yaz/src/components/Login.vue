@@ -51,6 +51,12 @@
                   </v-card-actions>
                 </v-card>
               </v-dialog>
+              <v-overlay :value="overlayError">
+                <v-progress-circular
+                  indeterminate
+                  size="64"
+                ></v-progress-circular>
+              </v-overlay>
               <!-------- Button to start session ----------->
               <v-layout>
                 <router-link :to="'/' + path" tag="span">
@@ -118,6 +124,7 @@ export default {
       bolError: false,
       // Variable that saves the previously imported icon
       warningIcon: mdiAlert,
+      overlayError: false,
     };
   },
   methods: {
@@ -125,6 +132,7 @@ export default {
     // Method that verifies if the user exists, and if it exists
     async validateSession() {
       try {
+        this.overlayError = true;
         const response = await UsersService.getUserByEmail(this.email);
         if (response.data != "") {
           if (response.data.data.user_password == this.password) {
@@ -138,18 +146,23 @@ export default {
               user_address: response.data.data.user_address,
             });
             this.setHideMenu(true);
+            this.overlayError = false;
             this.$router.go(-1);
           } else {
+
             this.bolError = true;
             this.error = "La contraseña es incorrecta";
+            this.overlayError = false;
           }
         } else {
           this.bolError = true;
           this.error = "El usuario no existe";
+          this.overlayError = false;
         }
       } catch (error) {
         console.log(error);
       }
+      this.overlayError = false;
     },
   },
   computed: {
@@ -183,5 +196,6 @@ export default {
   background-attachment: fixed;
   background-size: cover;
   background-color: #464646;
+  height: 100%;
 }
 </style>
