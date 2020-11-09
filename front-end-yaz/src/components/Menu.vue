@@ -74,13 +74,13 @@ export default {
 </script>
 <style scopet>
 .backGroundDiv {
+  margin-top: 70px;
   background-color: #35618a;
   background-image: url("~@/assets/yazBlanco.png");
   background-position: center center;
-
   height: 47vh;
 }
 .carousselDiv {
-  height: 43vh;
+  height: 43%;
 }
 </style>

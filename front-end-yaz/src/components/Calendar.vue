@@ -1,103 +1,96 @@
 <template>
-  <v-flex>
-    <!-- Middle area between the navbar and the calendar -->
-    <v-layout align-center justify-center>
-      <v-btn fab text color="grey darken-2" @click="prev">
-        <v-icon x-large>{{ arrowLeft }}</v-icon>
-      </v-btn>
-      <v-toolbar-title v-if="$refs.calendar">{{
-        $refs.calendar.title
-      }}</v-toolbar-title>
-      <div id="divCenter">
-        <v-btn fab text color="grey darken-2" @click="next">
-          <v-icon x-large>{{ arrowRight }}</v-icon>
+  <div class="calendarDiv">
+    <v-flex>
+      <!-- Middle area between the navbar and the calendar -->
+      <v-layout align-center justify-center>
+        <v-btn fab text color="grey darken-2" @click="prev">
+          <v-icon x-large>{{ arrowLeft }}</v-icon>
         </v-btn>
-      </div>
-    </v-layout>
-    <v-btn
-      class="ma-2"
-      v-show="isClient"
-      tile
-      outlined
-      color="black"
-      @click="setActiveEvent(true)"
-      >Solicitar evento</v-btn
-    >
-    <!-- Calling the changeEvent component -->
-    <changeEvent ref="childComponent" v-on:getService="getEvents" />
-    <v-sheet height="890">
-      <!-- Calendar component -->
-      <v-calendar
-        ref="calendar"
-        v-model="focus"
-        type="category"
-        first-interval="6"
-        category-show-all
-        :categories="category"
-        :events="listEvents"
-        category-hide-dynamic
-        :event-color="getEventColor"
-        event-text-color="white"
-        @click:event="showEvent"
-        @mouseenter:time-category="intervalCategory"
-        @click:time="createEvent"
-        @mouseleave:event="leaveEvent"
-        @mouseenter:event="EnterEvent"
-      ></v-calendar>
-      <div data-app>
-        <!-- Menu when pressing an event -->
-        <v-menu
-          v-model="selectedOpen"
-          :close-on-content-click="false"
-          :activator="selectedElement"
-          offset-x
-        >
-          <v-card color="grey lighten-4" min-width="350px" flat>
-            <v-toolbar :color="selectedEvent.color" max-height="58px" dark>
-              <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
-              <v-spacer></v-spacer>
-              <v-btn
-                @click="deleteEvent"
-                outlined
-                small
-                min-height="32px"
-                :elevation="7"
-                >Finalizar evento</v-btn
-              >
-            </v-toolbar>
-            <v-card-text>
-              <span v-html="selectedEvent.description"></span>
-            </v-card-text>
-            <v-layout>
-              <v-card-actions>
+        <v-toolbar-title v-if="$refs.calendar">{{
+          $refs.calendar.title
+        }}</v-toolbar-title>
+        <div id="divCenter">
+          <v-btn fab text color="grey darken-2" @click="next">
+            <v-icon x-large>{{ arrowRight }}</v-icon>
+          </v-btn>
+        </div>
+      </v-layout>
+      <!-- Calling the changeEvent component -->
+      <changeEvent ref="childComponent" />
+      <v-sheet height="100%">
+        <!-- Calendar component -->
+        <v-calendar
+          ref="calendar"
+          v-model="focus"
+          type="category"
+          first-interval="6"
+          category-show-all
+          :categories="category"
+          :events="events"
+          category-hide-dynamic
+          :event-color="getEventColor"
+          event-text-color="white"
+          @click:event="showEvent"
+          @mouseenter:time-category="intervalCategory"
+          @click:time="createEvent"
+          @mouseleave:event="leaveEvent"
+          @mouseenter:event="EnterEvent"
+        ></v-calendar>
+        <div data-app>
+          <!-- Menu when pressing an event -->
+          <v-menu
+            v-model="selectedOpen"
+            :close-on-content-click="false"
+            :activator="selectedElement"
+            offset-x
+          >
+            <v-card color="grey lighten-4" min-width="350px" flat>
+              <v-toolbar :color="selectedEvent.color" max-height="58px" dark>
+                <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
+                <v-spacer></v-spacer>
                 <v-btn
-                  text
-                  color="black"
-                  tile
+                  @click="erase"
                   outlined
-                  :elevation="5"
-                  @click="selectedOpen = false"
-                  >Cancelar</v-btn
+                  small
+                  min-height="32px"
+                  :elevation="7"
+                  >Finalizar evento</v-btn
                 >
-              </v-card-actions>
-              <v-spacer></v-spacer>
-              <v-card-actions>
-                <v-btn
-                  text
-                  color="black"
-                  tile
-                  outlined
-                  :elevation="5"
-                  @click="editEvent"
-                  >Editar</v-btn
-                >
-              </v-card-actions>
-            </v-layout>
-          </v-card>
-        </v-menu>
-      </div>
-    </v-sheet>
-  </v-flex>
+              </v-toolbar>
+              <v-card-text>
+                <span v-html="selectedEvent.details"></span>
+              </v-card-text>
+              <v-layout>
+                <v-card-actions>
+                  <v-btn
+                    text
+                    color="black"
+                    tile
+                    outlined
+                    :elevation="5"
+                    @click="selectedOpen = false"
+                    >Cancelar</v-btn
+                  >
+                </v-card-actions>
+                <v-spacer></v-spacer>
+                <v-card-actions>
+                  <v-btn
+                    text
+                    color="black"
+                    tile
+                    outlined
+                    :elevation="5"
+                    @click="editEvent"
+                    >Editar</v-btn
+                  >
+                </v-card-actions>
+              </v-layout>
+            </v-card>
+          </v-menu>
+        </div>
+      </v-sheet>
+    </v-flex>
+  </div>
 </template>
 <script>
 // Import of the object that allows to fetch variables from the Store
@@ -337,6 +330,9 @@ export default {
 <style scoped>
 #divCenter {
   margin-right: -37px;
+}
+.calendarDiv {
+  margin-top: 75px;
 }
 </style>
         

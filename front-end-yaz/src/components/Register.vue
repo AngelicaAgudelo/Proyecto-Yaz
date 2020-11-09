@@ -6,6 +6,36 @@
       <v-card width="600px" height="800px" shaped>
         <div class="divCentral">
           <v-col cols="10">
+            <!-------- Error card ----------->
+            <v-dialog v-model="bolError" max-width="500px">
+              <v-card>
+                <v-card-title>
+                  <span>
+                    <v-icon>{{ warningIcon }}</v-icon>
+                    {{ error }}
+                    <v-icon>{{ warningIcon }}</v-icon>
+                  </span>
+                  <v-spacer></v-spacer>
+                  <v-menu bottom left></v-menu>
+                </v-card-title>
+                <v-card-actions>
+                  <v-btn
+                    class="ma-2"
+                    outlined
+                    :elevation="3"
+                    color="black"
+                    @click="bolError = false"
+                    >cerrar</v-btn
+                  >
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+            <v-overlay :value="overlayError">
+              <v-progress-circular
+                indeterminate
+                size="64"
+              ></v-progress-circular>
+            </v-overlay>
             <!-------- Image Yaz ----------->
             <div class="imageyaz">
               <v-img :src="require('@/assets/yaz.png')"></v-img>
@@ -104,6 +134,8 @@ import UsersService from "../services/UsersService";
 // Import firebase to be able to upload images
 import { storage } from "../services/firebase";
 const ref = storage.ref();
+// Import of the login warning icon
+import { mdiAlert } from "@mdi/js";
 
 export default {
   data() {
@@ -143,12 +175,17 @@ export default {
       // Variable where the address of the photo is saved
       photo: null,
       images: [],
-      image: null,
+      image: [],
       // Variable to change the route depending on whether you log in or get an error
       path: "register",
       email: "",
       phone: "",
       address: "",
+      bolError: false,
+      error: "",
+      // Variable that saves the previously imported icon
+      warningIcon: mdiAlert,
+      overlayError: false,
     };
   },
   methods: {
@@ -156,14 +193,16 @@ export default {
     ...mapMutations(["addUser", "activeUser", "setHideMenu", "setActiveUser"]),
     // Function to validate the input data, create the user and return to the previous route
     validate() {
+      this.overlayError = true;
       if (this.$refs.form.validate()) {
         var user = {
-          id_user: this.id,
           user_name: this.name,
-          user_email: this.email,
-          user_type: 2,
           user_photo: this.photo,
           user_password: this.password,
+          user_email: this.email,
+          user_type: 2,
+          user_phone: this.phone,
+          user_address: this.address,
         };
         if (this.photo == null) {
           this.photo =
@@ -174,15 +213,9 @@ export default {
         }
 
         this.addUser(user);
-        if (this.paymentProcess == false) {
-          this.setHideMenu(true);
-          this.path = "";
-        } else {
-          this.setHideMenu(false);
-          this.path = "payment";
-        }
       }
     },
+
     async createUser() {
       var data = {
         user_name: this.name,
@@ -190,11 +223,34 @@ export default {
         user_photo: this.photo,
         user_password: this.password,
         user_email: this.email,
-        user_phone: "523",
-        user_address: "cra 49",
+        user_phone: "54",
+        user_address: "cara",
       };
-      const response = await UsersService.addUser(data);
-      this.setActiveUser(data);
+      const response = await UsersService.addUser(data)
+        .then((response) => {
+          this.setActiveUser(data);
+          if (this.paymentProcess == false) {
+            this.setHideMenu(true);
+            this.overlayError = false;
+            this.$router.push("/");
+          } else {
+            this.setHideMenu(false);
+            this.overlayError = false;
+            this.$router.push("/payment");
+          }
+          console.log(response);
+        })
+        .catch((e) => {
+          this.overlayError = false;
+          this.bolError = true;
+          if (e.response.data.message == "user_name must be unique") {
+            this.error = "El nombre de usuario ingresado ya existe";
+          } else if (e.response.data.message == "user_email must be unique") {
+            this.error = "El Email ingresado ya existe";
+          } else {
+            this.error = "Error 404";
+          }
+        });
     },
     clickImage(e) {
       this.image = e;
@@ -203,7 +259,8 @@ export default {
       const refImg = ref.child("Users/" + this.image.name);
       const metaData = { contentType: "jpeg" };
       refImg.put(this.image, metaData).then((e) => {
-        ref.child("Users/" + this.image.name)
+        ref
+          .child("Users/" + this.image.name)
           .getDownloadURL()
           .then((url) => {
             this.photo = url;
@@ -212,6 +269,7 @@ export default {
       });
     },
   },
+  created() {},
   computed: {
     // Declaration of Store variables
     ...mapState(["paymentProcess"]),
@@ -271,8 +329,9 @@ export default {
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-color: #464646;
-  height: 100vh;
+  height: 100%;
 }
+
 .imageyaz {
   height: 30px;
   width: 400px;
