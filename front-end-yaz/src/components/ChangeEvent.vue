@@ -3,9 +3,33 @@
     <v-dialog v-model="activeEvent" persistent max-width="500">
       <!-------- V-card ----------->
       <v-card>
-        <v-alert v-model="activeAlert" max-height="50px" type="error"
-          >El correo del usuario no existe</v-alert
-        >
+        <!-------- Error card ----------->
+        <v-dialog v-model="bolError" max-width="500px">
+          <v-card>
+            <v-card-title>
+              <span>
+                <v-icon>{{ warningIcon }}</v-icon>
+                {{ error }}
+                <v-icon>{{ warningIcon }}</v-icon>
+              </span>
+              <v-spacer></v-spacer>
+              <v-menu bottom left></v-menu>
+            </v-card-title>
+            <v-card-actions>
+              <v-btn
+                class="ma-2"
+                outlined
+                :elevation="3"
+                color="black"
+                @click="bolError = false"
+                >cerrar</v-btn
+              >
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+        <v-overlay :value="overlayError">
+          <v-progress-circular indeterminate size="64"></v-progress-circular>
+        </v-overlay>
         <v-container>
           <v-form @submit.prevent="addEvent">
             <v-layout align-center justify-center>
@@ -81,7 +105,7 @@
                 outlined
                 color="black"
                 :elevation="3"
-                @click="addEventComponent"
+                @click="verifyNameClient"
                 >{{ confirmButton }}</v-btn
               >
             </v-row>
@@ -96,7 +120,10 @@
 import { mapState } from "vuex";
 // Statement of Store methods
 import { mapMutations } from "vuex";
-import EventsService from "../services/EventsService"
+import EventsService from "../services/EventsService";
+import UsersService from "../services/UsersService";
+// Import of the login warning icon
+import { mdiAlert } from "@mdi/js";
 
 export default {
   data() {
@@ -125,10 +152,12 @@ export default {
       activeAlert: false,
       price: "0",
       status: "",
-      phoneRules: [
-        (v) => !isNaN(parseFloat(v)) || "Solo se permite números"
-      ],
+      phoneRules: [(v) => !isNaN(parseFloat(v)) || "Solo se permite números"],
       id: 0,
+      bolError: false,
+      overlayError: false,
+      error: "",
+      warningIcon: mdiAlert,
     };
   },
   // Connection with parent component
@@ -136,7 +165,28 @@ export default {
   methods: {
     ...mapMutations(["setActiveEvent", "setEvent", "verifyEmail"]),
     // Function to edit the event
-    addEventComponent() {
+    async verifyNameClient() {
+      this.overlayError = true;
+      const response = await UsersService.getClients()
+        .then((response) => {
+          var verify = false;
+          for (var i = 0; i < response.data.data.length; i++) {
+            if (this.name_user == response.data.data[i].user_name) {
+              verify = true;
+              i = response.data.data.lenght;
+            }
+          }
+          if (verify) {
+            this.addEventComponent();
+          } else {
+            this.overlayError = false;
+            this.error = "El cliente no ha sido encontrado";
+            this.bolError = true;
+          }
+        })
+        .catch((e) => {});
+    },
+    async addEventComponent() {
       var nameEvent = this.name;
       var detailsEvent = this.details;
       if (this.name == "") {
@@ -154,42 +204,17 @@ export default {
         service_name: nameEvent,
         service_description: detailsEvent,
         service_price: parseFloat(this.price),
-        service_status: this.status
-      }
-      if (this.editEvent) {
-          this.updateEvent(service);
-          this.setActiveEvent(false);
-        } else {
-          this.addEvent(service);
-          this.setActiveEvent(false);
-        }
-        /*
-      var event = {
-        category: this.selectEvent.category,
-        color: this.color,
-        details: detailsEvent,
-        end: this.date + " " + this.timeEnd,
-        id: this.selectEvent.id,
-        name: nameEvent,
-        start: this.selectEvent.start,
-        user_email: this.email,
+        service_status: this.status,
       };
-      this.verifyEmail(this.name_user);
-      if (this.checkEmail) {
-        if (this.editEvent) {
-          this.setEvent(event);
-        } else {
-          this.addEvent(event);
-        }
+      if (this.editEvent) {
+        this.updateEvent(service);
+        this.overlayError = false;
         this.setActiveEvent(false);
-        this.verifyEmail("null");
       } else {
-        this.activeAlert = true;
-        setTimeout(() => {
-          this.activeAlert = false;
-        }, 1500);
+        this.addEvent(service);
+        this.overlayError = false;
+        this.setActiveEvent(false);
       }
-      */
     },
     // Function to show component
     setVariables() {
@@ -200,7 +225,7 @@ export default {
         this.title = "Creador de Evento";
         this.confirmButton = "Crear evento";
       }
-      this.id= this.selectEvent.id_event;
+      this.id = this.selectEvent.id_event;
       this.name = this.selectEvent.name;
       this.name_user = this.selectEvent.client_name;
       this.color = this.selectEvent.color;
@@ -210,14 +235,14 @@ export default {
       this.timeEnd = this.selectEvent.end.split(" ")[1];
       this.date = this.selectEvent.end.split(" ")[0];
     },
-    async addEvent(event){
+    async addEvent(event) {
       const response = await EventsService.addEvent(event);
-      this.$emit('getService');
+      this.$emit("getService");
     },
-    async updateEvent(event){
+    async updateEvent(event) {
       var id = this.id;
       const response = await EventsService.updateEvent(id, event);
-      this.$emit('getService');
+      this.$emit("getService");
     },
   },
   computed: {

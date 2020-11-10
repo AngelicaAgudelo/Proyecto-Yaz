@@ -16,7 +16,7 @@
         </div>
       </v-layout>
       <!-- Calling the changeEvent component -->
-      <changeEvent ref="childComponent" />
+      <changeEvent ref="childComponent" @getService="getEvents" />
       <v-sheet height="100%">
         <!-- Calendar component -->
         <v-calendar
@@ -25,8 +25,8 @@
           type="category"
           first-interval="6"
           category-show-all
-          :categories="category"
-          :events="events"
+          :categories="categories"
+          :events="listEvents"
           category-hide-dynamic
           :event-color="getEventColor"
           event-text-color="white"
@@ -49,7 +49,7 @@
                 <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-btn
-                  @click="erase"
+                  @click="deleteEvent"
                   outlined
                   small
                   min-height="32px"
@@ -58,7 +58,9 @@
                 >
               </v-toolbar>
               <v-card-text>
-                <span v-html="selectedEvent.details"></span>
+                <h2>
+                  {{ selectedEvent.description }}
+                </h2>
               </v-card-text>
               <v-layout>
                 <v-card-actions>
@@ -103,6 +105,7 @@ import { mapMutations } from "vuex";
 import { mdiChevronRight, mdiDogSide } from "@mdi/js";
 import { mdiChevronLeft } from "@mdi/js";
 import EventsService from "../services/EventsService";
+import UsersService from "../services/UsersService";
 
 export default {
   components: {
@@ -132,6 +135,7 @@ export default {
     // variable that stores the last time clicked
     startTime: null,
     listEvents: [],
+    categories: [],
   }),
   mounted() {
     // Method that creates the categories from the users
@@ -142,6 +146,7 @@ export default {
   },
   created() {
     this.getEvents();
+    this.getCategories();
   },
   methods: {
     ...mapMutations([
@@ -151,26 +156,55 @@ export default {
       "setSelectedEvent",
       "setEditEvent",
     ]),
+    async deleteEvent() {
+      const response = await EventsService.deleteEvent(
+        this.selectedEvent.id_event
+      )
+        .then((response) => {
+          this.getEvents();
+          this.selectedOpen = false;
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
     async addEvent(data) {
       const response = await EventsService.addEvent(data);
-      console.log(response);
+    },
+    async getCategories() {
+      const response = await UsersService.getWorkers()
+        .then((response) => {
+          for (var i = 0; i < response.data.data.length; i++) {
+            this.categories.push(response.data.data[i].user_name);
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+        });
     },
     async getEvents() {
-      const response = await EventsService.getEvents();
-      this.listEvents = response.data.data.map((item) => {
-        return {
-          id_event: item.id_service,
-          client_name: item.client_name,
-          category: item.worker_name,
-          start: item.service_date_start,
-          end: item.service_date_end,
-          color: item.service_color,
-          name: item.service_name,
-          description: item.service_description,
-          price: item.service_price,
-          status: item.service_status,
-        };
-      });
+      const response = await EventsService.getEvents()
+        .then((response) => {
+          if (response.data != "") {
+            this.listEvents = response.data.data.map((item) => {
+              return {
+                id_event: item.id_service,
+                client_name: item.client_name,
+                category: item.worker_name,
+                start: item.service_date_start,
+                end: item.service_date_end,
+                color: item.service_color,
+                name: item.service_name,
+                description: item.service_description,
+                price: item.service_price,
+                status: item.service_status,
+              };
+            });
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+        });
     },
     // Function that returns the color of the selected event
     getEventColor(event) {
@@ -192,7 +226,7 @@ export default {
     },
     // Function to create event
     createEvent(nativeEvent, event) {
-      if (!this.enter) {
+      if (!this.enter && this.activeUser.user_type != 2) {
         var start = this.calculateMinute(nativeEvent.time);
         if (start.substring(3, 5) == "0") {
           start = start + "0";
@@ -303,26 +337,21 @@ export default {
     },
     // Function that saves the pointers returned by the showEvent event in variables
     showEvent({ nativeEvent, event }) {
-      const open = () => {
-        this.selectedEvent = event;
-        this.setSelectedEvent(event);
-        this.selectedElement = nativeEvent.target;
-        setTimeout(() => (this.selectedOpen = true), 10);
-      };
-      if (this.selectedOpen) {
-        this.selectedOpen = false;
-        setTimeout(open, 10);
-      } else {
-        open();
+      if (this.activeUser.user_type != 2) {
+        const open = () => {
+          this.selectedEvent = event;
+          this.setSelectedEvent(event);
+          this.selectedElement = nativeEvent.target;
+          setTimeout(() => (this.selectedOpen = true), 10);
+        };
+        if (this.selectedOpen) {
+          this.selectedOpen = false;
+          setTimeout(open, 10);
+        } else {
+          open();
+        }
+        nativeEvent.stopPropagation();
       }
-      nativeEvent.stopPropagation();
-    },
-    // Function to delete the event
-    async deleteEvent() {
-      var id = this.selectedEvent.id_event;
-      const response = await EventsService.deleteEvent(id);
-      this.getEvents();
-      this.selectedOpen = false;
     },
   },
 };
