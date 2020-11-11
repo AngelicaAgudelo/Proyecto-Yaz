@@ -10,10 +10,6 @@ const payment_service = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    payment_date: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
   });
 
   payment_service.sync({logging: true });

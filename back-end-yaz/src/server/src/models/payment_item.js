@@ -6,16 +6,12 @@ const payment_item = (sequelize, DataTypes) => {
       primaryKey: true,
       allowNull: false,
     },
-    id_client: {
+    id_user: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
     id_item: {
       type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    payment_item_date: {
-      type: DataTypes.DATE,
       allowNull: false,
     },
   });
