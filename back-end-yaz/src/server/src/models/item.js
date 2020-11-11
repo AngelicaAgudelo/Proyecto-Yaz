@@ -1,5 +1,5 @@
 const item = (sequelize, DataTypes) => {
-  const Item = sequelize.define('item', {
+  const item = sequelize.define('item', {
     id_item: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
@@ -27,13 +27,8 @@ const item = (sequelize, DataTypes) => {
     },
   });
 
-  Item.associate = models => {
-    Item.hasMany(models.Payment_Item,
-      { foreignKey: 'id_item', as: 'item_payment_item' }
-    )
-  };
-
-  return Item;
+  item.sync({logging: true });
+  return item;
 };
 
 export default item;

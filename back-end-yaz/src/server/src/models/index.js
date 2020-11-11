@@ -37,4 +37,70 @@ models.payment_item = payment_item(sequelize, Sequelize);
 models.payment_service = payment_service(sequelize, Sequelize);
 models.service = service(sequelize, Sequelize);
 
+// item
+models.item.hasMany(models.payment_item,
+    {
+        as: 'item_payment_item',
+        foreignKey: 'id_item',
+        targetKey: 'id_payment_item'
+    }
+)
+
+models.payment_item.belongsTo(models.item);
+
+// user: client
+models.user.belongsToMany(models.service,
+    {
+        as: 'user_service',
+        through: 'user_name',
+    }
+);
+
+
+models.service.belongsToMany(models.user,
+    {
+        as: 'user_service',
+        through: 'client_name',
+    }
+);
+
+
+// user: worker
+models.user.belongsToMany(models.service,
+    {
+        as: 'worker_service',
+        through: 'user_name',
+    }
+);
+
+
+models.service.belongsToMany(models.user,
+    {
+        as: 'worker_service',
+        through: 'client_name',
+    }
+);
+
+// user: payment
+models.user.hasMany(models.payment_item,
+    {
+        as: 'user_payment_item',
+        foreignKey: 'id_user',
+        targetKey: 'id_payment_item'
+    }
+);
+
+models.payment_item.belongsTo(models.user);
+
+// service: payment
+models.service.hasOne(models.payment_service,
+    {
+        as: 'service_payment_service',
+        foreignKey: 'id_service',
+        targetKey: 'id_payment_service'
+    }
+);
+
+models.payment_service.belongsTo(models.service);
+
 module.exports = models;

@@ -1,5 +1,5 @@
 const payment_service = (sequelize, DataTypes) => {
-  const Payment_Service = sequelize.define('payment_service', {
+  const payment_service = sequelize.define('payment_service', {
     id_payment_service: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
@@ -16,13 +16,8 @@ const payment_service = (sequelize, DataTypes) => {
     },
   });
 
-  Payment_Service.associate = models => {
-    Payment_Service.belongsTo(models.Service,
-      { foreignKey: 'id_service', as: 'service_payment_service', onDelete: 'CASCADE' }
-    )
-  };
-
-  return Payment_Service;
+  payment_service.sync({logging: true });
+  return payment_service;
 };
 
 export default payment_service;
