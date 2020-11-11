@@ -188,6 +188,7 @@ export default {
       warningIcon: mdiAlert,
       overlayError: false,
       url: null,
+      type: 0,
     };
   },
   methods: {
@@ -196,6 +197,7 @@ export default {
     mount() {
       this.email = this.activeUser.user_email;
       this.name = this.activeUser.user_name;
+      this.type = this.activeUser.user_type;
       this.password = this.activeUser.user_password;
       this.phone = this.activeUser.user_phone;
       this.address = this.activeUser.user_address;
@@ -251,6 +253,7 @@ export default {
         user_name: this.name,
         user_type: 2,
         user_photo: this.photo,
+        user_type: this.type,
         user_password: this.password,
         user_email: this.email,
         user_phone: this.phone,
