@@ -18,6 +18,6 @@ export default {
         return Api().put(`/users/id=${id}`, data)
     },
     deleteUser(id) {
-        return Api().delete(`/users/${id}`)
+        return Api().delete(`/users/id=${id}`)
     }
 }
