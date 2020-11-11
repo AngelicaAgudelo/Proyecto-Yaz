@@ -46,7 +46,7 @@
                 <!-------- ID input ----------->
                 <v-text-field
                   v-model="email"
-                  :counter="24"
+                  :counter="64"
                   :rules="emailRules"
                   label="Email"
                   required
@@ -64,7 +64,7 @@
                 <!-------- Password input ----------->
                 <v-text-field
                   v-model="password"
-                  :counter="24"
+                  :counter="32"
                   :rules="passwordRules"
                   :type="show1 ? 'text' : 'password'"
                   label="Contraseña"
@@ -153,16 +153,16 @@ export default {
       passwordRules: [
         (v) => !!v || "Se requiere una contraseña",
         (v) =>
-          (v && v.length <= 24) ||
-          "La contraseña no puede exceder los 24 dígitos",
+          (v && v.length <= 32) ||
+          "La contraseña no puede exceder los 32 dígitos",
       ],
       // Email field validations to ensure its integrity
       emailRules: [
         (v) => !!v || "Se requiere un email",
         (v) => /.+@.+/.test(v) || "El email no es válido",
         (v) =>
-          (v && v.length <= 24) ||
-          "La contraseña no puede exceder los 24 dígitos",
+          (v && v.length <= 64) ||
+          "La contraseña no puede exceder los 64 dígitos",
       ],
       // ID
       id: "",
@@ -238,7 +238,6 @@ export default {
             this.overlayError = false;
             this.$router.push("/payment");
           }
-          console.log(response);
         })
         .catch((e) => {
           this.overlayError = false;
@@ -248,7 +247,7 @@ export default {
           } else if (e.response.data.message == "user_email must be unique") {
             this.error = "El Email ingresado ya existe";
           } else {
-            this.error = "Error 404";
+            this.error = "Error 500";
           }
         });
     },
