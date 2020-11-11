@@ -15,7 +15,7 @@ export default {
         return Api().get(`/users/email=${email}`)
     },
     updateUser(id, data) {
-        return Api().put(`/users/${id}`, data)
+        return Api().put(`/users/id=${id}`, data)
     },
     deleteUser(id) {
         return Api().delete(`/users/${id}`)

@@ -11,7 +11,6 @@
           <slide v-for="(slide, i) in images" :index="i" :key="i">
             <template slot-scope="{ index, isCurrent, leftIndex, rightIndex }">
               <v-img
-                contai
                 :data-index="index"
                 :class="{
                   current: isCurrent,
