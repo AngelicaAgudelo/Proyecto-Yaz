@@ -88,7 +88,7 @@
       </v-flex>
 
       <div class="signOffDiv">
-        <router-link to="/login" tag="span">
+        <router-link to="/editUser" tag="span">
           <v-btn
             class="ma-2"
             tile
@@ -107,6 +107,7 @@
           min-width="100%"
           min-height="60"
           :elevation="0"
+          @click="signOff"
         >
           CERRAR SESION
         </v-btn>
@@ -147,7 +148,22 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(["setHideMenu"]),
+    ...mapMutations(["setHideMenu", "setActiveUser"]),
+    signOff() {
+      this.setActiveUser({
+        user_name: "",
+        user_type: 0,
+        user_photo:
+          "https://firebasestorage.googleapis.com/v0/b/yaz-85eb7.appspot.com/o/Users%2Fnull.png?alt=media&token=22b0ab1c-e1ea-4e90-9e66-3ccb11b78768",
+        user_password: "",
+        user_email: "",
+        user_phone: "",
+        user_address: "",
+      });
+      this.loginUser = false;
+      this.menu = !this.menu;
+      this.loginLabel = "INICIAR SESION";
+    },
   },
   mounted() {},
   computed: {

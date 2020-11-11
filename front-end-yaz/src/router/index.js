@@ -6,6 +6,7 @@ import Register from '../components/Register'
 import Login from '../components/Login'
 import Menu from '../components/Menu'
 import Payment from '../components/Payment'
+import EditUser from '../components/EditUser'
 Vue.use(VueRouter)
 
 const routes = [
@@ -39,6 +40,11 @@ const routes = [
     name: 'payment',
     component: Payment
   },
+  {
+    path: '/editUser',
+    name: 'editUser',
+    component: EditUser
+  }
 ]
 
 const router = new VueRouter({
