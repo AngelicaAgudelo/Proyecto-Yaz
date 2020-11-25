@@ -137,7 +137,7 @@ const ref = storage.ref();
 // Import of the login warning icon
 import { mdiAlert } from "@mdi/js";
 // Import the library to encrypt passwords
-import sha256 from 'crypto-js/sha256';
+import sha256 from "crypto-js/sha256";
 
 export default {
   data() {

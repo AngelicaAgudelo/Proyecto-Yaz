@@ -93,7 +93,7 @@ import { mapState } from "vuex";
 import { mdiAlert } from "@mdi/js";
 import UsersService from "../services/UsersService";
 // Import the library to encrypt passwords
-import sha256 from 'crypto-js/sha256';
+import sha256 from "crypto-js/sha256";
 
 export default {
   data() {
@@ -137,7 +137,9 @@ export default {
         this.overlayError = true;
         const response = await UsersService.getUserByEmail(this.email);
         if (response.data != "") {
-          if (response.data.data.user_password == sha256(this.password).toString()) {
+          if (
+            response.data.data.user_password == sha256(this.password).toString()
+          ) {
             this.setActiveUser({
               user_name: response.data.data.user_name,
               user_type: response.data.data.user_type,

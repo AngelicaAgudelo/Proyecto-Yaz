@@ -138,7 +138,7 @@ const ref = storage.ref();
 // Import of the login warning icon
 import { mdiAlert } from "@mdi/js";
 // Import the library to encrypt passwords
-import sha256 from 'crypto-js/sha256';
+import sha256 from "crypto-js/sha256";
 
 export default {
   data() {
@@ -164,8 +164,7 @@ export default {
         (v) => !!v || "Se requiere un email",
         (v) => /.+@.+/.test(v) || "El email no es válido",
         (v) =>
-          (v && v.length <= 64) ||
-          "El email no puede exceder los 64 dígitos",
+          (v && v.length <= 64) || "El email no puede exceder los 64 dígitos",
       ],
       // ID
       id: "",
