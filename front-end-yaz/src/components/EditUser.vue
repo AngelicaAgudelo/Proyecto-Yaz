@@ -58,7 +58,7 @@
                 <!-------- Email input ----------->
                 <v-text-field
                   v-model="email"
-                  :counter="24"
+                  :counter="64"
                   :rules="emailRules"
                   label="Email"
                   required
@@ -76,7 +76,7 @@
                 <!-------- Password input ----------->
                 <v-text-field
                   v-model="password"
-                  :counter="24"
+                  :counter="64"
                   :rules="passwordRules"
                   :type="show1 ? 'text' : 'password'"
                   label="Contraseña"
@@ -137,6 +137,8 @@ import { storage } from "../services/firebase";
 const ref = storage.ref();
 // Import of the login warning icon
 import { mdiAlert } from "@mdi/js";
+// Import the library to encrypt passwords
+import sha256 from "crypto-js/sha256";
 
 export default {
   data() {
@@ -154,16 +156,15 @@ export default {
       passwordRules: [
         (v) => !!v || "Se requiere una contraseña",
         (v) =>
-          (v && v.length <= 24) ||
-          "La contraseña no puede exceder los 24 dígitos",
+          (v && v.length <= 64) ||
+          "La contraseña no puede exceder los 64 dígitos",
       ],
       // Email field validations to ensure its integrity
       emailRules: [
         (v) => !!v || "Se requiere un email",
         (v) => /.+@.+/.test(v) || "El email no es válido",
         (v) =>
-          (v && v.length <= 24) ||
-          "La contraseña no puede exceder los 24 dígitos",
+          (v && v.length <= 64) || "El email no puede exceder los 64 dígitos",
       ],
       // ID
       id: "",
@@ -198,7 +199,6 @@ export default {
       this.email = this.activeUser.user_email;
       this.name = this.activeUser.user_name;
       this.type = this.activeUser.user_type;
-      this.password = this.activeUser.user_password;
       this.phone = this.activeUser.user_phone;
       this.address = this.activeUser.user_address;
       this.url = this.activeUser.user_photo;
@@ -254,7 +254,7 @@ export default {
         user_type: 2,
         user_photo: this.photo,
         user_type: this.type,
-        user_password: this.password,
+        user_password: sha256(this.password).toString(),
         user_email: this.email,
         user_phone: this.phone,
         user_address: this.address,

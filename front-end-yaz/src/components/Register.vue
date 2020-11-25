@@ -136,6 +136,8 @@ import { storage } from "../services/firebase";
 const ref = storage.ref();
 // Import of the login warning icon
 import { mdiAlert } from "@mdi/js";
+// Import the library to encrypt passwords
+import sha256 from "crypto-js/sha256";
 
 export default {
   data() {
@@ -153,8 +155,8 @@ export default {
       passwordRules: [
         (v) => !!v || "Se requiere una contraseña",
         (v) =>
-          (v && v.length <= 32) ||
-          "La contraseña no puede exceder los 32 dígitos",
+          (v && v.length <= 64) ||
+          "La contraseña no puede exceder los 64 dígitos",
       ],
       // Email field validations to ensure its integrity
       emailRules: [
@@ -221,7 +223,7 @@ export default {
         user_name: this.name,
         user_type: 2,
         user_photo: this.photo,
-        user_password: this.password,
+        user_password: sha256(this.password).toString(),
         user_email: this.email,
         user_phone: this.phone,
         user_address: this.address,
