@@ -1,103 +1,98 @@
 <template>
-  <v-flex>
-    <!-- Middle area between the navbar and the calendar -->
-    <v-layout align-center justify-center>
-      <v-btn fab text color="grey darken-2" @click="prev">
-        <v-icon x-large>{{ arrowLeft }}</v-icon>
-      </v-btn>
-      <v-toolbar-title v-if="$refs.calendar">{{
-        $refs.calendar.title
-      }}</v-toolbar-title>
-      <div id="divCenter">
-        <v-btn fab text color="grey darken-2" @click="next">
-          <v-icon x-large>{{ arrowRight }}</v-icon>
+  <div class="calendarDiv">
+    <v-flex>
+      <!-- Middle area between the navbar and the calendar -->
+      <v-layout align-center justify-center>
+        <v-btn fab text color="grey darken-2" @click="prev">
+          <v-icon x-large>{{ arrowLeft }}</v-icon>
         </v-btn>
-      </div>
-    </v-layout>
-    <v-btn
-      class="ma-2"
-      v-show="isClient"
-      tile
-      outlined
-      color="black"
-      @click="setActiveEvent(true)"
-      >Solicitar evento</v-btn
-    >
-    <!-- Calling the changeEvent component -->
-    <changeEvent ref="childComponent" />
-    <v-sheet height="890">
-      <!-- Calendar component -->
-      <v-calendar
-        ref="calendar"
-        v-model="focus"
-        type="category"
-        first-interval="6"
-        category-show-all
-        :categories="category"
-        :events="events"
-        category-hide-dynamic
-        :event-color="getEventColor"
-        event-text-color="white"
-        @click:event="showEvent"
-        @mouseenter:time-category="intervalCategory"
-        @click:time="createEvent"
-        @mouseleave:event="leaveEvent"
-        @mouseenter:event="EnterEvent"
-      ></v-calendar>
-      <div data-app>
-        <!-- Menu when pressing an event -->
-        <v-menu
-          v-model="selectedOpen"
-          :close-on-content-click="false"
-          :activator="selectedElement"
-          offset-x
-        >
-          <v-card color="grey lighten-4" min-width="350px" flat>
-            <v-toolbar :color="selectedEvent.color" max-height="58px" dark>
-              <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
-              <v-spacer></v-spacer>
-              <v-btn
-                @click="erase"
-                outlined
-                small
-                min-height="32px"
-                :elevation="7"
-                >Finalizar evento</v-btn
-              >
-            </v-toolbar>
-            <v-card-text>
-              <span v-html="selectedEvent.details"></span>
-            </v-card-text>
-            <v-layout>
-              <v-card-actions>
+        <v-toolbar-title v-if="$refs.calendar">{{
+          $refs.calendar.title
+        }}</v-toolbar-title>
+        <div id="divCenter">
+          <v-btn fab text color="grey darken-2" @click="next">
+            <v-icon x-large>{{ arrowRight }}</v-icon>
+          </v-btn>
+        </div>
+      </v-layout>
+      <!-- Calling the changeEvent component -->
+      <changeEvent ref="childComponent" @getService="getEvents" />
+      <v-sheet height="100%">
+        <!-- Calendar component -->
+        <v-calendar
+          ref="calendar"
+          v-model="focus"
+          type="category"
+          first-interval="6"
+          category-show-all
+          :categories="categories"
+          :events="listEvents"
+          category-hide-dynamic
+          :event-color="getEventColor"
+          event-text-color="white"
+          @click:event="showEvent"
+          @mouseenter:time-category="intervalCategory"
+          @click:time="createEvent"
+          @mouseleave:event="leaveEvent"
+          @mouseenter:event="EnterEvent"
+        ></v-calendar>
+        <div data-app>
+          <!-- Menu when pressing an event -->
+          <v-menu
+            v-model="selectedOpen"
+            :close-on-content-click="false"
+            :activator="selectedElement"
+            offset-x
+          >
+            <v-card color="grey lighten-4" min-width="350px" flat>
+              <v-toolbar :color="selectedEvent.color" max-height="58px" dark>
+                <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
+                <v-spacer></v-spacer>
                 <v-btn
-                  text
-                  color="black"
-                  tile
+                  @click="deleteEvent"
                   outlined
-                  :elevation="5"
-                  @click="selectedOpen = false"
-                  >Cancelar</v-btn
+                  small
+                  min-height="32px"
+                  :elevation="7"
+                  >Finalizar evento</v-btn
                 >
-              </v-card-actions>
-              <v-spacer></v-spacer>
-              <v-card-actions>
-                <v-btn
-                  text
-                  color="black"
-                  tile
-                  outlined
-                  :elevation="5"
-                  @click="editEvent"
-                  >Editar</v-btn
-                >
-              </v-card-actions>
-            </v-layout>
-          </v-card>
-        </v-menu>
-      </div>
-    </v-sheet>
-  </v-flex>
+              </v-toolbar>
+              <v-card-text>
+                <h2>
+                  {{ selectedEvent.description }}
+                </h2>
+              </v-card-text>
+              <v-layout>
+                <v-card-actions>
+                  <v-btn
+                    text
+                    color="black"
+                    tile
+                    outlined
+                    :elevation="5"
+                    @click="selectedOpen = false"
+                    >Cancelar</v-btn
+                  >
+                </v-card-actions>
+                <v-spacer></v-spacer>
+                <v-card-actions>
+                  <v-btn
+                    text
+                    color="black"
+                    tile
+                    outlined
+                    :elevation="5"
+                    @click="editEvent"
+                    >Editar</v-btn
+                  >
+                </v-card-actions>
+              </v-layout>
+            </v-card>
+          </v-menu>
+        </div>
+      </v-sheet>
+    </v-flex>
+  </div>
 </template>
 <script>
 // Import of the object that allows to fetch variables from the Store
@@ -109,6 +104,8 @@ import { mapMutations } from "vuex";
 // Import icons to move between days
 import { mdiChevronRight, mdiDogSide } from "@mdi/js";
 import { mdiChevronLeft } from "@mdi/js";
+import EventsService from "../services/EventsService";
+import UsersService from "../services/UsersService";
 
 export default {
   components: {
@@ -137,29 +134,78 @@ export default {
     close: null,
     // variable that stores the last time clicked
     startTime: null,
-    // variable that stores the last clicked date
-    lastDate: null,
-    // Variable that stores the last event created
-    lastEvent: null,
+    listEvents: [],
+    categories: [],
   }),
   mounted() {
     // Method that creates the categories from the users
     this.mountCategory();
-    // Method that validates what type of user accesses the calendar ( TEMPORARY )
-    this.valideTypeUser();
   },
   computed: {
     ...mapState(["events", "activeEvent", "category", "activeUser"]),
+  },
+  created() {
+    this.getEvents();
+    this.getCategories();
   },
   methods: {
     ...mapMutations([
       "setActiveEvent",
       "mountCategory",
       "setEvent",
-      "eraseEvent",
       "setSelectedEvent",
       "setEditEvent",
     ]),
+    async deleteEvent() {
+      const response = await EventsService.deleteEvent(
+        this.selectedEvent.id_event
+      )
+        .then((response) => {
+          this.getEvents();
+          this.selectedOpen = false;
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
+    async addEvent(data) {
+      const response = await EventsService.addEvent(data);
+    },
+    async getCategories() {
+      const response = await UsersService.getWorkers()
+        .then((response) => {
+          for (var i = 0; i < response.data.data.length; i++) {
+            this.categories.push(response.data.data[i].user_name);
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
+    async getEvents() {
+      const response = await EventsService.getEvents()
+        .then((response) => {
+          if (response.data != "") {
+            this.listEvents = response.data.data.map((item) => {
+              return {
+                id_event: item.id_service,
+                client_name: item.client_name,
+                category: item.worker_name,
+                start: item.service_date_start,
+                end: item.service_date_end,
+                color: item.service_color,
+                name: item.service_name,
+                description: item.service_description,
+                price: item.service_price,
+                status: item.service_status,
+              };
+            });
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
     // Function that returns the color of the selected event
     getEventColor(event) {
       return event.color;
@@ -180,37 +226,22 @@ export default {
     },
     // Function to create event
     createEvent(nativeEvent, event) {
-      if (!this.enter) {
-        // ( TEMPORARY )
-        this.lastDate = nativeEvent.date;
-        this.startTime = nativeEvent.time;
-        // ----------
+      if (!this.enter && this.activeUser.user_type != 2) {
         var start = this.calculateMinute(nativeEvent.time);
         if (start.substring(3, 5) == "0") {
           start = start + "0";
-        } else {
         }
-        // ( TEMPORARY )
-        var higher = 0;
-        for (var i = 0; i < this.events.length; i++) {
-          if (this.events[i].id >= higher) {
-            higher = this.events[i].id;
-          }
-        }
-        var evntId = higher + 1;
-        //  -------
         var event = {
-          id: evntId,
           name: "",
-          user_email: "",
-          details: "",
+          price: 0,
+          client_name: "",
+          description: "",
           start: nativeEvent.date + " " + start,
           end: nativeEvent.date + " " + this.calculateHour(start),
           color: "#1F32BB",
           category: this.targetCategory,
         };
         this.setEditEvent(false);
-        this.lastEvent = event;
         this.setSelectedEvent(event);
         this.$refs.childComponent.setVariables();
         this.setActiveEvent(true);
@@ -296,14 +327,6 @@ export default {
     EnterEvent() {
       this.enter = true;
     },
-    // Function that validates what type of user accesses the calendar ( TEMPORARY )
-    valideTypeUser() {
-      if (this.activeUser.user_type == 2) {
-        this.isClient = true;
-      } else {
-        this.isCliente = false;
-      }
-    },
     // Function that moves the calendar to the left
     prev() {
       this.$refs.calendar.prev();
@@ -314,34 +337,21 @@ export default {
     },
     // Function that saves the pointers returned by the showEvent event in variables
     showEvent({ nativeEvent, event }) {
-      const open = () => {
-        this.selectedEvent = event;
-        this.setSelectedEvent(event);
-        this.selectedElement = nativeEvent.target;
-        setTimeout(() => (this.selectedOpen = true), 10);
-      };
-      if (this.selectedOpen) {
-        this.selectedOpen = false;
-        setTimeout(open, 10);
-      } else {
-        open();
-      }
-      nativeEvent.stopPropagation();
-    },
-    showEvente(nativeEvent, event) {},
-    // Function to delete the event
-    erase() {
-      var busqueda = this.selectedEvent.id;
-      var num = 0;
-      for (var i = 0; i < this.events.length; i++) {
-        if (this.events[i].id == busqueda) {
-          num = i;
-          this.eraseEvent(num);
+      if (this.activeUser.user_type != 2) {
+        const open = () => {
+          this.selectedEvent = event;
+          this.setSelectedEvent(event);
+          this.selectedElement = nativeEvent.target;
+          setTimeout(() => (this.selectedOpen = true), 10);
+        };
+        if (this.selectedOpen) {
+          this.selectedOpen = false;
+          setTimeout(open, 10);
+        } else {
+          open();
         }
+        nativeEvent.stopPropagation();
       }
-      if (num == 0) {
-      }
-      this.selectedOpen = false;
     },
   },
 };
@@ -349,6 +359,9 @@ export default {
 <style scoped>
 #divCenter {
   margin-right: -37px;
+}
+.calendarDiv {
+  margin-top: 75px;
 }
 </style>
         

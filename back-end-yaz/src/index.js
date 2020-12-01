@@ -22,10 +22,10 @@ app.get('/', (req, res) => {
 });
 
 app.use('/users', userRoutes);
-app.use('/service', serviceRoutes);
-app.use('/payment_service', payment_serviceRoutes);
-app.use('/payment_item', payment_itemRoutes);
-app.use('/item', itemRoutes);
+app.use('/services', serviceRoutes);
+app.use('/payment_services', payment_serviceRoutes);
+app.use('/payment_items', payment_itemRoutes);
+app.use('/items', itemRoutes);
 
 app.all('*', (req, res) => {
   res.status(404).send({

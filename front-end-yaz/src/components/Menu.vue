@@ -11,7 +11,6 @@
           <slide v-for="(slide, i) in images" :index="i" :key="i">
             <template slot-scope="{ index, isCurrent, leftIndex, rightIndex }">
               <v-img
-                contai
                 :data-index="index"
                 :class="{
                   current: isCurrent,
@@ -74,13 +73,14 @@ export default {
 </script>
 <style scopet>
 .backGroundDiv {
-  background-color: #35618a;
-  background-image: url("~@/assets/yazBlanco.png");
+  margin-top: 73px;
+  background-image: url("~@/assets/yazMenu.png");
   background-position: center center;
-
-  height: 47vh;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 53vh;
 }
 .carousselDiv {
-  height: 43vh;
+  height: 43%;
 }
 </style>

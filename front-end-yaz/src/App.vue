@@ -71,15 +71,12 @@
       right
       temporary
       color="#f5f5f5"
-      width="350"
+      width="17%"
     >
       <v-flex cols="1">
         <v-layout column align-center>
-          <v-avatar id="icon_worker" size="230px">
-            <img
-              :src="activeUser.user_photo"
-              alt="John"
-            />
+          <v-avatar id="icon_worker" size="80%">
+            <img :src="activeUser.user_photo" />
           </v-avatar>
           <div id="name_worker">
             <h2>{{ activeUser.user_name }}</h2>
@@ -89,26 +86,32 @@
           </div>
         </v-layout>
       </v-flex>
-      <v-layout row align-center justify-center>
-        <div class="signOffDiv">
-          <router-link to="/login" tag="span">
-            <v-btn
-              class="ma-2"
-              tile
-              min-width="258"
-              min-height="60"
-              :elevation="3"
-              @click="setHideMenu(false)"
-            >
-              Editar Perfil
-            </v-btn>
-          </router-link>
 
-          <v-btn class="ma-2" tile min-width="258" min-height="60" :elevation="3">
-            CERRAR SESION
+      <div class="signOffDiv">
+        <router-link to="/editUser" tag="span">
+          <v-btn
+            class="ma-2"
+            tile
+            min-width="100%"
+            min-height="60"
+            :elevation="0"
+            @click="setHideMenu(false)"
+          >
+            Editar Perfil
           </v-btn>
-        </div>
-      </v-layout>
+        </router-link>
+
+        <v-btn
+          class="ma-2"
+          tile
+          min-width="100%"
+          min-height="60"
+          :elevation="0"
+          @click="signOff"
+        >
+          CERRAR SESION
+        </v-btn>
+      </div>
       <v-row justify="center"> </v-row>
     </v-navigation-drawer>
   </v-app>
@@ -145,7 +148,22 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(["setHideMenu"]),
+    ...mapMutations(["setHideMenu", "setActiveUser"]),
+    signOff() {
+      this.setActiveUser({
+        user_name: "",
+        user_type: 0,
+        user_photo:
+          "https://firebasestorage.googleapis.com/v0/b/yaz-85eb7.appspot.com/o/Users%2Fnull.png?alt=media&token=22b0ab1c-e1ea-4e90-9e66-3ccb11b78768",
+        user_password: "",
+        user_email: "",
+        user_phone: "",
+        user_address: "",
+      });
+      this.loginUser = false;
+      this.menu = !this.menu;
+      this.loginLabel = "INICIAR SESION";
+    },
   },
   mounted() {},
   computed: {
@@ -173,10 +191,10 @@ export default {
 #name_worker {
   margin-top: 30px;
   margin-bottom: 15px;
-  font-size:x-large;
+  font-size: 0.73vw;
 }
 #email_worker {
-  font-size:x-large;
+  font-size: 0.73vw;
 }
 .divImg {
   top: 25px;
@@ -199,10 +217,9 @@ export default {
   margin-top: 60px;
 }
 .signOffDiv {
-  left: 28px;
-  margin: 17px;
   position: fixed;
   bottom: 0;
-  width: 100%;
+  align-items: center;
+  justify-content: center;
 }
 </style>

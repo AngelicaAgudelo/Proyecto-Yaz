@@ -60,7 +60,14 @@
     <v-container class="my-4">
       <div class="item_container">
         <v-row row grap>
-          <v-flex xs12 sm6 md5 lg3 v-for="item in listItems" :key="item.id_item">
+          <v-flex
+            xs12
+            sm6
+            md5
+            lg3
+            v-for="item in listItems"
+            :key="item.id_item"
+          >
             <template>
               <div id="divCart">
                 <v-card class="mx-auto" :elevation="3" max-width="350">
@@ -81,18 +88,48 @@
                     <div class="fill-height bottom-gradient"></div>
                   </v-img>
                   <v-card-subtitle class="pb-0">Make-up</v-card-subtitle>
-                  <v-card-text class="text--primary">
-                    <div>{{ item.item_description }}</div>
-                  </v-card-text>
                   <v-card-actions>
+                    <v-card-text class="text--primary">
+                      <div>{{ item.summaryDescription }}</div>
+                    </v-card-text>
+                    <v-spacer></v-spacer>
                     <v-btn
-                      color="black"
-                      tile
-                      outlined
-                      :elevation="3"
-                      @click="buy(item)"
-                      >Comprar</v-btn
+                      v-if="item.item_description.length > 26"
+                      icon
+                      @click="validate(item.item_description)"
                     >
+                      <v-icon>{{
+                        show ? "mdi-chevron-up" : "mdi-chevron-down"
+                      }}</v-icon>
+                    </v-btn>
+                  </v-card-actions>
+                  <v-expand-transition>
+                    <div
+                      v-show="show"
+                      v-if="item.item_description == actualSentence"
+                    >
+                      <v-divider></v-divider>
+                      <v-card-text>
+                        {{ item.item_description }}
+                      </v-card-text>
+                    </div>
+                  </v-expand-transition>
+                  <v-card-actions>
+                    <v-tooltip top :disabled="item.item_quantity != 0">
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-btn
+                          color="black"
+                          tile
+                          outlined
+                          :elevation="3"
+                          @click="buy(item)"
+                          v-bind="attrs"
+                          v-on="on"
+                          >Comprar</v-btn
+                        >
+                      </template>
+                      <span>Se agotó las unidades</span>
+                    </v-tooltip>
                     <v-spacer></v-spacer>
                     <div id="price" color="green" text>
                       $ {{ item.item_price }}
@@ -167,6 +204,9 @@ export default {
       payButton: true,
       // Shop items
       listItems: [],
+      descriptionValidator: false,
+      show: false,
+      actualSentence: "",
     };
   },
   mounted() {
@@ -178,31 +218,71 @@ export default {
   methods: {
     ...mapMutations(["setHideMenu", "setShoppingCar", "setPaymentProcess"]),
     //Function that obtains the items of the database
+    validate(sentence) {
+      this.show = !this.show;
+      this.actualSentence = sentence;
+    },
+    separateDescription(word) {
+      var newDescription = "";
+      if (word.length > 26) {
+        word = word.split(" ");
+        for (var i = 0; i < word.length; i++) {
+          if (newDescription.length < 13) {
+            newDescription = newDescription + " " + word[i];
+          } else {
+            newDescription = newDescription + "...";
+            i = word.length;
+          }
+        }
+      } else {
+        newDescription = word;
+      }
+      return newDescription;
+    },
     async getItems() {
-      const response = await ItemsService.getItems();
-      this.listItems = response.data.data;
+      const response = await ItemsService.getItems().then((response) => {
+        //this.listItems = response.data.data;
+        //this.description();
+        if (response.data != "") {
+          this.listItems = response.data.data.map((item) => {
+            return {
+              id_item: item.id_item,
+              item_name: item.item_name,
+              item_photo: item.item_photo,
+              item_quantity: item.item_quantity,
+              item_description: item.item_description,
+              item_price: item.item_price,
+              summaryDescription: this.separateDescription(
+                item.item_description
+              ),
+            };
+          });
+        }
+      });
     },
     // Function to transfer the item to the shopping cart
-    buy(vari) {
-      var val = false;
-      for (var i = 0; i < this.shoopingCar.length; i++) {
-        if (this.shoopingCar[i].item.id_item == vari.id_item) {
-          this.shoopingCar[i].quantity++;
-          this.shoopingCar[i].total += vari.item_price;
-          val = true;
+    buy(product) {
+      if (product.item_quantity != 0) {
+        var val = false;
+        for (var i = 0; i < this.shoopingCar.length; i++) {
+          if (this.shoopingCar[i].item.id_item == product.id_item) {
+            this.shoopingCar[i].quantity++;
+            this.shoopingCar[i].total += product.item_price;
+            val = true;
+          }
         }
+        if (!val) {
+          this.shoopingCar.push({
+            item: product,
+            quantity: 1,
+            total: product.item_price,
+          });
+        }
+        this.quantifyElements();
+        this.totalTrolley();
+        this.payButton = false;
+        this.setShoppingCar(this.shoopingCar);
       }
-      if (!val) {
-        this.shoopingCar.push({
-          item: vari,
-          quantity: 1,
-          total: vari.item_price,
-        });
-      }
-      this.quantifyElements();
-      this.totalTrolley();
-      this.payButton = false;
-      this.setShoppingCar(this.shoopingCar);
     },
     // Function to count the total money of each * product (each product in the cart)
     totalTrolley() {
@@ -293,7 +373,7 @@ export default {
 .shoppingCarDiv {
   margin-left: 10px;
 }
-.item_container{
+.item_container {
   margin-top: 50px;
 }
 </style>

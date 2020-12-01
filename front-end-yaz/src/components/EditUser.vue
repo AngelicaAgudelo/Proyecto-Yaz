@@ -1,9 +1,12 @@
 <template>
-  <div class="divMainRegister">
+  <div class="divMainEdit">
     <!-------- Div to center the v-card ----------->
     <div class="divCenter">
       <!-------- V-card ----------->
-      <v-card width="600px" height="800px" shaped>
+      <v-card width="600px" height="860px" shaped>
+        <v-toolbar height="58%" elevation="3" color="#3c5dc9" dark>
+          <div class="text-toolbar">Editar perfil</div>
+        </v-toolbar>
         <div class="divCentral">
           <v-col cols="10">
             <!-------- Error card ----------->
@@ -38,12 +41,21 @@
             </v-overlay>
             <!-------- Image Yaz ----------->
             <div class="imageyaz">
-              <v-img :src="require('@/assets/yaz.png')"></v-img>
+              <v-avatar id="icon" size="150%" class="profile">
+                <img :src="url" />
+              </v-avatar>
             </div>
             <div class="divInformation">
               <!-------- V-form component to validate user input ----------->
               <v-form ref="form" v-model="valid" lazy-validation>
-                <!-------- ID input ----------->
+                <!-------- Image input ----------->
+                <v-file-input
+                  @change="clickImage($event)"
+                  v-model="photo"
+                  accept="image/*"
+                  label="Foto de perfil"
+                ></v-file-input>
+                <!-------- Email input ----------->
                 <v-text-field
                   v-model="email"
                   :counter="64"
@@ -64,7 +76,7 @@
                 <!-------- Password input ----------->
                 <v-text-field
                   v-model="password"
-                  :counter="32"
+                  :counter="64"
                   :rules="passwordRules"
                   :type="show1 ? 'text' : 'password'"
                   label="Contraseña"
@@ -87,34 +99,23 @@
                   label="Dirección"
                   outlined
                 ></v-text-field>
-                <!-------- Image input ----------->
-                <v-file-input
-                  @change="clickImage($event)"
-                  v-model="photo"
-                  accept="image/*"
-                  label="Foto de perfil"
-                ></v-file-input>
                 <!-------- Button to create user ----------->
                 <v-row>
-                  <router-link :to="'/' + path" tag="span">
-                    <v-btn
-                      class="ma-2"
-                      :disabled="!valid"
-                      tile
-                      outlined
-                      :elevation="3"
-                      color="black"
-                      @click="validate"
-                      >Crear Usuario</v-btn
-                    >
-                  </router-link>
+                  <v-btn
+                    class="ma-2"
+                    :disabled="!valid"
+                    tile
+                    outlined
+                    :elevation="3"
+                    color="black"
+                    @click="validate"
+                    >Actualizar perfil</v-btn
+                  >
                   <v-spacer></v-spacer>
                   <!-------- Button to log in ----------->
-                  <router-link to="/login" tag="span">
-                    <v-btn class="ma-2" tile :elevation="3"
-                      >¿ya tienes cuenta?</v-btn
-                    >
-                  </router-link>
+                  <v-btn class="ma-2" tile :elevation="3" @click="cancel"
+                    >Cancelar</v-btn
+                  >
                 </v-row>
               </v-form>
             </div>
@@ -163,8 +164,7 @@ export default {
         (v) => !!v || "Se requiere un email",
         (v) => /.+@.+/.test(v) || "El email no es válido",
         (v) =>
-          (v && v.length <= 64) ||
-          "La contraseña no puede exceder los 64 dígitos",
+          (v && v.length <= 64) || "El email no puede exceder los 64 dígitos",
       ],
       // ID
       id: "",
@@ -188,73 +188,41 @@ export default {
       // Variable that saves the previously imported icon
       warningIcon: mdiAlert,
       overlayError: false,
+      url: null,
+      type: 0,
     };
   },
   methods: {
     // Statement of Store methods
-    ...mapMutations(["addUser", "activeUser", "setHideMenu", "setActiveUser"]),
+    ...mapMutations(["setHideMenu", "setActiveUser"]),
+    mount() {
+      this.email = this.activeUser.user_email;
+      this.name = this.activeUser.user_name;
+      this.type = this.activeUser.user_type;
+      this.phone = this.activeUser.user_phone;
+      this.address = this.activeUser.user_address;
+      this.url = this.activeUser.user_photo;
+    },
     // Function to validate the input data, create the user and return to the previous route
     validate() {
       this.overlayError = true;
       if (this.$refs.form.validate()) {
-        var user = {
-          user_name: this.name,
-          user_photo: this.photo,
-          user_password: this.password,
-          user_email: this.email,
-          user_type: 2,
-          user_phone: this.phone,
-          user_address: this.address,
-        };
         if (this.photo == null) {
-          this.photo =
-            "https://firebasestorage.googleapis.com/v0/b/yaz-85eb7.appspot.com/o/Users%2Fnull.png?alt=media&token=22b0ab1c-e1ea-4e90-9e66-3ccb11b78768";
-          this.createUser();
+          this.photo = this.url;
+          this.getIdUser();
         } else {
           this.sendImage();
         }
-
-        this.addUser(user);
       }
     },
-
-    async createUser() {
-      var data = {
-        user_name: this.name,
-        user_type: 2,
-        user_photo: this.photo,
-        user_password: sha256(this.password).toString(),
-        user_email: this.email,
-        user_phone: this.phone,
-        user_address: this.address,
-      };
-      const response = await UsersService.addUser(data)
-        .then((response) => {
-          this.setActiveUser(data);
-          if (this.paymentProcess == false) {
-            this.setHideMenu(true);
-            this.overlayError = false;
-            this.$router.push("/");
-          } else {
-            this.setHideMenu(false);
-            this.overlayError = false;
-            this.$router.push("/payment");
-          }
-        })
-        .catch((e) => {
-          this.overlayError = false;
-          this.bolError = true;
-          if (e.response.data.message == "user_name must be unique") {
-            this.error = "El nombre de usuario ingresado ya existe";
-          } else if (e.response.data.message == "user_email must be unique") {
-            this.error = "El Email ingresado ya existe";
-          } else {
-            this.error = "Error 500";
-          }
-        });
-    },
     clickImage(e) {
-      this.image = e;
+      try {
+        this.url = URL.createObjectURL(this.photo);
+        this.image = e;
+      } catch (e) {
+        console.log(e);
+        this.url = "";
+      }
     },
     sendImage() {
       const refImg = ref.child("Users/" + this.image.name);
@@ -265,15 +233,61 @@ export default {
           .getDownloadURL()
           .then((url) => {
             this.photo = url;
-            this.createUser();
+            this.getIdUser();
           });
       });
     },
+    cancel() {
+      this.setHideMenu(true);
+      this.$router.go(-1);
+    },
+    async getIdUser() {
+      const response = await UsersService.getUserByEmail(
+        this.activeUser.user_email
+      ).then((response) => {
+        this.updateUser(response.data.data.id_user);
+      });
+    },
+    async updateUser(id) {
+      var data = {
+        user_name: this.name,
+        user_type: 2,
+        user_photo: this.photo,
+        user_type: this.type,
+        user_password: sha256(this.password).toString(),
+        user_email: this.email,
+        user_phone: this.phone,
+        user_address: this.address,
+      };
+      const response = await UsersService.updateUser(id, data)
+        .then((response) => {
+          this.overlayError = false;
+          this.setActiveUser(data);
+          this.setHideMenu(true);
+          this.$router.go(-1);
+        })
+        .catch((error) => {
+          console.log(error.response.data.message);
+          this.overlayError = false;
+          this.bolError = true;
+          if (error.response.data.message == "user_name must be unique") {
+            this.error = "El nombre de usuario ingresado ya existe";
+          } else if (
+            error.response.data.message == "user_email must be unique"
+          ) {
+            this.error = "El Email ingresado ya existe";
+          } else {
+            this.error = "Error 404";
+          }
+        });
+    },
   },
-  created() {},
+  created() {
+    this.mount();
+  },
   computed: {
     // Declaration of Store variables
-    ...mapState(["paymentProcess"]),
+    ...mapState(["paymentProcess", "activeUser"]),
     // Validations of the Identification field to guarantee its integrity
     phoneRules() {
       const rules = [];
@@ -304,6 +318,15 @@ export default {
 };
 </script>
 <style scoped>
+.divMainEdit {
+  background-image: url("~@/assets/flores.gif");
+  background-size: auto;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-color: #464646;
+  height: 100%;
+}
 .divCenter {
   height: 890px;
   display: flex;
@@ -320,23 +343,21 @@ export default {
   margin-left: 94px;
   font-size: 33px;
 }
-.divInformation {
-  margin-top: 90px;
-}
-.divMainRegister {
-  background-image: url("~@/assets/flores.gif");
-  background-size: auto;
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-color: #464646;
-  height: 100%;
-}
-
 .imageyaz {
-  height: 30px;
-  width: 400px;
+  height: 140px;
+  width: 140px;
   margin: 0px auto;
-  margin-bottom: 200px;
+  margin-bottom: 20%;
+}
+#icon {
+  top: 3%;
+  left: -20%;
+}
+#titleDiv {
+  margin-top: 3%;
+  margin-left: 44.2%;
+}
+.text-toolbar {
+  margin-left: 43%;
 }
 </style>
