@@ -33,9 +33,9 @@ models.sequelize = sequelize;
 
 models.user = user(sequelize, Sequelize);
 models.item = item(sequelize, Sequelize);
+models.service = service(sequelize, Sequelize);
 models.payment_item = payment_item(sequelize, Sequelize);
 models.payment_service = payment_service(sequelize, Sequelize);
-models.service = service(sequelize, Sequelize);
 
 // payment_item/item and payment_item/user
 models.item.hasMany(models.payment_item,
@@ -61,33 +61,25 @@ models.payment_item.belongsTo(models.user);
 // service/client
 models.user.belongsToMany(models.service,
     {
-        as: 'user_service',
-        through: 'user_name',
+        through: 'user_service',
+        sourceKey: 'user_name',
+        targetKey: 'client_name',
     }
 );
 
-models.service.belongsToMany(models.user,
-    {
-        as: 'user_service',
-        through: 'client_name',
-    }
-);
+models.service.belongsToMany(models.user, { through: 'user_service' });
 
 
 // service/worker
 models.user.belongsToMany(models.service,
     {
-        as: 'worker_service',
-        through: 'user_name',
+        through: 'worker_service',
+        sourceKey: 'user_name',
+        targetKey: 'worker_name',
     }
 );
 
-models.service.belongsToMany(models.user,
-    {
-        as: 'worker_service',
-        through: 'worker_name',
-    }
-);
+models.service.belongsToMany(models.user, { through: 'worker_service' });
 
 // service/payment_service 
 models.service.hasOne(models.payment_service,
