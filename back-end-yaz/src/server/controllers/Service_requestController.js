@@ -22,9 +22,18 @@ class Service_requestController {
 
     static async addService_request(req, res) {
         const newService_request = req.body
+        const { worker_id } = req.params;
+        if (!Number.isInteger(Number(worker_id))) {
+            util.setError(400, 'Please input a valid numeric value');
+            return util.send(res);
+        }
         try {
-            const createdService_request = await Service_requestService.addService_request(newService_request);
-            util.setSuccess(201, 'New service request created!', createdService_request);
+            const createdService_request = await Service_requestService.addService_request(newService_request, worker_id);
+            if (createdService_request) {
+                util.setSuccess(201, 'New service request created!', createdService_request);
+            } else {
+                util.setSuccess(204, 'Could not create the service request!')
+            }
             return util.send(res);
         } catch (error) {
             util.setError(400, error);

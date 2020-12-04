@@ -9,9 +9,28 @@ class Service_requestService {
         }
     }
 
-    static async addService_request(newService_request) {
+    static async addService_request(newService_request, worker_id) {
         try {
-            return await models.service_request.create(newService_request);
+            const worker = await models.user.findOne({
+                where: { id_user: Number(worker_id) }
+            });
+
+            if (worker) {
+                const service_request = await models.service_request.create(newService_request);
+
+                const service = {
+                    id_service_request: service_request.id_service_request,
+                    worker_name: worker.user_name,
+                    service_status: "finish"
+                };
+
+                await models.service.create(service);
+
+                return service_request;
+            }
+
+            return null;
+
         } catch (error) {
             throw error.errors[0].message.toString();
         }
