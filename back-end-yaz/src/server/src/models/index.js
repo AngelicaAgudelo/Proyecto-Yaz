@@ -5,6 +5,7 @@ import item from './item';
 import payment_item from './payment_item';
 import payment_service from './payment_service';
 import service from './service';
+import service_request from './service_request';
 
 var pg = require('pg');
 pg.defaults.ssl = true;
@@ -34,6 +35,7 @@ models.sequelize = sequelize;
 models.user = user(sequelize, Sequelize);
 models.item = item(sequelize, Sequelize);
 models.service = service(sequelize, Sequelize);
+models.service_request = service_request(sequelize, Sequelize);
 models.payment_item = payment_item(sequelize, Sequelize);
 models.payment_service = payment_service(sequelize, Sequelize);
 
@@ -58,28 +60,16 @@ models.user.hasMany(models.payment_item,
 
 models.payment_item.belongsTo(models.user);
 
-// service/client
-models.user.belongsToMany(models.service,
+models.service.hasOne(models.service_request,
     {
-        through: 'user_service',
-        sourceKey: 'user_name',
-        targetKey: 'client_name',
+        as: 'service_request_service',
+        foreignKey: 'id_service',
+        targetKey: 'id_service_request'
     }
+
 );
 
-models.service.belongsToMany(models.user, { through: 'user_service' });
-
-
-// service/worker
-models.user.belongsToMany(models.service,
-    {
-        through: 'worker_service',
-        sourceKey: 'user_name',
-        targetKey: 'worker_name',
-    }
-);
-
-models.service.belongsToMany(models.user, { through: 'worker_service' });
+models.service_request.belongsTo(models.service);
 
 // service/payment_service 
 models.service.hasOne(models.payment_service,
