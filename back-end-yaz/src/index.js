@@ -7,6 +7,7 @@ import serviceRoutes from './server/routes/ServiceRoutes';
 import payment_serviceRoutes from './server/routes/Payment_serviceRoutes';
 import payment_itemRoutes from './server/routes/Payment_itemsRoutes';
 import itemRoutes from './server/routes/ItemRoutes';
+import service_requestRoutes from './server/routes/Service_requestRoutes';
 import models from './server/src/models';
 
 const app = express();
@@ -26,6 +27,7 @@ app.use('/services', serviceRoutes);
 app.use('/payment_services', payment_serviceRoutes);
 app.use('/payment_items', payment_itemRoutes);
 app.use('/items', itemRoutes);
+app.use('/service_request', service_requestRoutes);
 
 app.all('*', (req, res) => {
   res.status(404).send({
