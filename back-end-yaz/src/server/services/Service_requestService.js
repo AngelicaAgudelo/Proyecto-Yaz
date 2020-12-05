@@ -14,21 +14,16 @@ class Service_requestService {
             const worker = await models.user.findOne({
                 where: { id_user: Number(worker_id) }
             });
-
             if (worker) {
                 const service_request = await models.service_request.create(newService_request);
-
                 const service = {
                     id_service_request: service_request.id_service_request,
                     worker_name: worker.user_name,
                     service_status: "finish"
                 };
-
                 await models.service.create(service);
-
                 return service_request;
             }
-
             return null;
 
         } catch (error) {
