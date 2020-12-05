@@ -21,6 +21,7 @@ class Service_requestController {
     }
 
     static async addService_request(req, res) {
+        console.log("controller")
         const newService_request = req.body
         const { worker_id } = req.params;
         if (!Number.isInteger(Number(worker_id))) {

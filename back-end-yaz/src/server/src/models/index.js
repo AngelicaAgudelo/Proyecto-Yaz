@@ -6,10 +6,10 @@ import payment_item from './payment_item';
 import payment_service from './payment_service';
 import service from './service';
 import service_request from './service_request';
-
+/*
 var pg = require('pg');
 pg.defaults.ssl = true;
-
+*/
 const sequelize = new Sequelize(
     process.env.DB_NAME,
     process.env.DB_USER,
@@ -18,12 +18,12 @@ const sequelize = new Sequelize(
         host: process.env.DB_HOST,
         port: process.env.DB_PORT,
         dialect: 'postgres',
-        dialectOptions: {
-            ssl: {
-                require: true,
-                rejectUnauthorized: false
-            },
-        }
+        // dialectOptions: {
+        //     ssl: {
+        //         require: true,
+        //         //rejectUnauthorized: false
+        //     },
+        // }
     },
 );
 
@@ -70,7 +70,13 @@ models.service.hasOne(models.service_request,
 );
 
 models.service_request.belongsTo(models.service);
+models.user.hasMany(models.service_request, {
+    as: 'user_service_request',
+    foreignKey: 'id_user',
+    targetKey: 'id_service_request'
+});
 
+models.service_request.belongsTo(models.service);
 // service/payment_service 
 models.service.hasOne(models.payment_service,
     {
