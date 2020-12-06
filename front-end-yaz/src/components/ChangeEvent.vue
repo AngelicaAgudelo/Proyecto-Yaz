@@ -122,6 +122,7 @@ import { mapState } from "vuex";
 import { mapMutations } from "vuex";
 import EventsService from "../services/EventsService";
 import UsersService from "../services/UsersService";
+import serviceRequests from "../services/serviceRequestsService";
 // Import of the login warning icon
 import { mdiAlert } from "@mdi/js";
 
@@ -236,7 +237,18 @@ export default {
       this.date = this.selectEvent.end.split(" ")[0];
     },
     async addEvent(event) {
-      const response = await EventsService.addEvent(event);
+
+      const user = await UsersService.getUserByName(event.worker_name).then((user) => {
+          const response = serviceRequests.addEvent(user.data.data.id_user, event).then((response) => {
+            console.log(response)
+          }).catch((e) => {
+            console.log(e.response)
+          })
+        }).catch(
+          (e) => {
+            console.log(e)
+          }
+        )
       this.$emit("getService");
     },
     async updateEvent(event) {
