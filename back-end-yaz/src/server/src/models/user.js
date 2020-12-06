@@ -1,5 +1,5 @@
 const user = (sequelize, DataTypes) => {
-  const User = sequelize.define('user', {
+  const user = sequelize.define('user', {
     id_user: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
@@ -35,21 +35,8 @@ const user = (sequelize, DataTypes) => {
     },
   });
 
-  User.associate = models => {
-    User.hasMany(models.Service,
-      { foreignKey: 'user_name', as: 'user_service' }
-    );
-
-    User.hasMany(models.Service,
-      { foreignKey: 'user_name', as: 'worker_service' }
-    );
-
-    User.hasMany(models.Payment_Item,
-      { foreignKey: 'id_user', as: 'user_payment_item' }
-    )
-  };
-
-  return User;
+  user.sync({logging: true });
+  return user;
 };
 
 export default user;

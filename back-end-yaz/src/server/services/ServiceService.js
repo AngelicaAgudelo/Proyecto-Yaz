@@ -3,7 +3,26 @@ import models from '../src/models';
 class ServiceService {
   static async getAllServices() {
     try {
-      return await models.service.findAll();
+      const all_services = await models.service.findAll();
+      const services_list = [];
+      for (const service of all_services) {
+        const service_request = await models.service_request.findOne({
+          where: { id_service_request: Number(service.id_service_request) }
+        });
+        const new_service = {
+          client_name: service_request.client_name,
+          worker_name: service.worker_name,
+          service_date_start: service_request.service_date_start,
+          service_date_end: service_request.service_date_end,
+          service_color: service_request.service_color,
+          service_name: service_request.service_name,
+          service_status: service.service_status,
+          service_price: service.service_price,
+          service_description: service_request.service_description
+        };
+        services_list.push(new_service);
+      }
+      return services_list;
     } catch (error) {
       throw error;
     }
