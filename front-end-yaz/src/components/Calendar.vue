@@ -136,7 +136,6 @@ export default {
     startTime: null,
     listEvents: [],
     categories: [],
-    count: 0
   }),
   mounted() {
     // Method that creates the categories from the users
@@ -203,10 +202,6 @@ export default {
               };
             });
           }
-          if(this.count == 0){
-            this.getEvents()
-            this.count++;
-          }
         })
         .catch((e) => {
           console.log(e.response.data);
@@ -250,7 +245,6 @@ export default {
         this.setEditEvent(false);
         this.setSelectedEvent(event);
         this.$refs.childComponent.setVariables();
-        this.count = 0;
         this.setActiveEvent(true);
       }
     },
