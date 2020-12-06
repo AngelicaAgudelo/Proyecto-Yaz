@@ -25,5 +25,7 @@ export default {
     },
     getWorkers() {
         return Api().get(`/users/type=1`)
+    },getUserByName(name) {
+        return Api().get(`/users/name=${name}`)
     }
 }

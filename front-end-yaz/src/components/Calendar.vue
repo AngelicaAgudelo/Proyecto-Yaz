@@ -183,6 +183,7 @@ export default {
         });
     },
     async getEvents() {
+      this.listEvents = []
       const response = await EventsService.getEvents()
         .then((response) => {
           if (response.data != "") {
@@ -203,7 +204,7 @@ export default {
           }
         })
         .catch((e) => {
-          console.log(e);
+          console.log(e.response.data);
         });
     },
     // Function that returns the color of the selected event
