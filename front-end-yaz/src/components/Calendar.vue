@@ -49,7 +49,7 @@
                 <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-btn
-                  @click="deleteEvent"
+                  @click="updateEvent"
                   outlined
                   small
                   min-height="32px"
@@ -181,6 +181,27 @@ export default {
         .catch((e) => {
           console.log(e);
         });
+    },
+    async updateEvent(){
+      console.log(this.selectedEvent)
+      var service = {
+        client_name: this.selectedEvent.client_name,
+        worker_name: this.selectedEvent.category,
+        service_date_start: this.selectedEvent.start,
+        service_date_end: this.selectedEvent.end,
+        service_color: "gray",
+        service_name: this.selectedEvent.name,
+        service_description: this.selectedEvent.description,
+        service_price: parseFloat(this.selectedEvent.price),
+        service_status: "Completed",
+      }
+      console.log(this.serviceUpdate)
+      const response = await EventsService.updateEvent(this.selectedEvent.id_event, service).then((response) => {
+        console.log(response)
+        this.getEvents()
+      }).catch((e) => {
+
+      })
     },
     async getEvents() {
       this.listEvents = []
