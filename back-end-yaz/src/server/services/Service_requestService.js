@@ -10,18 +10,14 @@ class Service_requestService {
     }
 
     static async addService_request(newService_request, worker_id) {
-        console.log("llamado")
         try {
             const worker = await models.user.findOne({
                 where: { id_user: Number(worker_id) }
             });
             const client = await models.user.findOne({
-                where: {user_name: String(newService_request.client_name)}
+                where: { user_name: String(newService_request.client_name) }
             })
-            console.log("worker>>>>>>>"+worker)
-            console.log("client>>>>>>>"+client)
             if (worker && client) {
-                console.log("here")
                 const service_request = await models.service_request.create(newService_request);
                 const service = {
                     id_service_request: service_request.id_service_request,

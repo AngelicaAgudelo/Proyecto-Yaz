@@ -27,7 +27,7 @@ app.use('/services', serviceRoutes);
 app.use('/payment_services', payment_serviceRoutes);
 app.use('/payment_items', payment_itemRoutes);
 app.use('/items', itemRoutes);
-app.use('/service_request', service_requestRoutes);
+app.use('/service_requests', service_requestRoutes);
 
 app.all('*', (req, res) => {
   res.status(404).send({
