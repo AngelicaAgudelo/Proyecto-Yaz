@@ -10,5 +10,6 @@ router.delete('/id=:id', UserController.deleteUserById);
 
 router.get('/email=:email', UserController.getUserByEmail);
 router.get('/type=:type', UserController.getAllUsersByType);
+router.get('/name=:name', UserController.getUserByName);
 
 export default router;

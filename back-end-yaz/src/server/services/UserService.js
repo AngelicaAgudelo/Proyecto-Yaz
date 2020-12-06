@@ -81,6 +81,18 @@ class UserService {
       throw error.errors[0].message.toString();
     }
   }
+
+  static async getUserByName(name) {
+    try {
+      const returnedUser = await models.user.findOne({
+        where: { user_name: name }
+      });
+
+      return returnedUser;
+    } catch (error) {
+      throw error.errors[0].message.toString();
+    }
+  }
 }
 
 export default UserService;

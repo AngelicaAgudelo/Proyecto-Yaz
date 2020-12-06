@@ -126,6 +126,22 @@ class UserController {
             return util.send(res);
         }
     }
+
+    static async getUserByName(req, res) {
+        const requiredUser = req.params.name;
+        try {
+            const returnedUser = await UserService.getUserByName(requiredUser)
+            if (returnedUser) {
+                util.setSuccess(200, `User ${requiredUser} returned!`, returnedUser);
+            } else {
+                util.setSuccess(204, `Could not found user ${requiredUser}!`);
+            }
+            return util.send(res);
+        } catch (error) {
+            util.setError(400, error);
+            return util.send(res);
+        }
+    }
 }
 
 export default UserController;
