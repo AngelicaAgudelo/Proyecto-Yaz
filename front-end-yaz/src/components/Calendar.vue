@@ -189,7 +189,7 @@ export default {
         worker_name: this.selectedEvent.category,
         service_date_start: this.selectedEvent.start,
         service_date_end: this.selectedEvent.end,
-        service_color: "gray",
+        service_color: "#8E8E8E",
         service_name: this.selectedEvent.name,
         service_description: this.selectedEvent.description,
         service_price: parseFloat(this.selectedEvent.price),

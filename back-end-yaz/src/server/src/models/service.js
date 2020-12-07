@@ -21,6 +21,10 @@ const service = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    service_color: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
   });
 
   service.sync({ logging: true });

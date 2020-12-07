@@ -15,7 +15,7 @@ class ServiceService {
           worker_name: service.worker_name,
           service_date_start: service_request.service_date_start,
           service_date_end: service_request.service_date_end,
-          service_color: service_request.service_color,
+          service_color: service.service_color,
           service_name: service_request.service_name,
           service_status: service.service_status,
           service_price: service.service_price,
