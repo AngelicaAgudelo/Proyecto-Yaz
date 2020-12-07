@@ -29,6 +29,9 @@ const service_request = (sequelize, DataTypes) => {
         service_description: {
             type: DataTypes.STRING,
         },
+        service_price: {
+            type: DataTypes.DOUBLE,
+        },
     });
 
     service_request.sync({ logging: true });

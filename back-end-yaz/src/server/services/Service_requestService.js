@@ -22,7 +22,9 @@ class Service_requestService {
                 const service = {
                     id_service_request: service_request.id_service_request,
                     worker_name: worker.user_name,
-                    service_status: "Start"
+                    service_status: "Start",
+                    service_color: service_request.service_color,
+                    service_price: service_request.service_price,
                 };
                 await models.service.create(service);
                 return service_request;

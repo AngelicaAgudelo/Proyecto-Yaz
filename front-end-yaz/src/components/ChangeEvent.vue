@@ -237,7 +237,6 @@ export default {
       this.date = this.selectEvent.end.split(" ")[0];
     },
     async addEvent(event) {
-
       const user = await UsersService.getUserByName(event.worker_name).then((user) => {
           const response = serviceRequests.addEvent(user.data.data.id_user, event).then((response) => {
             console.log(response)
