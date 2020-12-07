@@ -10,6 +10,7 @@ class ServiceService {
           where: { id_service_request: Number(service.id_service_request) }
         });
         const new_service = {
+          id_service: service.id_service,
           client_name: service_request.client_name,
           worker_name: service.worker_name,
           service_date_start: service_request.service_date_start,

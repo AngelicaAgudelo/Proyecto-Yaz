@@ -73,7 +73,7 @@ models.user.hasMany(models.service_request, {
     foreignKey: 'id_user',
     targetKey: 'id_service_request'
 });
-models.service_request.belongsTo(models.service);
+models.service_request.belongsTo(models.user);
 
 // service/payment_service 
 models.service.hasOne(models.payment_service,

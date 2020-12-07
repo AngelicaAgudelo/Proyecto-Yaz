@@ -152,7 +152,7 @@ export default {
       // Variable to show or hide the alert component
       activeAlert: false,
       price: "0",
-      status: "",
+      status: "Start",
       phoneRules: [(v) => !isNaN(parseFloat(v)) || "Solo se permite números"],
       id: 0,
       bolError: false,
