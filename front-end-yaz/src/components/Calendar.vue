@@ -182,29 +182,36 @@ export default {
           console.log(e);
         });
     },
-    async updateEvent(){
-      console.log(this.selectedEvent)
-      var service = {
-        client_name: this.selectedEvent.client_name,
-        worker_name: this.selectedEvent.category,
-        service_date_start: this.selectedEvent.start,
-        service_date_end: this.selectedEvent.end,
-        service_color: "#8E8E8E",
-        service_name: this.selectedEvent.name,
-        service_description: this.selectedEvent.description,
-        service_price: parseFloat(this.selectedEvent.price),
-        service_status: "Completed",
+    async updateEvent() {
+      if (this.selectedEvent.color != "#8E8E8E") {
+        var service = {
+          client_name: this.selectedEvent.client_name,
+          worker_name: this.selectedEvent.category,
+          service_date_start: this.selectedEvent.start,
+          service_date_end: this.selectedEvent.end,
+          service_color: "#8E8E8E",
+          service_name: this.selectedEvent.name,
+          service_description: this.selectedEvent.description,
+          service_price: parseFloat(this.selectedEvent.price),
+          service_status: "Completed",
+        };
+        console.log(this.serviceUpdate);
+        const response = await EventsService.updateEvent(
+          this.selectedEvent.id_event,
+          service
+        )
+          .then((response) => {
+            console.log(response);
+            this.selectedOpen = false;
+            this.getEvents();
+          })
+          .catch((e) => {
+            console.log(e);
+          });
       }
-      console.log(this.serviceUpdate)
-      const response = await EventsService.updateEvent(this.selectedEvent.id_event, service).then((response) => {
-        console.log(response)
-        this.getEvents()
-      }).catch((e) => {
-
-      })
     },
     async getEvents() {
-      this.listEvents = []
+      this.listEvents = [];
       const response = await EventsService.getEvents()
         .then((response) => {
           if (response.data != "") {
@@ -234,9 +241,11 @@ export default {
     },
     // Function that shows the ChangeEvent component
     editEvent() {
-      this.setEditEvent(true);
-      this.$refs.childComponent.setVariables();
-      this.setActiveEvent(true);
+      if (this.selectedEvent.color != "#8E8E8E") {
+        this.setEditEvent(true);
+        this.$refs.childComponent.setVariables();
+        this.setActiveEvent(true);
+      }
     },
     // Function that changes the calendar day
     setToday() {
