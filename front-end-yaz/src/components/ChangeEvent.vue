@@ -237,18 +237,21 @@ export default {
       this.date = this.selectEvent.end.split(" ")[0];
     },
     async addEvent(event) {
-      const user = await UsersService.getUserByName(event.worker_name).then((user) => {
-          const response = serviceRequests.addEvent(user.data.data.id_user, event).then((response) => {
-            console.log(response)
-          }).catch((e) => {
-            console.log(e.response)
-          })
-        }).catch(
-          (e) => {
-            console.log(e)
-          }
-        )
-      this.$emit("getService");
+      const user = await UsersService.getUserByName(event.worker_name)
+        .then((user) => {
+          const response = serviceRequests
+            .addEvent(user.data.data.id_user, event)
+            .then((response) => {
+              console.log(response);
+              this.$emit("getService");
+            })
+            .catch((e) => {
+              console.log(e.response);
+            });
+        })
+        .catch((e) => {
+          console.log(e);
+        });
     },
     async updateEvent(event) {
       var id = this.id;
