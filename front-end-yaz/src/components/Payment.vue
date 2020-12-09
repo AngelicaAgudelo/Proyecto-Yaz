@@ -150,7 +150,7 @@ export default {
   margin-top: 70px;
 }
 .appDiv {
-  height: 937px;
+  height: 100%;
   background-image: url("~@/assets/flores.gif");
   background-size: auto;
   background-position: center center;

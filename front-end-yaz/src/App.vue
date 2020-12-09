@@ -3,13 +3,21 @@
     <!-------- Navbar ----------->
     <v-app-bar
       app
-      v-show="hideMenu"
       :elevation="2"
       color="white"
       fade-img-on-scroll
       height="75px"
       max-height="75px"
     >
+      <router-link to="/" tag="span">
+        <v-btn class="ma-2" text min-height="60">
+          <v-col>
+            <v-icon center x-large>{{ menus }}</v-icon>
+            <div>Menu</div>
+          </v-col>
+        </v-btn>
+      </router-link>
+
       <v-spacer></v-spacer>
       <div>
         <router-link :to="'/' + pathCalendar" tag="span">
@@ -32,10 +40,41 @@
           </v-btn>
         </router-link>
       </div>
-      <v-btn text>
-        <v-icon center large>{{ newUserIcon }}</v-icon
-        >Contactenos
-      </v-btn>
+      <div class="text-center">
+        <v-dialog v-model="dialog" width="500">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn text v-bind="attrs" v-on="on">
+              <v-icon center large>{{ newUserIcon }}</v-icon
+              >Contactenos
+            </v-btn>
+          </template>
+          <v-card>
+            <v-card-title class="headline lighten-2">
+              Contactenos
+            </v-card-title>
+
+            <div class="contactDiv">
+              <div class="itemsDiv">
+                <v-layout justify-center column>
+                
+                    <div class="phoneIcon">
+                    <v-icon x-large>{{ phone }}</v-icon>
+                    6681818
+                    </div>
+                  
+
+                  <div class="mailIcon">
+                    <v-icon x-large>{{ mail }}</v-icon>
+                    peluqueriainternacional68@gmail.com
+                    </div>
+                </v-layout>
+              </div>
+            </div>
+
+            <v-divider></v-divider>
+          </v-card>
+        </v-dialog>
+      </div>
       <div>
         <router-link to="/register" tag="span">
           <v-btn v-show="!loginUser" text @click="setHideMenu(false)">
@@ -129,6 +168,9 @@ import { mdiStore } from "@mdi/js";
 import { mdiAccount } from "@mdi/js";
 import { mdiAccountPlus } from "@mdi/js";
 import { mdiMenu } from "@mdi/js";
+import { mdiHome } from "@mdi/js";
+import { mdiPhone } from "@mdi/js";
+import { mdiGmail } from "@mdi/js";
 
 export default {
   data() {
@@ -145,6 +187,10 @@ export default {
       menuHamburger: mdiMenu,
       // Boolean that represents if the user has logged in
       loginUser: false,
+      menus: mdiHome,
+      dialog: false,
+      phone: mdiPhone,
+      mail: mdiGmail,
     };
   },
   methods: {
@@ -221,5 +267,21 @@ export default {
   bottom: 0;
   align-items: center;
   justify-content: center;
+  margin-left: 5%;
+}
+.contactDiv {
+  margin-top: 1%;
+  height: 100px;
+}
+.itemsDiv{
+  margin-top: 2%;
+  margin-left: 13%;
+}
+.phoneIcon{
+  margin-left: 4%;
+}
+.mailIcon{
+  margin-top: 2%;
+  margin-left: 4%;
 }
 </style>

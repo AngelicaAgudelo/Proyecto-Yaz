@@ -53,7 +53,7 @@ export default {
   },
   data() {
     return {
-      links: ["Home", "About Us", "Team", "Services", "Blog", "Contact Us"],
+      links: ["Sobre nosotros", "Equipo de trabajo", "Servicios", "Blog"],
       images: [
         { i: 1, slide: require("../assets/imageCarousels/image1.jpg") },
         { i: 2, slide: require("../assets/imageCarousels/image2.jpg") },
