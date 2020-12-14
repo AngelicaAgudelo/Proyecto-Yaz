@@ -223,6 +223,7 @@ export default {
       this.actualSentence = sentence;
     },
     separateDescription(word) {
+      console.log(word)
       var newDescription = "";
       if (word.length > 26) {
         word = word.split(" ");
@@ -252,9 +253,8 @@ export default {
               item_quantity: item.item_quantity,
               item_description: item.item_description,
               item_price: item.item_price,
-              summaryDescription: this.separateDescription(
-                item.item_description
-              ),
+              summaryDescription: "Descripción"
+              ,
             };
           });
         }

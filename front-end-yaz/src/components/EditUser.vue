@@ -328,6 +328,7 @@ export default {
   height: 100%;
 }
 .divCenter {
+  margin-top: 3.1%;
   height: 890px;
   display: flex;
   justify-content: center;

@@ -35,7 +35,15 @@
           @click:time="createEvent"
           @mouseleave:event="leaveEvent"
           @mouseenter:event="EnterEvent"
-        ></v-calendar>
+        >
+        <template v-slot:day-body="{ date, week }">
+            <div
+              class="v-current-time"
+              :class="{ first: date === week[0].date }"
+              :style="{ top: nowY }"
+            ></div>
+          </template>
+        </v-calendar>
         <div data-app>
           <!-- Menu when pressing an event -->
           <v-menu
@@ -136,13 +144,23 @@ export default {
     startTime: null,
     listEvents: [],
     categories: [],
+    ready: false
   }),
   mounted() {
     // Method that creates the categories from the users
     this.mountCategory();
+    this.ready=true
+    this.scrollToTime()
+    this.updateTime()
   },
   computed: {
     ...mapState(["events", "activeEvent", "category", "activeUser"]),
+    cal () {
+        return this.ready ? this.$refs.calendar : null
+      },
+      nowY () {
+        return this.cal ? this.cal.timeToY(this.cal.times.now) + 'px' : '-10px'
+      }
   },
   created() {
     this.getEvents();
@@ -384,6 +402,18 @@ export default {
         nativeEvent.stopPropagation();
       }
     },
+    getCurrentTime () {
+        return this.cal ? this.cal.times.now.hour * 60 + this.cal.times.now.minute : 0
+      },
+      scrollToTime () {
+        const time = this.getCurrentTime()
+        const first = Math.max(0, time - (time % 30) - 30)
+
+        this.cal.scrollToTime(first)
+      },
+      updateTime () {
+        setInterval(() => this.cal.updateTimes(), 60 * 1000)
+      }
   },
 };
 </script>
@@ -393,6 +423,15 @@ export default {
 }
 .calendarDiv {
   margin-top: 75px;
+}
+.v-current-time {
+  height: 2px;
+  background-color: #ea4335;
+  position: absolute;
+  left: -1px;
+  right: 0;
+  pointer-events: none;
+
 }
 </style>
         

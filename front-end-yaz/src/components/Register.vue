@@ -309,6 +309,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top: 5%;
 }
 .divCentral {
   display: flex;
@@ -329,6 +330,7 @@ export default {
   background-position: center center;
   background-repeat: no-repeat;
   background-attachment: fixed;
+  background-size: cover;
   background-color: #464646;
   height: 100%;
 }
